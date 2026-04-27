@@ -1,0 +1,23 @@
+{
+  "scenario_id": "AIVSS-3.6.2",
+  "owasp_risk": "AAI002 — Agent Access Control Violation",
+  "cvss_base": 8.7,
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+  "aars_uplift": 1.0,
+  "aivss_score": 9.7,
+  "aivss_severity": "Critical",
+  "aps_primitive_exercised": "verifyDelegation TTL enforcement",
+  "narrative": "An agent attempts to use a delegation that has already expired, carrying administrative authority across session boundaries. APS verifyDelegation enforces TTL — a delegation past expiresAt fails verification with expired=true.",
+  "test_input": {
+    "delegation_scope": ["admin:full"],
+    "delegation_max_depth": 1,
+    "expires_in_hours": -1,
+    "attempted_use": "verifyDelegation on past-expiry delegation"
+  },
+  "expected_outcome": {
+    "permitted": false,
+    "throws": false,
+    "verifier_assertion": "verifyDelegation must return { valid: false, expired: true } for expired delegation"
+  },
+  "live_test_ref": "agent-passport-system/tests/adversarial.ts §3.6.2 Access Control Violation"
+}

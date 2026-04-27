@@ -1,0 +1,24 @@
+{
+  "scenario_id": "AIVSS-3.6.9",
+  "owasp_risk": "AAI009 — Agent Untraceability",
+  "cvss_base": 5.3,
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+  "aars_uplift": 3.0,
+  "aivss_score": 8.3,
+  "aivss_severity": "High",
+  "aps_primitive_exercised": "hashReceipt + buildMerkleRoot + generateMerkleProof + verifyMerkleProof",
+  "narrative": "Adjacent systems may suffer log gaps, allowing an agent's actions to be silently scrubbed. APS receipts are themselves the audit log — a Merkle-rooted batch admits per-receipt inclusion proofs that survive log gaps in adjacent systems. Positive demonstration: APS-instrumented systems cannot be silently de-instrumented without invalidating their published Merkle roots.",
+  "test_input": {
+    "delegation_scope": ["data_analysis"],
+    "delegation_max_depth": 1,
+    "batch_size": 4,
+    "actions": ["analyze batch-0", "analyze batch-1", "analyze batch-2", "analyze batch-3"],
+    "proof_target_index": 2
+  },
+  "expected_outcome": {
+    "permitted": true,
+    "throws": false,
+    "verifier_assertion": "buildMerkleRoot must produce a non-empty root; generateMerkleProof must yield an inclusion proof for the target leaf; verifyMerkleProof must return true; proof.root must equal published root"
+  },
+  "live_test_ref": "agent-passport-system/tests/adversarial.ts §3.6.9 Untraceability"
+}

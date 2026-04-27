@@ -1,0 +1,24 @@
+{
+  "scenario_id": "AIVSS-3.6.5",
+  "owasp_risk": "AAI005 — Agent Identity Impersonation",
+  "cvss_base": 7.4,
+  "cvss_vector": "CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:A/VC:H/VI:H/VA:N/SC:N/SI:N/SA:N",
+  "aars_uplift": 1.9,
+  "aivss_score": 9.3,
+  "aivss_severity": "Critical",
+  "aps_primitive_exercised": "verifyDelegation Ed25519 signature verification",
+  "narrative": "An impostor signs a delegation that claims to come from a legitimate principal. APS verifyDelegation checks that the signature was produced by the declared principal's key; a delegation whose declared issuer does not match the actual signer fails signature check.",
+  "test_input": {
+    "delegation_claims_issuer": "realPrincipal.publicKey",
+    "delegation_actually_signed_by": "impostor.privateKey",
+    "scope": ["*"],
+    "max_depth": 1
+  },
+  "expected_outcome": {
+    "permitted": false,
+    "throws": false,
+    "errors_must_include_match": "/signature/i",
+    "verifier_assertion": "verifyDelegation must return { valid: false } and surface a signature-related error"
+  },
+  "live_test_ref": "agent-passport-system/tests/adversarial.ts §3.6.5 Identity Impersonation"
+}

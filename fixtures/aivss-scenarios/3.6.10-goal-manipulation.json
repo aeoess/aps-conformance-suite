@@ -1,0 +1,34 @@
+{
+  "scenario_id": "AIVSS-3.6.10",
+  "owasp_risk": "AAI010 — Agent Goal and Instruction Manipulation",
+  "cvss_base": 2.1,
+  "cvss_vector": "CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:A/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N",
+  "aars_uplift": 5.0,
+  "aivss_score": 7.1,
+  "aivss_severity": "High",
+  "uplift_note": "Largest CVSS→AIVSS delta in AIVSS §3.6 (2.1 → 7.1, +5.0). The structural-test framing of AARS captures agent-specific risk that CVSS undercounts.",
+  "aps_primitive_exercised": "createReceipt scope check — fixed delegation scope bounds drift at action boundary",
+  "narrative": "An agent's internal goal is incrementally manipulated (prompt drift, instruction injection, memory poisoning) toward an out-of-scope action. APS bounds the drift at the authorization boundary: every action that crosses an authorization boundary must produce a receipt whose scopeUsed is checked against the immutable delegation scope. APS does NOT detect linguistic drift inside an authorized scope — that is the gap addressed by InstructionProvenanceReceipt v0.2.",
+  "test_input": {
+    "delegation_scope": ["communication:email"],
+    "delegation_max_depth": 1,
+    "in_scope_action": {
+      "type": "send",
+      "target": "user@org",
+      "scopeUsed": "communication:email"
+    },
+    "drifted_action": {
+      "type": "broadcast",
+      "target": "public-feed",
+      "scopeUsed": "communication:slack"
+    }
+  },
+  "expected_outcome": {
+    "in_scope_permitted": true,
+    "drifted_throws": true,
+    "drifted_reason_must_match": "/scope|Scope/",
+    "verifier_assertion": "in-scope receipt must verify; drifted-action createReceipt must throw a scope-violation error",
+    "out_of_scope_for_aps": "linguistic / semantic drift detection inside an authorized scope (see InstructionProvenanceReceipt v0.2 — addresses instruction-context governance gap)"
+  },
+  "live_test_ref": "agent-passport-system/tests/adversarial.ts §3.6.10 Goal Manipulation"
+}

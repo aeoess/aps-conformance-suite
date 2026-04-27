@@ -1,0 +1,19 @@
+{
+  "version": "1",
+  "spec": "AIVSS Scoring System For OWASP Agentic AI Core Security Risks v0.8",
+  "spec_url": "https://github.com/OWASP/www-project-artificial-intelligence-vulnerability-scoring-system",
+  "source_implementation": "agent-passport-system/tests/adversarial.ts (commit 883f1b65)",
+  "generated_at": "2026-04-26",
+  "scenarios": [
+    "3.6.1-tool-misuse.json",
+    "3.6.2-access-control-violation.json",
+    "3.6.3-cascading-failures.json",
+    "3.6.4-multi-agent-exploitation.json",
+    "3.6.5-identity-impersonation.json",
+    "3.6.6-memory-manipulation.json",
+    "3.6.7-critical-systems-interaction.json",
+    "3.6.8-supply-chain.json",
+    "3.6.9-untraceability.json",
+    "3.6.10-goal-manipulation.json"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "aps-conformance-suite",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cross-implementation test corpus for the Agent Passport System protocol. Byte-identical JCS canonicalization fixtures, deterministic Ed25519 signatures, OWASP AIVSS §3.6 scenario fixtures, instruction-provenance vectors. Apache-2.0.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "verify": "tsx runners/ts/verify.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "homepage": "https://aeoess.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aeoess/aps-conformance-suite.git"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "scenario_id": "AIVSS-3.6.8",
+  "owasp_risk": "AAI008 — Agent Supply Chain and Dependency Risk",
+  "cvss_base": 9.3,
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+  "aars_uplift": 0.4,
+  "aivss_score": 9.7,
+  "aivss_severity": "Critical",
+  "aps_primitive_exercised": "computeDelegationChainRoot — content-addressing the entire chain",
+  "narrative": "A supply-chain compromise swaps an honest dependency hop for a forged one. APS computeDelegationChainRoot content-addresses the entire chain, so swapping a hop produces a different root digest. Downstream verifiers see a different chain than the one originally signed and refuse the swapped version.",
+  "test_input": {
+    "innocent_chain_pattern": "principal -> innocentLib -> agent (scope: build:run)",
+    "swapped_chain_pattern": "principal -> compromisedLib -> agent (scope: build:run)",
+    "comparison": "computeDelegationChainRoot(innocentChain) vs computeDelegationChainRoot(swappedChain)"
+  },
+  "expected_outcome": {
+    "permitted": false,
+    "throws": false,
+    "verifier_assertion": "computeDelegationChainRoot must produce different root digests for the two chains; downstream verifier compares against published root and rejects mismatch"
+  },
+  "live_test_ref": "agent-passport-system/tests/adversarial.ts §3.6.8 Supply Chain"
+}

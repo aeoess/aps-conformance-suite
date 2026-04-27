@@ -1,0 +1,48 @@
+{
+  "version": "0.1.0",
+  "spec_refs": [
+    "https://aeoess.com/llms-full.txt",
+    "https://datatracker.ietf.org/doc/draft-pidlisnyi-aps-00/",
+    "https://doi.org/10.5281/zenodo.18749779",
+    "https://doi.org/10.5281/zenodo.18932404",
+    "https://doi.org/10.5281/zenodo.19260073",
+    "https://doi.org/10.5281/zenodo.19476002",
+    "https://doi.org/10.5281/zenodo.19478584",
+    "https://doi.org/10.5281/zenodo.19582550",
+    "https://doi.org/10.5281/zenodo.19646276"
+  ],
+  "fixtures": [
+    {
+      "category": "bilateral-delegation",
+      "path": "bilateral-delegation/canonicalize-fixture-v1.json",
+      "canonical_sha256": "353c71a82d7be79d7cdb52c46787e4ea52e5cf94c6cff408e2bc0e60fa782603",
+      "vector_count": 10,
+      "spec_section": "JCS canonicalization (RFC 8785) for delegation receipts; bilateral receipt envelope §4 / §6"
+    },
+    {
+      "category": "inference-session",
+      "path": "inference-session/inference-session-fixtures.json",
+      "canonical_sha256": "3221809b13ac12203bdb9d31556eb570b77d0d092b6bc811fff3af15bf41ddf5",
+      "vector_count": 7,
+      "spec_section": "CTEF v0.3.1 cryptographic agent identity; inference-session validity windows + sequence bounds"
+    },
+    {
+      "category": "instruction-provenance",
+      "path": "instruction-provenance/canonicalize-fixture-v1.json",
+      "canonical_sha256": "907b5a9b5f27be56b5bc0d28da39cae58de130b7e53300a7d638ce39d687d79b",
+      "vector_count": 10,
+      "spec_section": "InstructionProvenanceReceipt v0.2 §4 envelope, §5 canonicalization, §6 verification"
+    },
+    {
+      "category": "aivss-scenarios",
+      "path": "aivss-scenarios/manifest.json",
+      "canonical_sha256": "ecfb3bfabbd1302ae57333ca324ad600080fcb7f8df989e0f7f220fa70aec480",
+      "vector_count": 10,
+      "spec_section": "AIVSS §3.6 worked scenarios — OWASP Agentic AI Core risks AAI001–AAI010"
+    }
+  ],
+  "totals": {
+    "fixtures": 4,
+    "vectors": 37
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "scenario_id": "AIVSS-3.6.3",
+  "owasp_risk": "AAI003 — Agent Cascading Failures",
+  "cvss_base": 7.1,
+  "cvss_vector": "CVSS:4.0/AV:N/AC:H/AT:N/PR:L/UI:N/VC:N/VI:N/VA:H/SC:N/SI:H/SA:H",
+  "aars_uplift": 2.3,
+  "aivss_score": 9.4,
+  "aivss_severity": "Critical",
+  "aps_primitive_exercised": "verifyDelegation cachedRevocationState",
+  "narrative": "A failure cascades through a delegation chain when an upstream agent is revoked. APS verifyDelegation accepts a cachedRevocationState parameter so downstream verifiers reach the same deny verdict without a live registry hit, structurally bounding cascade failure to a single-hop blast radius.",
+  "test_input": {
+    "delegation_scope": ["ticket:triage"],
+    "delegation_max_depth": 2,
+    "cached_revocation_state": {
+      "revoked": true,
+      "checkedAt": "2026-04-26T00:00:00.000Z"
+    }
+  },
+  "expected_outcome": {
+    "permitted": false,
+    "throws": false,
+    "verifier_assertion": "verifyDelegation must return { valid: false, revoked: true } when cached revocation state says revoked"
+  },
+  "live_test_ref": "agent-passport-system/tests/adversarial.ts §3.6.3 Cascading Failures"
+}

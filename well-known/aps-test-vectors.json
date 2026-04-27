@@ -1,0 +1,107 @@
+{
+  "version": "0.1.0",
+  "spec": "Agent Passport System (APS) — cross-implementation test corpus",
+  "spec_refs": [
+    "https://aeoess.com/llms-full.txt",
+    "https://datatracker.ietf.org/doc/draft-pidlisnyi-aps-00/"
+  ],
+  "canonicalization": "JCS — RFC 8785",
+  "signature_alg": "Ed25519 (RFC 8032)",
+  "served_at": "https://aeoess.com/.well-known/aps-test-vectors.json",
+  "publisher": {
+    "did": "did:web:aeoess.com",
+    "homepage": "https://aeoess.com",
+    "repository": "https://github.com/aeoess/aps-conformance-suite"
+  },
+  "categories": {
+    "bilateral-delegation": {
+      "description": "JCS canonicalization vectors used in bilateral delegation receipts. Cross-language byte-parity required.",
+      "fixture": "bilateral-delegation/canonicalize-fixture-v1.json",
+      "deterministic_seed_input": "aps-canonicalize-fixture-v1",
+      "vector_count": 10
+    },
+    "inference-session": {
+      "description": "CTEF v0.3.1 inference-session vectors (validity windows, sequence bounds, agent identity claims).",
+      "fixture": "inference-session/inference-session-fixtures.json",
+      "deterministic_seed_input": "ctef-synthetic-fixture-v1",
+      "vector_count": 7
+    },
+    "instruction-provenance": {
+      "description": "InstructionProvenanceReceipt v0.2 envelope canonicalization, path canonicalization, exhaustiveness, action-time recompute.",
+      "fixture": "instruction-provenance/canonicalize-fixture-v1.json",
+      "deterministic_seed_input": "aps-instruction-provenance-fixture-v1",
+      "vector_count": 10
+    },
+    "aivss-scenarios": {
+      "description": "AIVSS §3.6 worked scenarios — OWASP Agentic AI Core risks AAI001–AAI010, mapped to APS protocol primitives.",
+      "fixture": "aivss-scenarios/manifest.json",
+      "spec_source": "AIVSS Scoring System For OWASP Agentic AI Core Security Risks v0.8",
+      "scenario_count": 10
+    }
+  },
+  "canonical_reference_set": [
+    {
+      "name": "bilateral-delegation/nested-null-preservation",
+      "category": "bilateral-delegation",
+      "input": {"a": null, "b": {"c": null}},
+      "canonical_bytes_hex": "7b2261223a6e756c6c2c2262223a7b2263223a6e756c6c7d7d",
+      "canonical_sha256": "0068ba9653f5819a9a3187269491e8fa88d864813fffe7e1fa539f34821de836"
+    },
+    {
+      "name": "bilateral-delegation/key-ordering-unicode",
+      "category": "bilateral-delegation",
+      "input": {"z": 1, "a": 2, "é": 3, "m": {"z": 1, "a": 2}},
+      "canonical_bytes_hex": "7b2261223a322c226d223a7b2261223a322c227a223a317d2c227a223a312c22c3a9223a337d",
+      "canonical_sha256": "b5f85e399a8319e62bf2a0571270a709f3ba6b28ed6d916ec7b65b5c5c555997"
+    },
+    {
+      "name": "instruction-provenance/minimal-valid-envelope",
+      "category": "instruction-provenance",
+      "spec_section": "IPR v0.2 §4 envelope schema",
+      "fixture_ref": "instruction-provenance/canonicalize-fixture-v1.json#minimal-valid-envelope"
+    },
+    {
+      "name": "instruction-provenance/multi-file-multi-pattern",
+      "category": "instruction-provenance",
+      "spec_section": "IPR v0.2 §4 envelope schema",
+      "fixture_ref": "instruction-provenance/canonicalize-fixture-v1.json#multi-file-multi-pattern"
+    },
+    {
+      "name": "instruction-provenance/recompute-at-action-true",
+      "category": "instruction-provenance",
+      "spec_section": "IPR v0.2 §6.5 action-time verification",
+      "fixture_ref": "instruction-provenance/canonicalize-fixture-v1.json#recompute-at-action-true"
+    },
+    {
+      "name": "instruction-provenance/expected-rejection-witnessed-tier",
+      "category": "instruction-provenance",
+      "spec_section": "IPR v0.2 §6.1 schema-level rejection (v0.2 tier lock)",
+      "fixture_ref": "instruction-provenance/canonicalize-fixture-v1.json#expected-rejection-witnessed-tier"
+    },
+    {
+      "name": "instruction-provenance/expected-rejection-trailing-slash",
+      "category": "instruction-provenance",
+      "spec_section": "IPR v0.2 §5.1 path canonicalization",
+      "fixture_ref": "instruction-provenance/canonicalize-fixture-v1.json#expected-rejection-trailing-slash"
+    },
+    {
+      "name": "aivss/3.6.1-tool-misuse",
+      "category": "aivss-scenarios",
+      "aivss_score": 9.9,
+      "fixture_ref": "aivss-scenarios/3.6.1-tool-misuse.json"
+    },
+    {
+      "name": "aivss/3.6.4-multi-agent-exploitation",
+      "category": "aivss-scenarios",
+      "aivss_score": 10.0,
+      "fixture_ref": "aivss-scenarios/3.6.4-multi-agent-exploitation.json"
+    },
+    {
+      "name": "aivss/3.6.10-goal-manipulation",
+      "category": "aivss-scenarios",
+      "aivss_score": 7.1,
+      "uplift_note": "Largest CVSS→AIVSS delta in §3.6 (2.1 → 7.1, +5.0). Triggering external evidence for InstructionProvenanceReceipt v0.2.",
+      "fixture_ref": "aivss-scenarios/3.6.10-goal-manipulation.json"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "scenario_id": "AIVSS-3.6.6",
+  "owasp_risk": "AAI006 — Agent Memory and Context Manipulation",
+  "cvss_base": 5.8,
+  "cvss_vector": "CVSS:4.0/AV:A/AC:H/AT:N/PR:H/UI:N/VC:L/VI:H/VA:L/SC:N/SI:N/SA:N",
+  "aars_uplift": 3.1,
+  "aivss_score": 8.9,
+  "aivss_severity": "High",
+  "aps_primitive_exercised": "verifyReceipt payload integrity",
+  "narrative": "An attacker tampers with the result field of a signed receipt after the fact, attempting to silently rewrite an audit trail (e.g., a poisoned-RAG retrieval claiming benign content). APS verifyReceipt detects post-sign tampering: any byte change to the signed payload invalidates the Ed25519 signature.",
+  "test_input": {
+    "honest_receipt": {
+      "scope": ["rag:retrieve"],
+      "action": {"type": "retrieve", "target": "kb/q4", "scopeUsed": "rag:retrieve"},
+      "result": {"status": "success", "summary": "returned 3 chunks"}
+    },
+    "tamper": {
+      "field": "result.summary",
+      "old_value": "returned 3 chunks",
+      "new_value": "leaked internal payroll"
+    }
+  },
+  "expected_outcome": {
+    "permitted": false,
+    "throws": false,
+    "verifier_assertion": "verifyReceipt must return { valid: false } when the result field is mutated after signing"
+  },
+  "live_test_ref": "agent-passport-system/tests/adversarial.ts §3.6.6 Memory Manipulation"
+}
