@@ -31,7 +31,7 @@ Any divergence between this mirror and upstream is a bug.
 ## Sync mechanism
 
 TBD. Cadence pending coordination with `@arian-gogani` on
-[A2A#1786](https://github.com/agent-network-protocol/A2A/issues/1786) — choosing
+[A2A#1786](https://github.com/a2aproject/A2A/issues/1786) — choosing
 between daily-poll and webhook-on-push.
 
 A skeleton GitHub Action lives at
