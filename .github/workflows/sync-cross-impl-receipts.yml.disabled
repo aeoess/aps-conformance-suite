@@ -1,0 +1,101 @@
+# Skeleton workflow — NOT ACTIVE.
+#
+# Filename ends in `.disabled` on purpose. GitHub Actions only loads files
+# matching `.github/workflows/*.yml` or `*.yaml`, so this file is dormant until
+# someone renames it.
+#
+# Do not enable until sync cadence (daily-poll vs webhook-on-push) is confirmed
+# with @arian-gogani per A2A#1786.
+#
+# Behavior when enabled:
+#   - Polls arian-gogani/nobulex@main once per day.
+#   - For each of the three receipt files, compares upstream SHA-256 against
+#     the mirrored copy in cross-impl-receipts/.
+#   - If any hash differs, re-fetches the changed files, refreshes the
+#     "Last synced" + "Upstream commit" lines in cross-impl-receipts/README.md,
+#     and opens a PR. Never auto-merges.
+#
+# Manual dispatch (workflow_dispatch) is included so a maintainer can run an
+# on-demand sync once enabled.
+
+name: sync-cross-impl-receipts
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # daily 00:00 UTC — placeholder; revisit per cadence decision
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      UPSTREAM_REPO: arian-gogani/nobulex
+      UPSTREAM_BRANCH: main
+      FILES: "aps-byte-match-receipt.json ctef-byte-match-receipt.json ctef-vectors.json"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compare upstream vs mirror
+        id: diff
+        run: |
+          set -euo pipefail
+          changed=()
+          for f in $FILES; do
+            upstream_hash=$(curl -fsSL "https://raw.githubusercontent.com/${UPSTREAM_REPO}/${UPSTREAM_BRANCH}/${f}" | shasum -a 256 | cut -d' ' -f1)
+            local_hash=$(shasum -a 256 "cross-impl-receipts/${f}" | cut -d' ' -f1)
+            if [ "$upstream_hash" != "$local_hash" ]; then
+              echo "CHANGED ${f} upstream=${upstream_hash} local=${local_hash}"
+              changed+=("$f")
+            else
+              echo "OK      ${f}"
+            fi
+          done
+          if [ ${#changed[@]} -eq 0 ]; then
+            echo "changed=" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=${changed[*]}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fetch changed files
+        if: steps.diff.outputs.changed != ''
+        run: |
+          set -euo pipefail
+          for f in ${{ steps.diff.outputs.changed }}; do
+            curl -fsSL "https://raw.githubusercontent.com/${UPSTREAM_REPO}/${UPSTREAM_BRANCH}/${f}" -o "cross-impl-receipts/${f}"
+          done
+
+      - name: Refresh README sync metadata
+        if: steps.diff.outputs.changed != ''
+        run: |
+          set -euo pipefail
+          upstream_sha=$(curl -fsSL "https://api.github.com/repos/${UPSTREAM_REPO}/commits/${UPSTREAM_BRANCH}" | jq -r .sha)
+          ts=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          # Replace "Upstream commit" and "Last synced" lines in the mirror README.
+          # Hash lines in the README are intentionally not auto-rewritten here —
+          # the PR diff makes them visible for human review.
+          sed -i.bak \
+            -e "s|^- Upstream commit: \`.*\`|- Upstream commit: \`${upstream_sha}\`|" \
+            -e "s|^- Last synced: \`.*\`|- Last synced: \`${ts}\`|" \
+            cross-impl-receipts/README.md
+          rm cross-impl-receipts/README.md.bak
+
+      - name: Open PR
+        if: steps.diff.outputs.changed != ''
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: bot/sync-cross-impl-receipts
+          title: "chore(cross-impl-receipts): sync from arian-gogani/nobulex"
+          commit-message: "chore(cross-impl-receipts): sync from arian-gogani/nobulex"
+          body: |
+            Automated mirror sync of cross-implementation verifier receipts.
+
+            Changed files:
+            ```
+            ${{ steps.diff.outputs.changed }}
+            ```
+
+            Source: `arian-gogani/nobulex@main`. Do not auto-merge — human review required.
