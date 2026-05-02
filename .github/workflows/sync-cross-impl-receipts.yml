@@ -1,28 +1,19 @@
-# Skeleton workflow — NOT ACTIVE.
+# Cross-implementation receipt mirror sync.
 #
-# Filename ends in `.disabled` on purpose. GitHub Actions only loads files
-# matching `.github/workflows/*.yml` or `*.yaml`, so this file is dormant until
-# someone renames it.
+# Polls arian-gogani/nobulex@main once per day. For each of the three receipt
+# files, compares upstream SHA-256 against the mirrored copy in
+# cross-impl-receipts/. If any hash differs, re-fetches the changed files,
+# refreshes the "Last synced" + "Upstream commit" lines in
+# cross-impl-receipts/README.md, and opens a PR. Never auto-merges.
 #
-# Do not enable until sync cadence (daily-poll vs webhook-on-push) is confirmed
-# with @arian-gogani per A2A#1786.
+# Manual dispatch (workflow_dispatch) included for on-demand syncs.
 #
-# Behavior when enabled:
-#   - Polls arian-gogani/nobulex@main once per day.
-#   - For each of the three receipt files, compares upstream SHA-256 against
-#     the mirrored copy in cross-impl-receipts/.
-#   - If any hash differs, re-fetches the changed files, refreshes the
-#     "Last synced" + "Upstream commit" lines in cross-impl-receipts/README.md,
-#     and opens a PR. Never auto-merges.
-#
-# Manual dispatch (workflow_dispatch) is included so a maintainer can run an
-# on-demand sync once enabled.
+# Cadence (daily-poll) confirmed in A2A#1786 with @arian-gogani.
 
-name: sync-cross-impl-receipts
 
 on:
   schedule:
-    - cron: "0 0 * * *"  # daily 00:00 UTC — placeholder; revisit per cadence decision
+    - cron: "0 0 * * *"  # daily 00:00 UTC (cadence per A2A#1786)
   workflow_dispatch:
 
 permissions:

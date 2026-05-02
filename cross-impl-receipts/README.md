@@ -30,14 +30,15 @@ Any divergence between this mirror and upstream is a bug.
 
 ## Sync mechanism
 
-TBD. Cadence pending coordination with `@arian-gogani` on
-[A2A#1786](https://github.com/a2aproject/A2A/issues/1786) — choosing
-between daily-poll and webhook-on-push.
+Daily polling at 00:00 UTC via GitHub Actions. Cadence confirmed with
+`@arian-gogani` in
+[A2A#1786](https://github.com/a2aproject/A2A/issues/1786) — daily-poll
+matches the upstream's bursty push pattern without webhook noise.
 
-A skeleton GitHub Action lives at
-`.github/workflows/sync-cross-impl-receipts.yml.disabled`. The `.disabled`
-suffix is intentional: the workflow is **not** active until cadence is agreed.
-When enabled, it opens a PR on diff and never auto-merges.
+The workflow lives at
+`.github/workflows/sync-cross-impl-receipts.yml`. It compares upstream
+SHA-256 against the mirrored copy for each receipt file, opens a PR on
+diff, and never auto-merges.
 
 Until automation is enabled, sync is manual: re-run the fetch + hash check
 below, update the timestamp + commit SHA in this README, and commit on a new
