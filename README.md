@@ -67,6 +67,40 @@ aps-conformance-suite/
     └── aps-test-vectors.json          (canonical reference subset)
 ```
 
+## Cross-validation triangle (CTEF v0.3.2 §A-aligned)
+
+Three independent implementations (ArkForge / APS / AgentGraph) anchor the cross-validation triangle. CTEF v0.3.2 §A names two reader-runnable verifier scripts (`verify-aps-byte-match.mjs` and `verify-ctef-byte-match.mjs`) as the canonical reproduction references, mirrored byte-exact in this repo's [`cross-impl-receipts/`](./cross-impl-receipts/) with daily-poll synchronization. Any third party resolving any one of the three repos arrives at byte-identical canonical envelopes — the conformance bar is reproducibility-without-maintainer-rerun, not the count of byte-matches.
+
+| Implementation | Repo | Fixture path / harness URL | Verifier |
+|---|---|---|---|
+| **APS** | [`aeoess/aps-conformance-suite`](https://github.com/aeoess/aps-conformance-suite) | `cross-impl-receipts/` (this repo) + `fixtures/bilateral-delegation/canonicalize-fixture-v1.json` (upstream) | `runners/ts/verify.ts` (this repo) + Nobulex `scripts/verify-aps-byte-match.mjs` mirrored byte-exact at [`cross-impl-receipts/`](./cross-impl-receipts/) |
+| **ArkForge** | [`corpollc/qntm`](https://github.com/corpollc/qntm) | `specs/test-vectors/` + production-derived `canonical-bytes-diff-v032.json` (qntm#15) | TODO — finalize when CTEF v0.3.2 §A draft names ArkForge's verifier code path |
+| **AgentGraph** | [`agentgraph-co/agentgraph`](https://github.com/agentgraph-co/agentgraph) (frozen at `69ad94d`) | [`https://agentgraph.co/.well-known/interop-harness.json`](https://agentgraph.co/.well-known/interop-harness.json) `cross_validation_receipts` block | Nobulex `scripts/verify-ctef-byte-match.mjs` against CTEF v0.3.1 inline vectors (4/4 incl. negative-path `INVALID_CLAIM_SCOPE` + `INVALID_COMPOSITION`) — named normatively in CTEF v0.3.2 §A draft as one of the two reader-runnable verifier scripts |
+
+### Three SHA-256 commitments
+
+The byte-faithful mirrored receipts in [`cross-impl-receipts/`](./cross-impl-receipts/) carry the following SHA-256 hashes (frozen at `arian-gogani/nobulex@d68fcee`, fetched 2026-05-02T00:18:49Z):
+
+| File | SHA-256 |
+|---|---|
+| `cross-impl-receipts/aps-byte-match-receipt.json`  | `a4d63359574a7408cac8dd3c132586cff611535c4c8f074ed3556a61cf165443` |
+| `cross-impl-receipts/ctef-byte-match-receipt.json` | `2e8afc85080ed64fe539c913410f2343d10cba8c5b17f61cc8a7d19e4fa11216` |
+| `cross-impl-receipts/ctef-vectors.json`            | `b655d1b3e7aeccb8b75517c1efc46d2dbf6759dea07581a1b39d4ab59baa7046` |
+
+### Reciprocal pointer — AgentGraph harness aggregator
+
+The same three SHA-256s are surfaced by AgentGraph at [`https://agentgraph.co/.well-known/interop-harness.json`](https://agentgraph.co/.well-known/interop-harness.json) under the `cross_validation_receipts.receipt_sources.mirror.files_pinned_2026_05_02` block, with `source_commit` pinned to `arian-gogani/nobulex@d68fcee`. Reviewers can pull receipt artifacts from either [`arian-gogani/nobulex`](https://github.com/arian-gogani/nobulex) (originating) or this mirror and reproduce the byte-match independently — the maintainer-rerun-dependency gap is closed.
+
+### Forward pointer
+
+CTEF v0.3.2 §A "Conformance Appendix" was drafted by [@kenneives](https://github.com/kenneives) on 2026-05-04 in [A2A#1786 comment](https://github.com/a2aproject/A2A/issues/1786#issuecomment-4373904351). The §A normative text adopts:
+
+> Implementations claiming CTEF v0.3.2 conformance MUST demonstrate byte-match reproduction against the inline-vector set. Two reader-runnable verifier scripts are published under stable URLs as the canonical reproduction reference: `scripts/verify-aps-byte-match.mjs` (10/10 against the APS bilateral-delegation fixture) and `scripts/verify-ctef-byte-match.mjs` (4/4 against the CTEF inline vectors INCLUDING both negative-path vectors). The two scripts are maintained at `arian-gogani/nobulex` (originating verifier) and mirrored byte-exact at `aeoess/aps-conformance-suite/cross-impl-receipts/` with daily-poll synchronization. The harness aggregator at `https://agentgraph.co/.well-known/interop-harness.json` `cross_validation_receipts` block surfaces both source URLs with SHA-256 pins of the receipt artifacts. Reviewers verifying conformance MUST be able to reproduce byte-match without contacting the implementation maintainer.
+
+Target publish for the v0.3.2 spec (which will normative-cite this section): mid-May 2026, post-launch. The ArkForge row TODO will firm up if the v0.3.2 spec text or a follow-up §A revision normatively enumerates an ArkForge-specific verifier code path; until then ArkForge's role is captured in the May 4 18:41 components plan ("cross-validated against APS depth-walker code path") rather than in the §A normative draft itself.
+
+---
+
 ## Adoption
 
 This suite is the **reference test corpus for the Agent Passport System protocol**. External implementations of APS-compatible delegation chains, decision receipts, instruction-provenance receipts, and adversarial scenarios are encouraged to validate against these fixtures.
