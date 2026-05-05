@@ -69,7 +69,7 @@ aps-conformance-suite/
 
 ## Cross-validation triangle (CTEF v0.3.2 §A-aligned)
 
-Three independent implementations (ArkForge / APS / AgentGraph) verify the same canonical-bytes fixture set through four verifier code paths. Any third party resolving any one of the three repos arrives at byte-identical canonical envelopes — the conformance bar is reproducibility-without-maintainer-rerun, not the count of byte-matches.
+Three independent implementations (ArkForge / APS / AgentGraph) anchor the cross-validation triangle. CTEF v0.3.2 §A names two reader-runnable verifier scripts (`verify-aps-byte-match.mjs` and `verify-ctef-byte-match.mjs`) as the canonical reproduction references, mirrored byte-exact in this repo's [`cross-impl-receipts/`](./cross-impl-receipts/) with daily-poll synchronization. Any third party resolving any one of the three repos arrives at byte-identical canonical envelopes — the conformance bar is reproducibility-without-maintainer-rerun, not the count of byte-matches.
 
 | Implementation | Repo | Fixture path / harness URL | Verifier |
 |---|---|---|---|
