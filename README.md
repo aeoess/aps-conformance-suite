@@ -75,7 +75,7 @@ Three independent implementations (ArkForge / APS / AgentGraph) verify the same 
 |---|---|---|---|
 | **APS** | [`aeoess/aps-conformance-suite`](https://github.com/aeoess/aps-conformance-suite) | `cross-impl-receipts/` (this repo) + `fixtures/bilateral-delegation/canonicalize-fixture-v1.json` (upstream) | `runners/ts/verify.ts` (this repo) + Nobulex `scripts/verify-aps-byte-match.mjs` mirrored byte-exact at [`cross-impl-receipts/`](./cross-impl-receipts/) |
 | **ArkForge** | [`corpollc/qntm`](https://github.com/corpollc/qntm) | `specs/test-vectors/` + production-derived `canonical-bytes-diff-v032.json` (qntm#15) | TODO — finalize when CTEF v0.3.2 §A draft names ArkForge's verifier code path |
-| **AgentGraph** | [`agentgraph-co/agentgraph`](https://github.com/agentgraph-co/agentgraph) (frozen at `69ad94d`) | [`https://agentgraph.co/.well-known/interop-harness.json`](https://agentgraph.co/.well-known/interop-harness.json) `cross_validation_receipts` block | TODO — finalize when CTEF v0.3.2 §A draft names AgentGraph's verifier code path |
+| **AgentGraph** | [`agentgraph-co/agentgraph`](https://github.com/agentgraph-co/agentgraph) (frozen at `69ad94d`) | [`https://agentgraph.co/.well-known/interop-harness.json`](https://agentgraph.co/.well-known/interop-harness.json) `cross_validation_receipts` block | Nobulex `scripts/verify-ctef-byte-match.mjs` against CTEF v0.3.1 inline vectors (4/4 incl. negative-path `INVALID_CLAIM_SCOPE` + `INVALID_COMPOSITION`) — named normatively in CTEF v0.3.2 §A draft as one of the two reader-runnable verifier scripts |
 
 ### Three SHA-256 commitments
 
@@ -93,7 +93,11 @@ The same three SHA-256s are surfaced by AgentGraph at [`https://agentgraph.co/.w
 
 ### Forward pointer
 
-CTEF v0.3.2 §A "Conformance Appendix" at [A2A#1786](https://github.com/a2aproject/A2A/issues/1786) will normative-cite this section. Updates here precede or follow the §A draft as kenneives publishes; the table verifier-name TODOs are placeholders pending §A draft text.
+CTEF v0.3.2 §A "Conformance Appendix" was drafted by [@kenneives](https://github.com/kenneives) on 2026-05-04 in [A2A#1786 comment](https://github.com/a2aproject/A2A/issues/1786#issuecomment-4373904351). The §A normative text adopts:
+
+> Implementations claiming CTEF v0.3.2 conformance MUST demonstrate byte-match reproduction against the inline-vector set. Two reader-runnable verifier scripts are published under stable URLs as the canonical reproduction reference: `scripts/verify-aps-byte-match.mjs` (10/10 against the APS bilateral-delegation fixture) and `scripts/verify-ctef-byte-match.mjs` (4/4 against the CTEF inline vectors INCLUDING both negative-path vectors). The two scripts are maintained at `arian-gogani/nobulex` (originating verifier) and mirrored byte-exact at `aeoess/aps-conformance-suite/cross-impl-receipts/` with daily-poll synchronization. The harness aggregator at `https://agentgraph.co/.well-known/interop-harness.json` `cross_validation_receipts` block surfaces both source URLs with SHA-256 pins of the receipt artifacts. Reviewers verifying conformance MUST be able to reproduce byte-match without contacting the implementation maintainer.
+
+Target publish for the v0.3.2 spec (which will normative-cite this section): mid-May 2026, post-launch. The ArkForge row TODO will firm up if the v0.3.2 spec text or a follow-up §A revision normatively enumerates an ArkForge-specific verifier code path; until then ArkForge's role is captured in the May 4 18:41 components plan ("cross-validated against APS depth-walker code path") rather than in the §A normative draft itself.
 
 ---
 
