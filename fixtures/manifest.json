@@ -39,10 +39,17 @@
       "canonical_sha256": "ecfb3bfabbd1302ae57333ca324ad600080fcb7f8df989e0f7f220fa70aec480",
       "vector_count": 10,
       "spec_section": "AIVSS §3.6 worked scenarios — OWASP Agentic AI Core risks AAI001–AAI010"
+    },
+    {
+      "category": "canonical-bytes",
+      "path": "canonical-bytes/canonical-bytes-diff-v032.json",
+      "canonical_sha256": "84df9e0a634eba40f5388872bed4f028a240e0c2f2d646755ecbdfb6b8ee0e42",
+      "vector_count": 1,
+      "spec_section": "String-concatenation preimage failure class. Mirrored from corpollc/qntm#15. Deep verification in runners/ts/canonical-bytes-qntm-v0.3.2.test.ts."
     }
   ],
   "totals": {
-    "fixtures": 4,
-    "vectors": 37
+    "fixtures": 5,
+    "vectors": 38
   }
 }

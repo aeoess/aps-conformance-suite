@@ -1,0 +1,82 @@
+{
+  "meta": {
+    "title": "ArkForge Merkle-chain attestation: canonical-bytes pre-fix/post-fix diff",
+    "version": "0.3.2",
+    "source": "trust_layer/proofs.py (verify_proof_integrity, generate_proof)",
+    "spec_reference": "CTEF v0.3.2 depth-first proof-stripping normative text",
+    "description": "Demonstrates canonicalization divergence between legacy string-concatenation chain hash (pre-fix) and canonical JSON chain hash (post-fix). Legacy approach has preimage ambiguity at field boundaries that canonical JSON eliminates. Same failure class as bilateral-delegation depth-walker and continuity-rotation fixtures.",
+    "failure_class": "INVALID_COMPOSITION",
+    "related_vectors": [
+      "bilateral-delegation depth-walker (APS)",
+      "continuity-rotation (APS)",
+      "CTE vectors (AgentGraph)"
+    ],
+    "generated_at": "2026-05-01T23:45:00Z"
+  },
+  "components": {
+    "request_hash": "a7f3e8c1d2b4f5a6e9c8d7f2b1a4e3c6d5f8a9b2c1d4e7f6a3b8c5d2e1f4a7",
+    "response_hash": "b8c4d9e2f3a5b6c7d8e9f1a2b3c4d5e6f7a8b9c1d2e3f4a5b6c7d8e9f1a2b3",
+    "transaction_id": "pi_3RD5vYP7kN2mXwZt1qR9sU4v",
+    "timestamp": "2026-04-28T14:23:07.892Z",
+    "buyer_fingerprint": "c9d5e1f2a3b4c6d7e8f9a1b2c3d4e5f6a7b8c9d1e2f3a4b5c6d7e8f9a1b2c3",
+    "seller": "api.openai.com"
+  },
+  "pre_fix": {
+    "method": "string_concatenation",
+    "spec_versions": [
+      "1.0",
+      "1.1",
+      "2.0"
+    ],
+    "input_construction": "request_hash + response_hash + transaction_id + timestamp + buyer_fingerprint + seller",
+    "canonical_bytes_hex": "6137663365386331643262346635613665396338643766326231613465336336643566386139623263316434653766366133623863356432653166346137623863346439653266336135623663376438653966316132623363346435653666376138623963316432653366346135623663376438653966316132623370695f33524435765950376b4e326d58775a743171523973553476323032362d30342d32385431343a32333a30372e3839325a63396435653166326133623463366437653866396131623263336434653566366137623863396431653266336134623563366437653866396131623263336170692e6f70656e61692e636f6d",
+    "chain_hash": "sha256:53cce2bf015723f6ffe2eb31cccae5de9237c69c4ae49e3900a9295be7d6a332",
+    "note": "Raw field concatenation with no delimiters. Field boundaries are implicit."
+  },
+  "post_fix": {
+    "method": "canonical_json",
+    "spec_versions": [
+      "1.2+"
+    ],
+    "input_construction": "JSON.stringify(chain_data, sortKeys=true, separators=[\",\",\":\"])",
+    "canonical_bytes_utf8": "{\"buyer_fingerprint\":\"c9d5e1f2a3b4c6d7e8f9a1b2c3d4e5f6a7b8c9d1e2f3a4b5c6d7e8f9a1b2c3\",\"request_hash\":\"a7f3e8c1d2b4f5a6e9c8d7f2b1a4e3c6d5f8a9b2c1d4e7f6a3b8c5d2e1f4a7\",\"response_hash\":\"b8c4d9e2f3a5b6c7d8e9f1a2b3c4d5e6f7a8b9c1d2e3f4a5b6c7d8e9f1a2b3\",\"seller\":\"api.openai.com\",\"timestamp\":\"2026-04-28T14:23:07.892Z\",\"transaction_id\":\"pi_3RD5vYP7kN2mXwZt1qR9sU4v\"}",
+    "canonical_bytes_hex": "7b2262757965725f66696e6765727072696e74223a226339643565316632613362346336643765386639613162326333643465356636613762386339643165326633613462356336643765386639613162326333222c22726571756573745f68617368223a226137663365386331643262346635613665396338643766326231613465336336643566386139623263316434653766366133623863356432653166346137222c22726573706f6e73655f68617368223a226238633464396532663361356236633764386539663161326233633464356536663761386239633164326533663461356236633764386539663161326233222c2273656c6c6572223a226170692e6f70656e61692e636f6d222c2274696d657374616d70223a22323032362d30342d32385431343a32333a30372e3839325a222c227472616e73616374696f6e5f6964223a2270695f33524435765950376b4e326d58775a743171523973553476227d",
+    "chain_hash": "sha256:040cfc8c93e252c8f9f524d9f947987a7a1e9bff7fc2952e0aa9ffe553811c69",
+    "note": "Deterministic JSON (sorted keys, no whitespace). Field boundaries explicit via JSON structure."
+  },
+  "divergence": {
+    "hashes_match": false,
+    "pre_fix_hash": "sha256:53cce2bf015723f6ffe2eb31cccae5de9237c69c4ae49e3900a9295be7d6a332",
+    "post_fix_hash": "sha256:040cfc8c93e252c8f9f524d9f947987a7a1e9bff7fc2952e0aa9ffe553811c69",
+    "root_cause": "Canonical JSON sorts keys alphabetically and wraps values in JSON structure, producing different preimage bytes."
+  },
+  "preimage_ambiguity_proof": {
+    "description": "Two semantically different inputs produce identical concatenation bytes.",
+    "original": {
+      "seller": "api.openai.com",
+      "upstream_timestamp": "2026-04-28T14:23:06.001Z",
+      "concat_result": "api.openai.com2026-04-28T14:23:06.001Z",
+      "chain_hash": "sha256:5cf0d855e891b707506c95e07b2eb1fafdcd2502237574c72c858890beffe91d"
+    },
+    "collision": {
+      "seller": "api.openai.com2",
+      "upstream_timestamp": "026-04-28T14:23:06.001Z",
+      "concat_result": "api.openai.com2026-04-28T14:23:06.001Z",
+      "chain_hash": "sha256:5cf0d855e891b707506c95e07b2eb1fafdcd2502237574c72c858890beffe91d"
+    },
+    "collision_confirmed": true,
+    "canonical_json_immune": true
+  },
+  "extended_with_upstream_timestamp": {
+    "upstream_timestamp": "2026-04-28T14:23:06.001Z",
+    "pre_fix": {
+      "canonical_bytes_hex": "6137663365386331643262346635613665396338643766326231613465336336643566386139623263316434653766366133623863356432653166346137623863346439653266336135623663376438653966316132623363346435653666376138623963316432653366346135623663376438653966316132623370695f33524435765950376b4e326d58775a743171523973553476323032362d30342d32385431343a32333a30372e3839325a63396435653166326133623463366437653866396131623263336434653566366137623863396431653266336134623563366437653866396131623263336170692e6f70656e61692e636f6d323032362d30342d32385431343a32333a30362e3030315a",
+      "chain_hash": "sha256:5cf0d855e891b707506c95e07b2eb1fafdcd2502237574c72c858890beffe91d"
+    },
+    "post_fix": {
+      "canonical_bytes_utf8": "{\"buyer_fingerprint\":\"c9d5e1f2a3b4c6d7e8f9a1b2c3d4e5f6a7b8c9d1e2f3a4b5c6d7e8f9a1b2c3\",\"request_hash\":\"a7f3e8c1d2b4f5a6e9c8d7f2b1a4e3c6d5f8a9b2c1d4e7f6a3b8c5d2e1f4a7\",\"response_hash\":\"b8c4d9e2f3a5b6c7d8e9f1a2b3c4d5e6f7a8b9c1d2e3f4a5b6c7d8e9f1a2b3\",\"seller\":\"api.openai.com\",\"timestamp\":\"2026-04-28T14:23:07.892Z\",\"transaction_id\":\"pi_3RD5vYP7kN2mXwZt1qR9sU4v\",\"upstream_timestamp\":\"2026-04-28T14:23:06.001Z\"}",
+      "canonical_bytes_hex": "7b2262757965725f66696e6765727072696e74223a226339643565316632613362346336643765386639613162326333643465356636613762386339643165326633613462356336643765386639613162326333222c22726571756573745f68617368223a226137663365386331643262346635613665396338643766326231613465336336643566386139623263316434653766366133623863356432653166346137222c22726573706f6e73655f68617368223a226238633464396532663361356236633764386539663161326233633464356536663761386239633164326533663461356236633764386539663161326233222c2273656c6c6572223a226170692e6f70656e61692e636f6d222c2274696d657374616d70223a22323032362d30342d32385431343a32333a30372e3839325a222c227472616e73616374696f6e5f6964223a2270695f33524435765950376b4e326d58775a743171523973553476222c22757073747265616d5f74696d657374616d70223a22323032362d30342d32385431343a32333a30362e3030315a227d",
+      "chain_hash": "sha256:0475404171c48b456ca7367e76d6ea4ebf0b6c9b096f156511b7e7b2cdbcb14c"
+    }
+  }
+}

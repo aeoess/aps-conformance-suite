@@ -6,7 +6,9 @@
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
-    "verify": "tsx runners/ts/verify.ts"
+    "verify": "tsx runners/ts/verify.ts",
+    "test:canonical-bytes": "tsx runners/ts/canonical-bytes-qntm-v0.3.2.test.ts",
+    "test": "npm run verify && npm run test:canonical-bytes"
   },
   "devDependencies": {
     "tsx": "^4.0.0",
