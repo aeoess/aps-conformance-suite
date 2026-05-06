@@ -52,3 +52,17 @@ npm test
 ## Reciprocal pointer
 
 This fixture closes the mirror commitment posted at [corpollc/qntm#15 (issuecomment-4376765242)](https://github.com/corpollc/qntm/pull/15#issuecomment-4376765242). The reciprocal pointer in qntm's repo references this directory.
+
+## External byte-match verifier reciprocity
+
+External cross-impl verifier scripts live at [arian-gogani/nobulex/scripts](https://github.com/arian-gogani/nobulex/tree/main/scripts):
+
+- [`verify-aps-byte-match.mjs`](https://github.com/arian-gogani/nobulex/blob/main/scripts/verify-aps-byte-match.mjs): runs 10 vectors against APS `canonicalizeJCS` (`src/core/canonical-jcs.ts`)
+- [`verify-ctef-byte-match.mjs`](https://github.com/arian-gogani/nobulex/blob/main/scripts/verify-ctef-byte-match.mjs): runs 4 vectors against CTEF v0.3.1
+
+Most recent reciprocal verification: 2026-05-05, posted to [A2A#1786 (issuecomment-4384898059)](https://github.com/a2aproject/A2A/issues/1786#issuecomment-4384898059):
+
+- APS receipt sha256: `5e31d6cf37d6a4ee7459a631a289733308c50f01b1f85db4c15370406a3e6dda` (10/10 PASS)
+- CTEF receipt sha256: `a14e6db4477989a1f5c0d60078b0efcc4dc9dd7e3cd1276c4480bdd95b52bcfb` (4/4 PASS)
+
+These external scripts complement the upstream Python verifier (column 1 of the cross-validation triangle) and the APS TypeScript test (column 2) by running byte-equality checks of full receipt envelopes against actual SDK output rather than testing the canonicalization function in isolation.
