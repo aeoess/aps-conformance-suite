@@ -1,0 +1,152 @@
+{
+  "layer": "L3",
+  "description": "3-link APS delegation chain whose final delegatee is the wire-signing agent that produced L1 and counter-signed L2. Monotonic narrowing is demonstrated by dropping one action category at each link.",
+  "binds_to_l2": {
+    "bilateral_receipt_ref": "recv-envoys-rfc9421-l2-v1",
+    "leaf_delegation_constraint": "scope.constraints.bilateral_receipt_ref"
+  },
+  "schema_ref": "~/agent-passport-system/src/v2/types.ts V2Delegation + V2ScopeDefinition + PolicyContext",
+  "signing_convention": "Each link signed via signObject() at ~/agent-passport-system/src/v2/bridge.ts: signature = ed25519_sign(seed, utf8(sha256_hex(canonicalize(delegation_minus_signature))))",
+  "keypair_root": {
+    "seed_hex": "0202020202020202020202020202020202020202020202020202020202020202",
+    "seed_source": "32 bytes of 0x02",
+    "public_key_hex": "8139770ea87d175f56a35466c34c7ecccb8d8a91b4ee37a25df60f5b8fc9b394"
+  },
+  "keypair_middle": {
+    "seed_hex": "0303030303030303030303030303030303030303030303030303030303030303",
+    "seed_source": "32 bytes of 0x03",
+    "public_key_hex": "ed4928c628d1c2c6eae90338905995612959273a5c63f93636c14614ac8737d1"
+  },
+  "keypair_leaf": {
+    "seed_hex": "0404040404040404040404040404040404040404040404040404040404040404",
+    "seed_source": "32 bytes of 0x04",
+    "public_key_hex": "ca93ac1705187071d67b83c7ff0efe8108e8ec4530575d7726879333dbdabe7c"
+  },
+  "final_delegatee_public_key_hex": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a",
+  "scopes": {
+    "root": [
+      "commerce.checkout",
+      "commerce.refund",
+      "commerce.dispute"
+    ],
+    "middle": [
+      "commerce.checkout",
+      "commerce.refund"
+    ],
+    "leaf": [
+      "commerce.checkout"
+    ],
+    "monotonic_narrowing": "root ⊇ middle ⊇ leaf (each child is a subset of its parent)"
+  },
+  "policy_context": {
+    "policy_version": "v2",
+    "values_floor_version": "v1",
+    "trust_epoch": 0,
+    "issuer_id": "did:aps:envoys-rfc9421-fixture",
+    "created_at": "2026-05-10T00:00:00.000Z",
+    "valid_from": "2026-05-10T00:00:00.000Z",
+    "valid_until": "2026-08-08T00:00:00.000Z"
+  },
+  "chain": [
+    {
+      "id": "delg-envoys-rfc9421-link-1-root",
+      "version": 1,
+      "supersedes": null,
+      "supersession_justification": null,
+      "delegator": "did:key:z8139770ea87d175f56a35466c34c7ecccb8d8a91b4ee37a25df60f5b8fc9b394",
+      "delegatee": "did:key:zed4928c628d1c2c6eae90338905995612959273a5c63f93636c14614ac8737d1",
+      "scope": {
+        "action_categories": [
+          "commerce.checkout",
+          "commerce.refund",
+          "commerce.dispute"
+        ],
+        "domain": "commerce"
+      },
+      "policy_context": {
+        "policy_version": "v2",
+        "values_floor_version": "v1",
+        "trust_epoch": 0,
+        "issuer_id": "did:aps:envoys-rfc9421-fixture",
+        "created_at": "2026-05-10T00:00:00.000Z",
+        "valid_from": "2026-05-10T00:00:00.000Z",
+        "valid_until": "2026-08-08T00:00:00.000Z"
+      },
+      "status": "active",
+      "renewal_reason": null,
+      "expansion_reviewer": null,
+      "expansion_review_sig": null,
+      "assurance_class": "mechanically_enforceable",
+      "signature": "3735445d6928f2b3cbec145c174e6e6c5a2cf040c42f5b44f5d1952ffea7b7e0dede93c88277e0512623e92ee71d7a8772ce29a831ebccd87cd474824358600d"
+    },
+    {
+      "id": "delg-envoys-rfc9421-link-2-middle",
+      "version": 1,
+      "supersedes": null,
+      "supersession_justification": null,
+      "delegator": "did:key:zed4928c628d1c2c6eae90338905995612959273a5c63f93636c14614ac8737d1",
+      "delegatee": "did:key:zca93ac1705187071d67b83c7ff0efe8108e8ec4530575d7726879333dbdabe7c",
+      "scope": {
+        "action_categories": [
+          "commerce.checkout",
+          "commerce.refund"
+        ],
+        "domain": "commerce"
+      },
+      "policy_context": {
+        "policy_version": "v2",
+        "values_floor_version": "v1",
+        "trust_epoch": 0,
+        "issuer_id": "did:aps:envoys-rfc9421-fixture",
+        "created_at": "2026-05-10T00:00:00.000Z",
+        "valid_from": "2026-05-10T00:00:00.000Z",
+        "valid_until": "2026-08-08T00:00:00.000Z"
+      },
+      "status": "active",
+      "renewal_reason": null,
+      "expansion_reviewer": null,
+      "expansion_review_sig": null,
+      "assurance_class": "mechanically_enforceable",
+      "signature": "c4270d6bcb6d5dd42eea4b564df3c7f00c1994a0eec43192377a817c9407b6b26a7aa723d929d948d3aeaaf7596c18bbb29346d93d27353f9e32646e484fe502"
+    },
+    {
+      "id": "delg-envoys-rfc9421-link-3-leaf",
+      "version": 1,
+      "supersedes": null,
+      "supersession_justification": null,
+      "delegator": "did:key:zca93ac1705187071d67b83c7ff0efe8108e8ec4530575d7726879333dbdabe7c",
+      "delegatee": "did:key:zd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a",
+      "scope": {
+        "action_categories": [
+          "commerce.checkout"
+        ],
+        "domain": "commerce",
+        "constraints": {
+          "bilateral_receipt_ref": "recv-envoys-rfc9421-l2-v1"
+        }
+      },
+      "policy_context": {
+        "policy_version": "v2",
+        "values_floor_version": "v1",
+        "trust_epoch": 0,
+        "issuer_id": "did:aps:envoys-rfc9421-fixture",
+        "created_at": "2026-05-10T00:00:00.000Z",
+        "valid_from": "2026-05-10T00:00:00.000Z",
+        "valid_until": "2026-08-08T00:00:00.000Z"
+      },
+      "status": "active",
+      "renewal_reason": null,
+      "expansion_reviewer": null,
+      "expansion_review_sig": null,
+      "assurance_class": "mechanically_enforceable",
+      "signature": "2af72b8a5ad5ac4aaa76bf151f5df916dda62b7b11e1f40943845540108594b3d2840d67d81e0d0c34f8a2fde4bf864e3865b8c0d44190d64f523279bed7760c"
+    }
+  ],
+  "expected_verifier_output": {
+    "chain_valid": true,
+    "links_verified": 3,
+    "narrowing_holds": true,
+    "final_delegatee_matches_wire_agent": true,
+    "leaf_bilateral_receipt_ref": "recv-envoys-rfc9421-l2-v1"
+  }
+}

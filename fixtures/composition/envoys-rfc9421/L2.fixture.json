@@ -1,0 +1,56 @@
+{
+  "layer": "L2",
+  "description": "APS bilateral_receipt envelope wrapping the L1 wire signature. Both requesting and serving agents counter-sign the same outcome body. The L1 signature value (base64) is bound into evidenceCommitments[0].credentialHash via SHA-256.",
+  "binds_to_l1": {
+    "l1_request_body_sha256_hex": "30a7dd0e1bf4d693981a867c54a63908d75ebf248c50bf0caaf27154969a5aed",
+    "l1_signature_value_sha256_hex": "8e83977ea9e0dd8552c18ca13afb1c4ec4996dc24672629d2b9d885311ca207e"
+  },
+  "schema_ref": "~/agent-passport-system/src/types/bilateral-receipt.ts BilateralReceipt + EvidenceCommitment",
+  "signing_convention": "Both signatures cover the canonical-JSON form of the receipt body (null-stripped, sorted keys) per ~/agent-passport-system/src/core/bilateral-receipt.ts. Signature bytes are returned as hex; canonical form is signed directly (no extra sha256 wrap).",
+  "keypair_requesting": {
+    "seed_hex": "9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60",
+    "seed_source": "RFC 8032 §7.1 Test 1 (same as L1)",
+    "public_key_hex": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a"
+  },
+  "keypair_serving": {
+    "seed_hex": "0101010101010101010101010101010101010101010101010101010101010101",
+    "seed_source": "32 bytes of 0x01",
+    "public_key_hex": "8a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c"
+  },
+  "receipt": {
+    "receiptId": "recv-envoys-rfc9421-l2-v1",
+    "version": "1.0",
+    "requestingAgentId": "did:key:zd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a",
+    "servingAgentId": "did:key:z8a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c",
+    "outcome": {
+      "toolName": "envoys.rfc9421.post_task",
+      "requestHash": "30a7dd0e1bf4d693981a867c54a63908d75ebf248c50bf0caaf27154969a5aed",
+      "responseHash": "94cf8e20fa8389511a0dd15baa842527cc528ec713409781d1c59c0ed547c4e3",
+      "status": "success",
+      "summary": "Wire-signed POST /api/task accepted by serving agent; outcome counter-signed under bilateral receipt envelope."
+    },
+    "requestedAt": "2026-05-10T00:00:00.000Z",
+    "completedAt": "2026-05-10T00:00:00.500Z",
+    "agreedAt": "2026-05-10T00:00:01.000Z",
+    "evidenceCommitments": [
+      {
+        "type": "rfc9421_message_signature",
+        "credentialHash": "8e83977ea9e0dd8552c18ca13afb1c4ec4996dc24672629d2b9d885311ca207e",
+        "committedAt": "2026-05-10T00:00:01.000Z"
+      }
+    ],
+    "requestingAgentSignature": "7a90601f9fb8ae0649d6d2e029a8ec96bc689bab8c7b33dec6984a3b0247439c8b95720652cf5b13318a449934f09559d0164bfced4610932d53c0ce26cbd50c",
+    "servingAgentSignature": "914e1a821629127fd8e796b5d203a53f4d9e20df0f5a4805cbefa552ec37bf953861dc18cb61b0fd4382bf9cf7426b4b254d1a6dfac162debee80bab60a2fa00"
+  },
+  "canonical_receipt_body": "{\"agreedAt\":\"2026-05-10T00:00:01.000Z\",\"completedAt\":\"2026-05-10T00:00:00.500Z\",\"evidenceCommitments\":[{\"committedAt\":\"2026-05-10T00:00:01.000Z\",\"credentialHash\":\"8e83977ea9e0dd8552c18ca13afb1c4ec4996dc24672629d2b9d885311ca207e\",\"type\":\"rfc9421_message_signature\"}],\"outcome\":{\"requestHash\":\"30a7dd0e1bf4d693981a867c54a63908d75ebf248c50bf0caaf27154969a5aed\",\"responseHash\":\"94cf8e20fa8389511a0dd15baa842527cc528ec713409781d1c59c0ed547c4e3\",\"status\":\"success\",\"summary\":\"Wire-signed POST /api/task accepted by serving agent; outcome counter-signed under bilateral receipt envelope.\",\"toolName\":\"envoys.rfc9421.post_task\"},\"receiptId\":\"recv-envoys-rfc9421-l2-v1\",\"requestedAt\":\"2026-05-10T00:00:00.000Z\",\"requestingAgentId\":\"did:key:zd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a\",\"servingAgentId\":\"did:key:z8a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c\",\"version\":\"1.0\"}",
+  "canonical_receipt_body_sha256_hex": "23d8e4a545a2270f91f7a8da960384ab865d583164d73bfc212bd26dcd8f391d",
+  "expected_verifier_output": {
+    "valid": true,
+    "requestingAgentSignatureValid": true,
+    "servingAgentSignatureValid": true,
+    "gatewaySignatureValid": null,
+    "outcomeConsistent": true,
+    "timingValid": true,
+    "errors": []
+  }
+}

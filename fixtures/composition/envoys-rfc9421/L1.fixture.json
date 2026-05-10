@@ -1,0 +1,51 @@
+{
+  "layer": "L1",
+  "description": "Per-message RFC 9421 HTTP Message Signature over jschoemaker's @envoys/sdk v1.4.0 §13 Vector 2 (POST /api/task). Signed with RFC 8032 §7.1 Test 1 Ed25519 keypair. Reproduces the spec's expected Signature header byte-identical.",
+  "spec_refs": {
+    "envoys_signature_v140": "https://github.com/jschoemaker/Envoys-public/blob/main/specs/signature/v1.md",
+    "envoys_sdk_npm": "https://www.npmjs.com/package/@envoys/sdk",
+    "envoys_sdk_version": "0.7.0",
+    "rfc_9421": "https://www.rfc-editor.org/rfc/rfc9421",
+    "rfc_9530_content_digest": "https://www.rfc-editor.org/rfc/rfc9530",
+    "rfc_8032_test_vectors": "https://www.rfc-editor.org/rfc/rfc8032#section-7.1",
+    "a2a_issue": "https://github.com/a2aproject/A2A/issues/1829"
+  },
+  "keypair": {
+    "seed_hex": "9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60",
+    "seed_source": "RFC 8032 §7.1 Test 1",
+    "public_key_hex": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a"
+  },
+  "request": {
+    "method": "POST",
+    "path": "/api/task",
+    "body": "{\"task\":\"summarize\",\"url\":\"https://example.com/doc\"}",
+    "headers": {
+      "Content-Digest": "sha-256=:MKfdDhv01pOYGoZ8VKY5CNdevySMUL8MqvJxVJaaWu0=:",
+      "Signature-Input": "sig1=(\"@method\" \"@path\" \"content-digest\");keyid=\"https://envoys.me/agents/test@rfc8032-vec1.example\";created=1714000060;nonce=\"EBESExQVFhcYGRobHB0eHw\"",
+      "Signature": "sig1=:i5tKcOHKhRTCztR2cazuzNAg9rPiRf47MKTOGve92Rs43gNmltuN5LVScedR6C08MGsQykMc7txJ21KCG8SEBQ==:"
+    }
+  },
+  "covered_components": [
+    "@method",
+    "@path",
+    "content-digest"
+  ],
+  "signature_params": {
+    "keyid": "https://envoys.me/agents/test@rfc8032-vec1.example",
+    "created": 1714000060,
+    "nonce": "EBESExQVFhcYGRobHB0eHw"
+  },
+  "signature_base": "\"@method\": POST\n\"@path\": /api/task\n\"content-digest\": sha-256=:MKfdDhv01pOYGoZ8VKY5CNdevySMUL8MqvJxVJaaWu0=:\n\"@signature-params\": (\"@method\" \"@path\" \"content-digest\");keyid=\"https://envoys.me/agents/test@rfc8032-vec1.example\";created=1714000060;nonce=\"EBESExQVFhcYGRobHB0eHw\"",
+  "signature_value_base64": "i5tKcOHKhRTCztR2cazuzNAg9rPiRf47MKTOGve92Rs43gNmltuN5LVScedR6C08MGsQykMc7txJ21KCG8SEBQ==",
+  "expected_verifier_output": {
+    "verified": true,
+    "method": "POST",
+    "path": "/api/task",
+    "covered_components": [
+      "@method",
+      "@path",
+      "content-digest"
+    ],
+    "keyid_resolution_required": true
+  }
+}
