@@ -1,0 +1,41 @@
+{
+  "fixture_set": "a2a-1496-negative-paths",
+  "description": "Negative-path conformance vectors for A2A#1496 delegation chain validation, CTEF v0.3.2 §A format.",
+  "generator": {
+    "repo": "agentgraph-co/agentgraph",
+    "script": "scripts/gen_a2a_1496_negative_paths.py",
+    "script_commit": "c5d2d3a"
+  },
+  "determinism": {
+    "reference_clock": "2026-05-13T18:00:00Z",
+    "note": "Fixtures pin input.now; validation does not depend on real-time Date.now().",
+    "ed25519_seeds": {
+      "root": "01*32",
+      "agent_a": "02*32",
+      "agent_b": "03*32",
+      "agent_c": "04*32",
+      "agent_d": "05*32"
+    },
+    "seed_notation": "Transcribed verbatim from commit 381885a. The notation 'XX*32' denotes the single byte 0xXX repeated 32 times to form the 32-byte Ed25519 seed."
+  },
+  "format_conformance": [
+    "Ed25519 over canonicalizeJCS(link minus signature), no sha256 wrap",
+    "RFC 8785 JCS with null values preserved",
+    "camelCase validityWindow with snake_case not_before / not_after",
+    "scope.action_categories as array",
+    "chain-level max_depth, not per-link"
+  ],
+  "fixtures": [
+    { "file": "01-scope-expansion.fixture.json", "expected_error_code": "INVALID_CLAIM_SCOPE" },
+    { "file": "02-depth-violation.fixture.json", "expected_error_code": "DELEGATION_DEPTH_EXCEEDED" },
+    { "file": "03-signature-substitution.fixture.json", "expected_error_code": "INVALID_SIGNATURE" },
+    { "file": "04-validity-expired.fixture.json", "expected_error_code": "VALIDITY_EXPIRED" }
+  ],
+  "references": [
+    "A2A#1496",
+    "A2A#1786",
+    "CTEF v0.3.2 §A"
+  ],
+  "source_commit": "381885af9a89dfa0cbe7a216bdd2397fcbeea9ee",
+  "attribution": "Fixture cases contributed by @kenneives (agentgraph-co). Scaffold and validator maintained by APS."
+}
