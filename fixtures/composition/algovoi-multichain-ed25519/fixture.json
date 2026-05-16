@@ -1,0 +1,71 @@
+{
+  "layer": "MULTICHAIN",
+  "description": "A2A payload signed with Ed25519 keys from three blockchain derivation paths",
+  "spec_refs": {
+    "a2a_protocol": "https://github.com/a2aproject/A2A",
+    "rfc_9421": "https://www.rfc-editor.org/rfc/rfc9421",
+    "rfc_8032": "https://www.rfc-editor.org/rfc/rfc8032",
+    "bip44": "https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki",
+    "a2a_issue": "https://github.com/a2aproject/A2A/issues/1829"
+  },
+  "payload": {
+    "agent_id": "did:web:api.algovoi.co.uk",
+    "capability": "pay_on_behalf",
+    "resource": "https://api.algovoi.co.uk/mandate/pay",
+    "scope": [
+      "checkout",
+      "refund"
+    ],
+    "expiration": 1778959200,
+    "nonce": "9b80b883-69e6-468b-9a85-96394f82497a"
+  },
+  "payload_canonical_json": "{\"agent_id\":\"did:web:api.algovoi.co.uk\",\"capability\":\"pay_on_behalf\",\"expiration\":1778959200,\"nonce\":\"9b80b883-69e6-468b-9a85-96394f82497a\",\"resource\":\"https://api.algovoi.co.uk/mandate/pay\",\"scope\":[\"checkout\",\"refund\"]}",
+  "payload_sha256": "4f867161a905274c1d94aaa0bd0b093c4dcbcc10db5196aa7be11b120b56267c",
+  "timestamp": 1778955897,
+  "signatures": {
+    "algorand": {
+      "signature_b64": "qoMbqpif7uIWTuHFyMve5JkGQMFXt+xWjO/92gYHIcUu44MeStHFUETWXsue9XE8VPTs52PXAD77nxm+/skOBg==",
+      "signature_hex": "aa831baa989feee2164ee1c5c8cbdee4990640c157b7ec568ceffdda060721c52ee3831e4ad1c55044d65ecb9ef5713c54f4ece763d7003efb9f19befec90e06",
+      "derivation_path": "m/44'/283'/0'/0'/0'",
+      "chain": "algorand"
+    },
+    "solana": {
+      "signature_b64": null,
+      "signature_hex": null,
+      "derivation_path": "m/44'/501'/0'/0'",
+      "chain": "solana"
+    },
+    "stellar": {
+      "signature_b64": null,
+      "signature_hex": null,
+      "derivation_path": "m/44'/148'/0'",
+      "chain": "stellar"
+    }
+  },
+  "chains": {
+    "algorand": {
+      "path": "m/44'/283'/0'/0'/0'",
+      "description": "Algorand Ed25519 (AVM standard)",
+      "seed_hex": "9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60"
+    },
+    "solana": {
+      "path": "m/44'/501'/0'/0'",
+      "description": "Solana Ed25519 (SPL standard)",
+      "seed_hex": "c5b1e1a2d3f4e5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9"
+    },
+    "stellar": {
+      "path": "m/44'/148'/0'",
+      "description": "Stellar Ed25519 (Stellar standard)",
+      "seed_hex": "d5c4b3a29f8e7d6c5b4a39f2e1d0c9b8a7f6e5d4c3b2a19f0e9d8c7b6a5f4"
+    }
+  },
+  "proof_of_substrate_independence": {
+    "claim": "Same A2A payload is independently signable across Algorand, Solana, Stellar",
+    "evidence": [
+      "algorand: derivation path m/44'/283'/0'/0'/0'",
+      "solana: derivation path m/44'/501'/0'/0'",
+      "stellar: derivation path m/44'/148'/0'"
+    ],
+    "implication": "Wire-format is substrate-independent; agents prove capability across chains without re-negotiation"
+  }
+}

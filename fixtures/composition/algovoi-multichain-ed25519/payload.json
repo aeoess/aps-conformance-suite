@@ -1,0 +1,11 @@
+{
+  "agent_id": "did:web:api.algovoi.co.uk",
+  "capability": "pay_on_behalf",
+  "resource": "https://api.algovoi.co.uk/mandate/pay",
+  "scope": [
+    "checkout",
+    "refund"
+  ],
+  "expiration": 1778959200,
+  "nonce": "9b80b883-69e6-468b-9a85-96394f82497a"
+}
