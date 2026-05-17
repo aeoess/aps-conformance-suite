@@ -24,20 +24,20 @@
   "timestamp": 1778955897,
   "signatures": {
     "algorand": {
-      "signature_b64": "qoMbqpif7uIWTuHFyMve5JkGQMFXt+xWjO/92gYHIcUu44MeStHFUETWXsue9XE8VPTs52PXAD77nxm+/skOBg==",
-      "signature_hex": "aa831baa989feee2164ee1c5c8cbdee4990640c157b7ec568ceffdda060721c52ee3831e4ad1c55044d65ecb9ef5713c54f4ece763d7003efb9f19befec90e06",
+      "signature_b64": "fj0plkJ/UCBYSj4e9VAzVJYd+VOoTcP41rVogfBdgjDcxC//0cI+E/nua7plXEMucEvkSJHJeFaaAmhhtPfnBA==",
+      "signature_hex": "7e3d2996427f5020584a3e1ef5503354961df953a84dc3f8d6b56881f05d8230dcc42fffd1c23e13f9ee6bba655c432e704be44891c978569a026861b4f7e704",
       "derivation_path": "m/44'/283'/0'/0'/0'",
       "chain": "algorand"
     },
     "solana": {
-      "signature_b64": null,
-      "signature_hex": null,
+      "signature_b64": "ytE+NFOiKWC+hMUO/i7x0hLHzI648kPfOChn9G+B3TV9YtcdGFqV4DmJxz0FVPfPiWn5/zgwqp6GWI/UrfB1Dw==",
+      "signature_hex": "cad13e3453a22960be84c50efe2ef1d212c7cc8eb8f243df382867f46f81dd357d62d71d185a95e03989c73d0554f7cf8969f9ff3830aa9e86588fd4adf0750f",
       "derivation_path": "m/44'/501'/0'/0'",
       "chain": "solana"
     },
     "stellar": {
-      "signature_b64": null,
-      "signature_hex": null,
+      "signature_b64": "6brTXQAQiyCMSlPOTetxsLxLFs9N65Hcu3II2jTpClnDiGrvt0waDNfbrT0Q0cDpv4RLsqyxYzb+mZQuHgC6CQ==",
+      "signature_hex": "e9bad35d00108b208c4a53ce4deb71b0bc4b16cf4deb91dcbb7208da34e90a59c3886aefb74c1a0cd7dbad3d10d1c0e9bf844bb2acb16336fe99942e1e00ba09",
       "derivation_path": "m/44'/148'/0'",
       "chain": "stellar"
     }
