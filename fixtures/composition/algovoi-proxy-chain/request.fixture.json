@@ -1,0 +1,49 @@
+{
+  "layer": "REQUEST",
+  "description": "RFC 9421-signed GET request to api.algovoi.co.uk/compliance/attestation",
+  "keypair": {
+    "seed_hex": "9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60",
+    "seed_source": "RFC 8032 Section 7.1 Test 1",
+    "public_key_hex": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a"
+  },
+  "request": {
+    "method": "GET",
+    "uri": "https://api.algovoi.co.uk/compliance/attestation",
+    "path": "/compliance/attestation",
+    "authority": "api.algovoi.co.uk",
+    "headers": {
+      "host": "api.algovoi.co.uk",
+      "content-digest": "sha-256=:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=:",
+      "signature-input": "(\"@method\" \"@authority\" \"@path\" \"content-digest\" \"created\");created=1778955520;keyid=\"did:web:api.algovoi.co.uk\";alg=\"ed25519\"",
+      "signature": "sig=:Xj1peMjEYi75R/QQFYpU9q/gHwQKYwgt1etjAX1qc0zugTMJoJ86Uhy/jTZ175b3zFhp0j8cLjmDJvGmySDBAQ==:"
+    }
+  },
+  "signing": {
+    "timestamp": 1778955520,
+    "signing_base": "\"@method\": get\n\"@authority\": api.algovoi.co.uk\n\"@path\": /compliance/attestation\n\"content-digest\": sha-256=:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=:\n\"created\": 1778955520",
+    "algorithm": "ed25519",
+    "signature_value_b64": "Xj1peMjEYi75R/QQFYpU9q/gHwQKYwgt1etjAX1qc0zugTMJoJ86Uhy/jTZ175b3zFhp0j8cLjmDJvGmySDBAQ==",
+    "signature_value_hex": "5e3d6978c8c4622ef947f410158a54f6afe01f040a63082dd5eb63017d6a734cee813309a09f3a521cbf8d3675ef96f7cc5869d23f1c2e398326f1a6c920c101"
+  },
+  "timestamp": 1778955520,
+  "chain": {
+    "description": "3-hop proxy chain: Cloudflare -> nginx (VM1) -> FastAPI",
+    "hops": [
+      {
+        "hop": 1,
+        "name": "Cloudflare",
+        "role": "Edge proxy"
+      },
+      {
+        "hop": 2,
+        "name": "nginx",
+        "role": "Reverse proxy (VM1 45.77.57.62)"
+      },
+      {
+        "hop": 3,
+        "name": "FastAPI",
+        "role": "Application server"
+      }
+    ]
+  }
+}

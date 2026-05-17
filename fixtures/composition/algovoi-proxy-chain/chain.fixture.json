@@ -1,0 +1,6 @@
+{
+  "fixture_name": "algovoi-proxy-chain",
+  "description": "RFC 9421 signature and content-digest survival through CF->nginx->FastAPI",
+  "generated_at": "2026-05-16 18:18:41 UTC",
+  "target_endpoint": "https://api.algovoi.co.uk/compliance/attestation"
+}
