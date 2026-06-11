@@ -1,0 +1,46 @@
+{
+  "fixture": "fixtures/cross-stack/nobulex-bilateral-v0/vectors.json",
+  "source": "https://github.com/arian-gogani/nobulex/blob/89d4956f8b4d79c7e57caca2e6b20fd4c2c4f546/fixtures/bilateral-receipt/v0/vectors.json",
+  "source_commit_sha": "89d4956f8b4d79c7e57caca2e6b20fd4c2c4f546",
+  "sdk_module": "agent-passport-system dist/src/core/external-action-ref.js (computeExternalActionRefV1)",
+  "ran_at": "2026-06-11T01:09:55.006Z",
+  "failures": 0,
+  "vectors": [
+    {
+      "id": "0001-baseline-allow",
+      "profile": "integer-epoch (timestamp_ms)",
+      "externalTimestamp": "2025-05-23T11:33:20.000Z",
+      "theirDigest": "86bdb19ed2ee90065ca9fbeaf597075ea03abab6ff01027d457239b9c7c5809b",
+      "stdlibDigest": "86bdb19ed2ee90065ca9fbeaf597075ea03abab6ff01027d457239b9c7c5809b",
+      "sdkStringProfileDigest": "a5f9e95b08bdad7304bf68e13372089a74497fab6d4c67617a2887699a2538e1",
+      "status": "DIVERGE(two-profile)"
+    },
+    {
+      "id": "0002-deny-receipt",
+      "profile": "integer-epoch (timestamp_ms)",
+      "externalTimestamp": "2025-05-23T11:33:21.000Z",
+      "theirDigest": "ae036c69337e09fcaab63d3ebc77e9a1d80a1f019a830815890c43bf1bd79d4f",
+      "stdlibDigest": "ae036c69337e09fcaab63d3ebc77e9a1d80a1f019a830815890c43bf1bd79d4f",
+      "sdkStringProfileDigest": "7c3198c983ee49225a37eb149761a9bdd4f0e901288b1e836adcbdc378d3de6e",
+      "status": "DIVERGE(two-profile)"
+    },
+    {
+      "id": "0003-with-policy-version",
+      "profile": "integer-epoch (timestamp_ms)",
+      "externalTimestamp": "2025-05-23T11:33:22.000Z",
+      "theirDigest": "dd0a1ec0afdcdfd4be7eb45404449ecdb7f697b01d707a06a32305fc05fadf75",
+      "stdlibDigest": "dd0a1ec0afdcdfd4be7eb45404449ecdb7f697b01d707a06a32305fc05fadf75",
+      "sdkStringProfileDigest": "85e5fd4b6960626f7e08463432999790cc8828b7349d80b793e15461bcfc6d80",
+      "status": "DIVERGE(two-profile)"
+    },
+    {
+      "id": "0004-issued-valid-executed-revoked",
+      "profile": "integer-epoch (timestamp_ms)",
+      "externalTimestamp": "2025-05-23T11:33:23.000Z",
+      "theirDigest": "57c4990825b8be98f326acf8065a43280f51e2c6727ffd9bdb14c62eff6985da",
+      "stdlibDigest": "57c4990825b8be98f326acf8065a43280f51e2c6727ffd9bdb14c62eff6985da",
+      "sdkStringProfileDigest": "cf92f7264d00fd8f368f87509a66b947054a7d5c8f6d238d41c7e35cbae152c8",
+      "status": "DIVERGE(two-profile)"
+    }
+  ]
+}
