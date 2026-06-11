@@ -17,7 +17,7 @@ A `.well-known/aps-test-vectors.json` mirrors the agentgraph.co `.well-known` sh
 
 ## What this suite isn't
 
-- **Not a normative spec.** The spec lives in the seven APS papers (Zenodo) and the IETF Internet-Draft `draft-pidlisnyi-aps-00`. This suite is the conformance corpus that says "does your implementation match the canonical reference at the byte level."
+- **Not a normative spec.** The spec lives in the eight APS papers (Zenodo) and the IETF Internet-Draft `draft-pidlisnyi-aps`. This suite is the conformance corpus that says "does your implementation match the canonical reference at the byte level."
 - **Not the live test suite.** For full APS adversarial testing, run `agent-passport-system` `npm test` upstream. This suite extracts the byte-canonical reference set; it does not replace dynamic test execution.
 - **Not a validator.** The runner verifies your canonicalizer against the corpus. It does not validate that your implementation's API surface matches APS — that's an integration question, not a canonicalization one.
 
@@ -122,7 +122,8 @@ This suite is the conformance reference for the protocol described in:
 - *Physics-Enforced Delegation* — https://doi.org/10.5281/zenodo.19478584
 - *Governance in the Medium* — https://doi.org/10.5281/zenodo.19582550
 - *Cognitive Attestation* — https://doi.org/10.5281/zenodo.19646276
-- IETF Internet-Draft: `draft-pidlisnyi-aps-00`
+- *The Evidence-Safety Gap* — https://doi.org/10.5281/zenodo.19914628
+- IETF Internet-Draft: `draft-pidlisnyi-aps-01`
 
 AIVSS scenario fixtures cite: *AIVSS Scoring System For OWASP Agentic AI Core Security Risks v0.8* (OWASP, accessed 2026-04-26).
 
