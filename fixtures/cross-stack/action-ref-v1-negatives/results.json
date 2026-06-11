@@ -1,0 +1,130 @@
+{
+  "fixture": "fixtures/cross-stack/action-ref-v1-negatives/vectors.json",
+  "source": "authored for argentum-core examples/conformance conventions; mirrors local branch fixtures/action-ref-v1-recompute @ 43223a658b6805c68a679f258a1dfb1a16964338 (local clone only, not pushed; see SOURCE.md)",
+  "sdk_module": "agent-passport-system dist/src/core/external-action-ref.js (computeExternalActionRefV1)",
+  "ran_at": "2026-06-11T17:08:26.645Z",
+  "failures": 0,
+  "vectors": [
+    {
+      "id": "0001-basic",
+      "kind": "positive",
+      "expected": "de7d7f40147b9b7f41134b14752aa36e3435bda89c51938ba358a69be04dccf6",
+      "stdlibDigest": "de7d7f40147b9b7f41134b14752aa36e3435bda89c51938ba358a69be04dccf6",
+      "sdkDigest": "de7d7f40147b9b7f41134b14752aa36e3435bda89c51938ba358a69be04dccf6",
+      "status": "MATCH"
+    },
+    {
+      "id": "0002-unicode-fields",
+      "kind": "positive",
+      "expected": "a5c0ec37b01673b6ca9d593d4dba6e6f40dafdfc25fde3ad3673dceb79b72cc4",
+      "stdlibDigest": "a5c0ec37b01673b6ca9d593d4dba6e6f40dafdfc25fde3ad3673dceb79b72cc4",
+      "sdkDigest": "a5c0ec37b01673b6ca9d593d4dba6e6f40dafdfc25fde3ad3673dceb79b72cc4",
+      "status": "MATCH"
+    },
+    {
+      "id": "0003-empty-scope",
+      "kind": "positive",
+      "expected": "8a5e53417ae5a4e1cdfc1659980ece6518611d7610c173ccf7d14121924b241e",
+      "stdlibDigest": "8a5e53417ae5a4e1cdfc1659980ece6518611d7610c173ccf7d14121924b241e",
+      "sdkDigest": "8a5e53417ae5a4e1cdfc1659980ece6518611d7610c173ccf7d14121924b241e",
+      "status": "MATCH"
+    },
+    {
+      "id": "0004-ms-floor",
+      "kind": "positive",
+      "expected": "01eb9688d2a1ababeb993c900bd7b7836f9b334f179030fafec2ecc8b33c4f6c",
+      "stdlibDigest": "01eb9688d2a1ababeb993c900bd7b7836f9b334f179030fafec2ecc8b33c4f6c",
+      "sdkDigest": "01eb9688d2a1ababeb993c900bd7b7836f9b334f179030fafec2ecc8b33c4f6c",
+      "status": "MATCH"
+    },
+    {
+      "id": "0005-ms-ceiling",
+      "kind": "positive",
+      "expected": "0cc0a719600948603fbefabb5167145df36215f63b7f677a0e84466540b445e5",
+      "stdlibDigest": "0cc0a719600948603fbefabb5167145df36215f63b7f677a0e84466540b445e5",
+      "sdkDigest": "0cc0a719600948603fbefabb5167145df36215f63b7f677a0e84466540b445e5",
+      "status": "MATCH"
+    },
+    {
+      "id": "neg-a01-received-order",
+      "kind": "negative(field_order_drift)",
+      "claimed": "5fcfb5213cbb304570a3cf4e2f472feba3cf9fd8c13410f14a45431fc9f72dd6",
+      "stdlibDigest": "fefa13abb3765bc5f9279b49ea5507a406799b7076611e1238e482cbd5dfb32d",
+      "sdkDigest": "fefa13abb3765bc5f9279b49ea5507a406799b7076611e1238e482cbd5dfb32d",
+      "failureStage": "recompute",
+      "status": "FAIL-CLOSED"
+    },
+    {
+      "id": "neg-a02-reversed-order",
+      "kind": "negative(field_order_drift)",
+      "claimed": "9c34dad62de307e4c65e34a56b83fa91be9efe221682580d8ed6813ecb9d1288",
+      "stdlibDigest": "6f028fc93f87cca54a0251da90a8de03c50c4cb19a8a915fa28b382959ce8c92",
+      "sdkDigest": "6f028fc93f87cca54a0251da90a8de03c50c4cb19a8a915fa28b382959ce8c92",
+      "failureStage": "recompute",
+      "status": "FAIL-CLOSED"
+    },
+    {
+      "id": "neg-b01-epoch-integer",
+      "kind": "negative(timestamp_form_drift)",
+      "claimed": "d807275082611d69aa0cf3fbd265ac52df68c380eb32e7e6614bc9df61415763",
+      "stdlibDigest": null,
+      "sdkDigest": "grammar-throw",
+      "failureStage": "grammar",
+      "status": "FAIL-CLOSED"
+    },
+    {
+      "id": "neg-b02-second-precision",
+      "kind": "negative(timestamp_form_drift)",
+      "claimed": "48862e6601dcdf9b951fbe1b41a9113231e02e775567813531ad8eb3ad8ee451",
+      "stdlibDigest": "d73b70c4c8fc900c54de705cb5d53bb735f774e1b248e9c975cc39bd06e9485b",
+      "sdkDigest": "d73b70c4c8fc900c54de705cb5d53bb735f774e1b248e9c975cc39bd06e9485b",
+      "failureStage": "recompute",
+      "status": "FAIL-CLOSED"
+    },
+    {
+      "id": "neg-b03-microsecond-precision",
+      "kind": "negative(timestamp_form_drift)",
+      "claimed": "fa3f63e9b37fe877bb8ffdc855577f031d022bee993989c01d98916c7eea2d16",
+      "stdlibDigest": "d461626a9ef4b3ab7fe59f2c5392d24143efc98306720bfa1f41373ce2326e10",
+      "sdkDigest": "d461626a9ef4b3ab7fe59f2c5392d24143efc98306720bfa1f41373ce2326e10",
+      "failureStage": "recompute",
+      "status": "FAIL-CLOSED"
+    },
+    {
+      "id": "neg-c01-agent-id-lowercased",
+      "kind": "negative(casing_drift)",
+      "claimed": "b63e4aba6b21f718cbd425972fe536b77645578d2cf4320074a9f9a01b887c65",
+      "stdlibDigest": "b5499f92b80552fa63518f9bf54095895cfd3f5b0c928914ae0b5789f8a54e28",
+      "sdkDigest": "b5499f92b80552fa63518f9bf54095895cfd3f5b0c928914ae0b5789f8a54e28",
+      "failureStage": "recompute",
+      "status": "FAIL-CLOSED"
+    },
+    {
+      "id": "neg-c02-agent-id-uppercased",
+      "kind": "negative(casing_drift)",
+      "claimed": "2d555e3e5191b7ebd935f3e2d9aaddaf7c3fb8fd478e8b6c0b407e22266b1303",
+      "stdlibDigest": "a7351a1d995d00e650a0c6051e9301e42880538068fdaa262d69cbed6c96e4c7",
+      "sdkDigest": "a7351a1d995d00e650a0c6051e9301e42880538068fdaa262d69cbed6c96e4c7",
+      "failureStage": "recompute",
+      "status": "FAIL-CLOSED"
+    },
+    {
+      "id": "neg-d01-scope-changed",
+      "kind": "negative(payload_drift)",
+      "claimed": "1bf527c864278ecbb6a1da5158264efd966fc29db453d88b6e7b658654493c7a",
+      "stdlibDigest": "4aea72656c085069fca26571158db1319c33456f704d78587904f1c2a28b16fe",
+      "sdkDigest": "4aea72656c085069fca26571158db1319c33456f704d78587904f1c2a28b16fe",
+      "failureStage": "recompute",
+      "status": "FAIL-CLOSED"
+    },
+    {
+      "id": "neg-d02-action-type-changed",
+      "kind": "negative(payload_drift)",
+      "claimed": "202f0cc855fc50602cfb3d96298381fb959f90447c916eadba86e147de340c1d",
+      "stdlibDigest": "e578a0a48ecc30530189109a54ea47e2476213ca5819640302a9c850e485605a",
+      "sdkDigest": "e578a0a48ecc30530189109a54ea47e2476213ca5819640302a9c850e485605a",
+      "failureStage": "recompute",
+      "status": "FAIL-CLOSED"
+    }
+  ]
+}
