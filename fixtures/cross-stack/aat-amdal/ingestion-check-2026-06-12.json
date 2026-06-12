@@ -1,0 +1,21 @@
+{
+ "ingested_at_utc": "2026-06-12T02:19:54Z",
+ "jwks_kid": "ab0502f7",
+ "jwks_fetched_live": true,
+ "results": [
+  {
+   "vector": "aat-2026-06-12-live",
+   "jti": "aat_Ac9XOt4hejyahmwG",
+   "signature": "valid",
+   "in_window_at_ingestion": false,
+   "window_verdict_at_ingestion": "exp_reject"
+  },
+  {
+   "vector": "aat-2026-06-12-expired",
+   "jti": "aat_rEXvU3SNeMV1Vrjn",
+   "signature": "valid",
+   "in_window_at_ingestion": false,
+   "window_verdict_at_ingestion": "exp_reject"
+  }
+ ]
+}
