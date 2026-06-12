@@ -91,6 +91,14 @@ The byte-faithful mirrored receipts in [`cross-impl-receipts/`](./cross-impl-rec
 
 The same three SHA-256s are surfaced by AgentGraph at [`https://agentgraph.co/.well-known/interop-harness.json`](https://agentgraph.co/.well-known/interop-harness.json) under the `cross_validation_receipts.receipt_sources.mirror.files_pinned_2026_05_02` block, with `source_commit` pinned to `arian-gogani/nobulex@d68fcee`. Reviewers can pull receipt artifacts from either [`arian-gogani/nobulex`](https://github.com/arian-gogani/nobulex) (originating) or this mirror and reproduce the byte-match independently — the maintainer-rerun-dependency gap is closed.
 
+### Cross-stack corpora (`fixtures/cross-stack/`)
+
+Two corpora added 2026-06-11/12:
+
+- [`action-ref-v1-negatives/`](./fixtures/cross-stack/action-ref-v1-negatives/): recomputation-property vectors for `action-ref-v1` (field-order, timestamp-form, casing, and payload drift), mirrored from the fixture set contributed upstream to `giskard09/argentum-core` (PR #12). Five positives double-derived, nine negatives with real drifted-form digests.
+- [`aat-amdal/`](./fixtures/cross-stack/aat-amdal/): weekly AgentLair AAT pairs (one live-window, one pre-expired) verified against the issuer JWKS, beginning 2026-06-17. Boundary semantics for the two layers are documented at [agent-passport.org/aat-aps-boundary.html](https://agent-passport.org/aat-aps-boundary.html). Vectors carry `verification_time`; runners evaluate windows against that instant so the corpus stays replayable.
+
+
 ### Forward pointer
 
 CTEF v0.3.2 §A "Conformance Appendix" was drafted by [@kenneives](https://github.com/kenneives) on 2026-05-04 in [A2A#1786 comment](https://github.com/a2aproject/A2A/issues/1786#issuecomment-4373904351). The §A normative text adopts:
