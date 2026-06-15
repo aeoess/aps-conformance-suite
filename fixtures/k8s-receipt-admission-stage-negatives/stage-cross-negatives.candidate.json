@@ -1,0 +1,155 @@
+{
+  "_candidate_banner": "CANDIDATE. Authored by AEOESS, offered for the kube-agentic-networking #298 stage family. Every verdict reproduces from this file alone under the closed stage_to_kind_to_verb table (self-checked 5/5). Candidate status pending the table decision on the equal-digest cross-stage case noted in the README.",
+  "_authored_against": {
+    "design": "stage_to_kind_to_verb, co-developed on kube-agentic-networking #243",
+    "reproduced_pr": "kubernetes-sigs/kube-agentic-networking #298",
+    "reproduced_head": "4055d9f173e0bcd5d0b0a531106c9fd929a0a704",
+    "bar": "whichever side authors, the other reproduces every verdict from this file alone"
+  },
+  "_intent": "Extend the #298 stage set with the negative directions it does not yet exercise: the reverse cross-stage object case, stage-kind rejects landing on the agent-declared object stage rather than controller-observed-object, and the unknown_stage verdict that the enum defines but no vector exercises.",
+  "canonicalization": {
+    "profile": "jcs-json-v1",
+    "hash": "sha256",
+    "digest_encoding": "hex",
+    "digest_prefix": "sha256:"
+  },
+  "schema": "receipt_admission_conformance_vectors.v0.candidate",
+  "spec": {
+    "stage_model": {
+      "note": "Reference copy of the closed table from #298. The kind is fixed per stage; the verb derives from the stage. Object stages verify by recompute, the effect stage by compare.",
+      "stage_to_kind_to_verb": {
+        "agent-declared": {
+          "kind": "object",
+          "verb": "recompute"
+        },
+        "controller-observed-object": {
+          "kind": "object",
+          "verb": "recompute"
+        },
+        "observed-effect": {
+          "kind": "effect",
+          "verb": "compare"
+        }
+      }
+    },
+    "stage_verdicts": {
+      "bound": "object stage; the commitment digest equals the recompute at the named stage",
+      "digest_mismatch": "object kind, same stage; the recompute diverges (tampering)",
+      "cross_stage_digest_mismatch": "object kind, commitment stage differs from the recompute stage; a digest mismatch caused by the pipeline (e.g. defaulting), not tampering",
+      "stage_kind_mismatch": "the required stage and the commitment stage are different kinds; a category error rejected before any recompute or compare",
+      "unknown_stage": "the named stage is not in the closed enum",
+      "confirmed": "effect stage; an independent observation matches the declaration",
+      "contradicted": "effect stage; an independent observation diverges from the declaration",
+      "unobserved": "effect stage; no independent observation, so the receipt stays a declaration"
+    }
+  },
+  "vectors": [
+    {
+      "id": "cand1_cross_stage_controller_to_declared",
+      "family": "stage",
+      "_asserts": "Reverse of st3. The commitment was taken at controller-observed-object (defaulted object) but the required stage is agent-declared. Object kind on both sides, stages differ, so the divergence is the pipeline, not tamper.",
+      "commitment": {
+        "stage": "controller-observed-object",
+        "object_digest": "sha256:09ba9cedc033ff71103dcd7efda1f3be9bb6cd2889a34360a87320cec2fe51ba"
+      },
+      "required_stage": "agent-declared",
+      "recompute_object": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "metadata": {
+          "name": "deploy-key-agent",
+          "namespace": "ci"
+        },
+        "spec": {
+          "replicas": 1
+        }
+      },
+      "expected": {
+        "stage": "cross_stage_digest_mismatch",
+        "stage_reason": "commitment_stage_differs_from_recompute_stage_pipeline_not_tamper"
+      }
+    },
+    {
+      "id": "cand2_cross_kind_effect_vs_agent_declared",
+      "family": "stage",
+      "_asserts": "Effect commitment required at the agent-declared object stage. st5 used controller-observed-object as the object side; this exercises the other object stage. Different kinds, rejected before any verb.",
+      "commitment": {
+        "stage": "observed-effect",
+        "declares": {
+          "decision": "allow",
+          "effect": "create_deploy_key",
+          "target": "sha256:repo-a"
+        }
+      },
+      "required_stage": "agent-declared",
+      "expected": {
+        "stage": "stage_kind_mismatch",
+        "stage_reason": "cross_kind_decided_before_verb"
+      }
+    },
+    {
+      "id": "cand3_cross_kind_agent_declared_vs_effect",
+      "family": "stage",
+      "_asserts": "Object commitment at agent-declared required at the effect stage. st6 used a controller-observed-object commitment; this exercises the agent-declared object stage. Different kinds, rejected before any verb.",
+      "commitment": {
+        "stage": "agent-declared",
+        "object_digest": "sha256:7229caa820ff06fe2efd4bacd805b0f75891bd66297d234c450d9d30a3a41ff0"
+      },
+      "required_stage": "observed-effect",
+      "expected": {
+        "stage": "stage_kind_mismatch",
+        "stage_reason": "cross_kind_decided_before_verb"
+      }
+    },
+    {
+      "id": "cand4_unknown_required_stage",
+      "family": "stage",
+      "_asserts": "The required stage names a value outside the closed enum. The #298 set defines unknown_stage but no vector exercises it. Adjacent to the cross-stage and stage-kind ask, included for enum coverage.",
+      "commitment": {
+        "stage": "agent-declared",
+        "object_digest": "sha256:7229caa820ff06fe2efd4bacd805b0f75891bd66297d234c450d9d30a3a41ff0"
+      },
+      "required_stage": "controller-applied",
+      "recompute_object": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "metadata": {
+          "name": "deploy-key-agent",
+          "namespace": "ci"
+        },
+        "spec": {
+          "replicas": 1
+        }
+      },
+      "expected": {
+        "stage": "unknown_stage",
+        "stage_reason": "named_stage_not_in_closed_enum"
+      }
+    },
+    {
+      "id": "cand5_unknown_commitment_stage",
+      "family": "stage",
+      "_asserts": "The commitment names a stage outside the closed enum. Covers the unknown_stage path from the commitment side as well as the required side.",
+      "commitment": {
+        "stage": "agent-applied",
+        "object_digest": "sha256:7229caa820ff06fe2efd4bacd805b0f75891bd66297d234c450d9d30a3a41ff0"
+      },
+      "required_stage": "agent-declared",
+      "recompute_object": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "metadata": {
+          "name": "deploy-key-agent",
+          "namespace": "ci"
+        },
+        "spec": {
+          "replicas": 1
+        }
+      },
+      "expected": {
+        "stage": "unknown_stage",
+        "stage_reason": "named_stage_not_in_closed_enum"
+      }
+    }
+  ]
+}
