@@ -1,0 +1,47 @@
+{
+  "vector_id": "V3-expired-parent-reject",
+  "aae_shape": "chain-envelope",
+  "description": "Child scope [read] narrows parent [read, write] correctly and the child window is current, but the parent's validity.not_after is in the past. An expired ancestor invalidates the whole chain.",
+  "expected_result": "REJECT",
+  "expected_reason": "parent delegation expired (validity.not_after in the past); expiry of an ancestor invalidates the subtree",
+  "expected_reason_code": "DELEGATION_EXPIRED",
+  "chain": [
+    {
+      "vc_id": "urn:aae:vc:v3:parent",
+      "issuer": "did:aae:acme-root",
+      "subject": "did:aae:team-lead",
+      "mandate": {
+        "actions": ["read", "write"]
+      },
+      "constraints": {
+        "resource": "repo:acme/*"
+      },
+      "validity": {
+        "not_before": "2026-01-01T00:00:00Z",
+        "not_after": "2026-03-01T00:00:00Z",
+        "single_use": false,
+        "revocation_check": { "mechanism": "status_list_2021", "status": "active" }
+      }
+    },
+    {
+      "vc_id": "urn:aae:vc:v3:child",
+      "issuer": "did:aae:team-lead",
+      "subject": "did:aae:reviewer-agent",
+      "delegator_did": "did:aae:team-lead",
+      "depth": 1,
+      "max_depth": 2,
+      "mandate": {
+        "actions": ["read"]
+      },
+      "constraints": {
+        "resource": "repo:acme/colmena"
+      },
+      "validity": {
+        "not_before": "2026-01-01T00:00:00Z",
+        "not_after": "2030-01-01T00:00:00Z",
+        "single_use": false,
+        "revocation_check": { "mechanism": "status_list_2021", "status": "active" }
+      }
+    }
+  ]
+}

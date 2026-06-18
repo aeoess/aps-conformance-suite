@@ -1,0 +1,47 @@
+{
+  "vector_id": "V1-narrowing-valid",
+  "aae_shape": "chain-envelope",
+  "description": "Child mandate.actions [read] is a strict subset of parent [read, write]. Both validity windows current, no revocation. Monotonic narrowing holds.",
+  "expected_result": "ACCEPT",
+  "expected_reason": null,
+  "expected_reason_code": null,
+  "chain": [
+    {
+      "vc_id": "urn:aae:vc:v1:parent",
+      "issuer": "did:aae:acme-root",
+      "subject": "did:aae:team-lead",
+      "mandate": {
+        "actions": ["read", "write"]
+      },
+      "constraints": {
+        "resource": "repo:acme/*"
+      },
+      "validity": {
+        "not_before": "2026-01-01T00:00:00Z",
+        "not_after": "2030-01-01T00:00:00Z",
+        "single_use": false,
+        "revocation_check": { "mechanism": "status_list_2021", "status": "active" }
+      }
+    },
+    {
+      "vc_id": "urn:aae:vc:v1:child",
+      "issuer": "did:aae:team-lead",
+      "subject": "did:aae:reviewer-agent",
+      "delegator_did": "did:aae:team-lead",
+      "depth": 1,
+      "max_depth": 2,
+      "mandate": {
+        "actions": ["read"]
+      },
+      "constraints": {
+        "resource": "repo:acme/colmena"
+      },
+      "validity": {
+        "not_before": "2026-01-01T00:00:00Z",
+        "not_after": "2030-01-01T00:00:00Z",
+        "single_use": false,
+        "revocation_check": { "mechanism": "status_list_2021", "status": "active" }
+      }
+    }
+  ]
+}

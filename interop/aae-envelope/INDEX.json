@@ -1,0 +1,45 @@
+{
+  "suite": "aae-envelope",
+  "shape": "MoltyCel AAE chain-envelope: { \"chain\": [parent, child] }",
+  "description": "Four chain-envelope conformance vectors in the AAE shape, each decided by the shipped APS verifier (verifyDelegation + scopeCovers) via a small AAE->APS delegation-chain adapter.",
+  "verifier": "agent-passport-system dist (verifyDelegation: signature/expiry/notBefore/revocation/depth; scopeCovers: monotonic narrowing)",
+  "runner": "interop/aae-envelope/verify.ts (tsx)",
+  "vectors": [
+    {
+      "id": "V1-narrowing-valid",
+      "file": "V1-narrowing-valid.json",
+      "expected_result": "ACCEPT",
+      "expected_reason": null,
+      "aae_section": "§2.2/2.3 scope (mandate.actions); child is a strict subset of parent",
+      "aps_reason_code": null,
+      "aps_reference": "tests/property-delegation.test.ts (INV-2 Scope Monotonic Narrowing); core scopeCovers"
+    },
+    {
+      "id": "V2-widened-scope-reject",
+      "file": "V2-widened-scope-reject.json",
+      "expected_result": "REJECT",
+      "expected_reason": "scope-widening: child_scope is not a subset of parent_scope (child grants write/delete the delegator does not hold)",
+      "aae_section": "§6 attenuation/cycle; widening violates monotonic attenuation",
+      "aps_reason_code": "SCOPE_WIDENING",
+      "aps_reference": "tests/property-delegation.test.ts (INV-2) and tests/v2/delegation-escalation.test.ts (delegation_scope_expansion); subDelegate raises 'Scope violation: [..] not in parent scope [..]'"
+    },
+    {
+      "id": "V3-expired-parent-reject",
+      "file": "V3-expired-parent-reject.json",
+      "expected_result": "REJECT",
+      "expected_reason": "parent validity.not_after is in the past; an expired ancestor invalidates the subtree",
+      "aae_section": "§2.4 validity window (temporal)",
+      "aps_reason_code": "DELEGATION_EXPIRED",
+      "aps_reference": "tests/conformance/golden-fixtures/NEG-DELEGATION-EXPIRED.json; verifyDelegation emits 'Delegation expired'"
+    },
+    {
+      "id": "V4-revoked-parent-cascade-reject",
+      "file": "V4-revoked-parent-cascade-reject.json",
+      "expected_result": "REJECT",
+      "expected_reason": "parent revocation_check resolves to revoked; revocation of an ancestor cascades to the subtree at verification time (check-time, not next-lookup)",
+      "aae_section": "§6.5 revocation",
+      "aps_reason_code": "DELEGATION_REVOKED",
+      "aps_reference": "tests/conformance/golden-fixtures/NEG-STALE-REVOCATION.json; verifyDelegation with cachedRevocationState marks the node revoked at check time"
+    }
+  ]
+}

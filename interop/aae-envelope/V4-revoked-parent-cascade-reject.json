@@ -1,0 +1,47 @@
+{
+  "vector_id": "V4-revoked-parent-cascade-reject",
+  "aae_shape": "chain-envelope",
+  "description": "Child credential is fully valid on its own (narrows parent [read, write] to [read], current window, not revoked). The parent's revocation_check resolves to REVOKED at verification time. Revoking the parent invalidates the subtree. This is a CHECK-TIME cascade: the rejection happens when the chain is verified against current revocation state, not on a later lookup. Matches tests/conformance/golden-fixtures/NEG-STALE-REVOCATION.json semantics (a verifier that ignores revocation state would wrongly accept).",
+  "expected_result": "REJECT",
+  "expected_reason": "parent delegation revoked; revocation of an ancestor cascades to the subtree at verification time (check-time, not next-lookup)",
+  "expected_reason_code": "DELEGATION_REVOKED",
+  "chain": [
+    {
+      "vc_id": "urn:aae:vc:v4:parent",
+      "issuer": "did:aae:acme-root",
+      "subject": "did:aae:team-lead",
+      "mandate": {
+        "actions": ["read", "write"]
+      },
+      "constraints": {
+        "resource": "repo:acme/*"
+      },
+      "validity": {
+        "not_before": "2026-01-01T00:00:00Z",
+        "not_after": "2030-01-01T00:00:00Z",
+        "single_use": false,
+        "revocation_check": { "mechanism": "status_list_2021", "status": "revoked", "revoked_at": "2026-05-15T00:00:00Z" }
+      }
+    },
+    {
+      "vc_id": "urn:aae:vc:v4:child",
+      "issuer": "did:aae:team-lead",
+      "subject": "did:aae:reviewer-agent",
+      "delegator_did": "did:aae:team-lead",
+      "depth": 1,
+      "max_depth": 2,
+      "mandate": {
+        "actions": ["read"]
+      },
+      "constraints": {
+        "resource": "repo:acme/colmena"
+      },
+      "validity": {
+        "not_before": "2026-01-01T00:00:00Z",
+        "not_after": "2030-01-01T00:00:00Z",
+        "single_use": false,
+        "revocation_check": { "mechanism": "status_list_2021", "status": "active" }
+      }
+    }
+  ]
+}
