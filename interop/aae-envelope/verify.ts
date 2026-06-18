@@ -26,7 +26,8 @@ import { fileURLToPath } from 'node:url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 // ── Load the SHIPPED APS SDK verifier (built dist; no source modified) ──
-const SDK = `${process.env.HOME}/agent-passport-system/dist/src/index.js`
+// SDK path resolves from APS_SDK_PATH when set, else the default local build location.
+const SDK = process.env.APS_SDK_PATH || `${process.env.HOME}/agent-passport-system/dist/src/index.js`
 const { generateKeyPair, canonicalize, sign, verifyDelegation, scopeCovers } =
   await import(SDK)
 

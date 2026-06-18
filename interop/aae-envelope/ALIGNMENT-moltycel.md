@@ -71,6 +71,8 @@ later lookup.
 
 ## Reproduce
 
+Prerequisite: `verify.ts` loads the shipped APS SDK from `$HOME/agent-passport-system/dist/src/index.js` by default. Build the SDK there, or set `APS_SDK_PATH` to your built `dist/src/index.js`. The cross-encoding steps expect MoltyCel's repo at `/tmp/aae-moltycel` (override with `AAE_MOLTYCEL_REPO`).
+
 ```
 # APS canonical (source of truth)
 cd aps-conformance-suite && npx tsx interop/aae-envelope/verify.ts
