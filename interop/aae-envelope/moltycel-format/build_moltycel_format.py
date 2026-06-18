@@ -124,7 +124,7 @@ def write(filename: str, vector: dict) -> None:
 # --- the four re-encodings (mirror interop/aae-envelope/V1-V4) ----------------
 
 def build():
-    # V1 — narrowing valid: parent [read,write] -> child [read] (subset). ACCEPT.
+    # V1 - narrowing valid: parent [read,write] -> child [read] (subset). ACCEPT.
     p1_id = "urn:uuid:00000091-0000-4000-8000-0000000000a0"
     p1 = vc(p1_id, REGISTRY, AGENT_A, {
         "mandate": root_mandate(["read", "write"]),
@@ -139,7 +139,7 @@ def build():
     })
     write("V1-narrowing-valid.json", {
         "id": "aae-vector-91",
-        "name": "APS V1 cross-encoding — narrowing valid (child actions subset of parent)",
+        "name": "APS V1 cross-encoding: narrowing valid (child actions subset of parent)",
         "description": "ONE-TIME APS->AAE cross-encoding of interop/aae-envelope/V1-narrowing-valid. Depth-1 delegated AAE (agent-a->agent-b) whose actions [read] are a subset of the parent [read, write]; both windows current; no revocation.",
         "section_ref": f"{SECTION} §3, §5 step 9",
         "input": {"secured_aae": sign_jws(c1, AGENT_A_KEY), "context": {
@@ -153,7 +153,7 @@ def build():
         "rationale": "Mirrors APS V1: child actions [read] subset parent [read, write], parent->child link valid, both windows current, no revocation. APS verifyDelegation+scopeCovers ACCEPT; AAE §5 step 9 ACCEPT.",
     })
 
-    # V2 — widened scope: parent [read] -> child [read,write,delete] (superset). REJECT.
+    # V2 - widened scope: parent [read] -> child [read,write,delete] (superset). REJECT.
     p2_id = "urn:uuid:00000092-0000-4000-8000-0000000000a0"
     p2 = vc(p2_id, REGISTRY, AGENT_A, {
         "mandate": root_mandate(["read"]),
@@ -168,7 +168,7 @@ def build():
     })
     write("V2-widened-scope-reject.json", {
         "id": "aae-vector-92",
-        "name": "APS V2 cross-encoding — widened scope (child actions superset of parent)",
+        "name": "APS V2 cross-encoding: widened scope (child actions superset of parent)",
         "description": "ONE-TIME APS->AAE cross-encoding of interop/aae-envelope/V2-widened-scope-reject. Delegated AAE lists [read, write, delete]; the parent grants only [read]; write/delete are not held by the delegator.",
         "section_ref": f"{SECTION} §3 (Actions subset), §5 step 9",
         "input": {"secured_aae": sign_jws(c2, AGENT_A_KEY), "context": {
@@ -182,7 +182,7 @@ def build():
         "rationale": "Mirrors APS V2 (SCOPE_WIDENING): child_scope [read, write, delete] is not a subset of parent [read]. AAE §3 rejects at step 9 delegated_actions_not_subset; APS rejects via scopeCovers (child_scope not subset of parent_scope).",
     })
 
-    # V3 — expired parent: parent not_after in the past, child current. REJECT (cascade).
+    # V3 - expired parent: parent not_after in the past, child current. REJECT (cascade).
     p3_id = "urn:uuid:00000093-0000-4000-8000-0000000000a0"
     p3 = vc(p3_id, REGISTRY, AGENT_A, {
         "mandate": root_mandate(["read", "write"]),
@@ -197,7 +197,7 @@ def build():
     })
     write("V3-expired-parent-reject.json", {
         "id": "aae-vector-93",
-        "name": "APS V3 cross-encoding — expired parent invalidates chain",
+        "name": "APS V3 cross-encoding: expired parent invalidates chain",
         "description": "ONE-TIME APS->AAE cross-encoding of interop/aae-envelope/V3-expired-parent-reject. The child window is current but the parent's not_after is in the past; an expired ancestor invalidates the subtree.",
         "section_ref": f"{SECTION} §2.4 (not_after), §5 step 9 (ancestor temporal)",
         "input": {"secured_aae": sign_jws(c3, AGENT_A_KEY), "context": {
@@ -211,7 +211,7 @@ def build():
         "rationale": "Mirrors APS V3 (DELEGATION_EXPIRED): the presented child is temporally valid, but step 9 re-checks each ancestor's temporal validity; the parent's not_after (10:00Z) precedes current_time (12:00Z), so the chain is rejected at step 9 expired_not_after. APS reaches the same outcome by cascading parent expiry to the subtree.",
     })
 
-    # V4 — revoked parent (check-time cascade): child fully valid, parent revoked. REJECT.
+    # V4 - revoked parent (check-time cascade): child fully valid, parent revoked. REJECT.
     p4_id = "urn:uuid:00000094-0000-4000-8000-0000000000a0"
     p4 = vc(p4_id, REGISTRY, AGENT_A, {
         "mandate": root_mandate(["read", "write"]),
@@ -227,7 +227,7 @@ def build():
     })
     write("V4-revoked-parent-cascade-reject.json", {
         "id": "aae-vector-94",
-        "name": "APS V4 cross-encoding — revoked parent cascades to child at check time",
+        "name": "APS V4 cross-encoding: revoked parent cascades to child at check time",
         "description": "ONE-TIME APS->AAE cross-encoding of interop/aae-envelope/V4-revoked-parent-cascade-reject. The child is fully valid on its own; the parent's revocation endpoint reports revoked at verification time, invalidating the subtree. CHECK-TIME cascade, not next-lookup.",
         "section_ref": f"{SECTION} §6.5 (Delegation Revocation), §5 step 9 (+ step 8 per ancestor)",
         "input": {"secured_aae": sign_jws(c4, AGENT_A_KEY), "context": {

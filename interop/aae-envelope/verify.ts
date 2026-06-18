@@ -5,7 +5,7 @@
 // Loads the four V*.json vectors (MoltyCel AAE chain-envelope shape:
 // {"chain":[parent, child]}), maps each AAE credential to a REAL APS
 // delegation via a small adapter, then decides each chain with the SHIPPED
-// APS verifier primitives — verifyDelegation (signature / expiry / notBefore /
+// APS verifier primitives - verifyDelegation (signature / expiry / notBefore /
 // revocation / depth) and scopeCovers (monotonic narrowing). The decision is
 // real SDK output; this runner only adapts inputs and asserts the expected
 // result + reason code per vector.
@@ -17,7 +17,7 @@
 //
 // V4 note: revocation is consulted WHEN THE CHAIN IS VERIFIED (check-time
 // cascade). A revoked parent invalidates the child subtree in the same
-// verification pass — not on a later lookup. Matches NEG-STALE-REVOCATION.
+// verification pass - not on a later lookup. Matches NEG-STALE-REVOCATION.
 
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
@@ -64,7 +64,7 @@ interface Decision {
 
 // ── Adapter: one AAE credential -> one signed APS delegation ──
 // Keys are generated per DID so that a child's delegatedBy (issuer key) equals
-// its parent's delegatedTo (subject key) — the cryptographic chain link. The
+// its parent's delegatedTo (subject key) - the cryptographic chain link. The
 // AAE validity window maps directly onto the APS delegation's notBefore /
 // expiresAt, and mandate.actions onto APS scope tokens. Signing uses the SDK's
 // own canonicalize + sign, so verifyDelegation's signature check is real.

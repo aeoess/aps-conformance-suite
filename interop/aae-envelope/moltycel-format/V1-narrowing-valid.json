@@ -1,6 +1,6 @@
 {
   "id": "aae-vector-91",
-  "name": "APS V1 cross-encoding \u2014 narrowing valid (child actions subset of parent)",
+  "name": "APS V1 cross-encoding: narrowing valid (child actions subset of parent)",
   "description": "ONE-TIME APS->AAE cross-encoding of interop/aae-envelope/V1-narrowing-valid. Depth-1 delegated AAE (agent-a->agent-b) whose actions [read] are a subset of the parent [read, write]; both windows current; no revocation.",
   "section_ref": "draft-kroehl-agentic-trust-aae-00 \u00a73, \u00a75 step 9",
   "input": {

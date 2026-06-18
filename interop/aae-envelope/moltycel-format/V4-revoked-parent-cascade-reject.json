@@ -1,6 +1,6 @@
 {
   "id": "aae-vector-94",
-  "name": "APS V4 cross-encoding \u2014 revoked parent cascades to child at check time",
+  "name": "APS V4 cross-encoding: revoked parent cascades to child at check time",
   "description": "ONE-TIME APS->AAE cross-encoding of interop/aae-envelope/V4-revoked-parent-cascade-reject. The child is fully valid on its own; the parent's revocation endpoint reports revoked at verification time, invalidating the subtree. CHECK-TIME cascade, not next-lookup.",
   "section_ref": "draft-kroehl-agentic-trust-aae-00 \u00a76.5 (Delegation Revocation), \u00a75 step 9 (+ step 8 per ancestor)",
   "input": {

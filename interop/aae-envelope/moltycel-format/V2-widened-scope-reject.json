@@ -1,6 +1,6 @@
 {
   "id": "aae-vector-92",
-  "name": "APS V2 cross-encoding \u2014 widened scope (child actions superset of parent)",
+  "name": "APS V2 cross-encoding: widened scope (child actions superset of parent)",
   "description": "ONE-TIME APS->AAE cross-encoding of interop/aae-envelope/V2-widened-scope-reject. Delegated AAE lists [read, write, delete]; the parent grants only [read]; write/delete are not held by the delegator.",
   "section_ref": "draft-kroehl-agentic-trust-aae-00 \u00a73 (Actions subset), \u00a75 step 9",
   "input": {

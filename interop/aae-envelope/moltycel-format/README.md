@@ -1,4 +1,4 @@
-# moltycel-format/ — ONE-TIME cross-encoding (NOT a maintained set)
+# moltycel-format/ - ONE-TIME cross-encoding (NOT a maintained set)
 
 These four files are a **one-time cross-encoding** of APS's canonical AAE-envelope
 vectors (`../V1-narrowing-valid.json` … `../V4-revoked-parent-cascade-reject.json`)

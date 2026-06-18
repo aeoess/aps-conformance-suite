@@ -1,6 +1,6 @@
 {
   "id": "aae-vector-93",
-  "name": "APS V3 cross-encoding \u2014 expired parent invalidates chain",
+  "name": "APS V3 cross-encoding: expired parent invalidates chain",
   "description": "ONE-TIME APS->AAE cross-encoding of interop/aae-envelope/V3-expired-parent-reject. The child window is current but the parent's not_after is in the past; an expired ancestor invalidates the subtree.",
   "section_ref": "draft-kroehl-agentic-trust-aae-00 \u00a72.4 (not_after), \u00a75 step 9 (ancestor temporal)",
   "input": {
