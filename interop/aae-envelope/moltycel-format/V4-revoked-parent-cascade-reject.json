@@ -1,0 +1,31 @@
+{
+  "id": "aae-vector-94",
+  "name": "APS V4 cross-encoding \u2014 revoked parent cascades to child at check time",
+  "description": "ONE-TIME APS->AAE cross-encoding of interop/aae-envelope/V4-revoked-parent-cascade-reject. The child is fully valid on its own; the parent's revocation endpoint reports revoked at verification time, invalidating the subtree. CHECK-TIME cascade, not next-lookup.",
+  "section_ref": "draft-kroehl-agentic-trust-aae-00 \u00a76.5 (Delegation Revocation), \u00a75 step 9 (+ step 8 per ancestor)",
+  "input": {
+    "secured_aae": "eyJhbGciOiJFZERTQSIsImN0eSI6ImFhZStqc29uIiwia2lkIjoiZGlkOndlYjpleGFtcGxlLmNvbTphZ2VudC1hI2tleS0xIn0.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL21vbHRydXN0LmNoL2NvbnRleHRzL2FhZS92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiQWdlbnRBdXRob3JpemF0aW9uRW52ZWxvcGUiXSwiaWQiOiJ1cm46dXVpZDowMDAwMDA5NC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwYjEiLCJpc3N1ZXIiOiJkaWQ6d2ViOmV4YW1wbGUuY29tOmFnZW50LWEiLCJ2YWxpZEZyb20iOiIyMDI2LTA1LTIwVDA4OjAwOjAwWiIsImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiZGlkOndlYjpleGFtcGxlLmNvbTphZ2VudC1iIiwiYWFlIjp7Im1hbmRhdGUiOnsiYWN0aW9ucyI6WyJyZWFkIl0sImRlbGVnYXRpb24iOnsiZGVsZWdhdG9yX2RpZCI6ImRpZDp3ZWI6ZXhhbXBsZS5jb206YWdlbnQtYSIsImRlbGVnYXRvcl9hYWVfaWQiOiJ1cm46dXVpZDowMDAwMDA5NC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwYTAiLCJkZWxlZ2F0b3JfYWFlX3VyaSI6Imh0dHBzOi8vYWFlLmV4YW1wbGUvcC91cm46dXVpZDowMDAwMDA5NC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwYTAiLCJkZWxlZ2F0b3JfYWFlX2hhc2giOiJzaGEtMjU2OlVBUnRCNWYzYWYwa3ZNam1oLWpLV01GZlh4M0sxWEt6T0lzSmVNai0xZmciLCJkZXB0aCI6MSwibWF4X2RlcHRoIjoyfX0sImNvbnN0cmFpbnRzIjp7fSwidmFsaWRpdHkiOnsibm90X2JlZm9yZSI6IjIwMjYtMDUtMjBUMDg6MDA6MDBaIiwibm90X2FmdGVyIjoiMjAyNi0wNS0yMFQxNjowMDowMFoiLCJzaW5nbGVfdXNlIjpmYWxzZX19fX0.q8fnVWaFwRfPnYJ3dfL9808NavyudSzWs-0c1L9twWPQS2Y-g6bNfv4KYvTEManlhqns-yo1FgnWMIYKPW-qDA",
+    "context": {
+      "current_time": "2026-05-20T12:00:00Z",
+      "requested_action": "read",
+      "action_context": {},
+      "subject_binding": {
+        "challenge_response_valid": true
+      },
+      "delegation_chain": [
+        "eyJhbGciOiJFZERTQSIsImN0eSI6ImFhZStqc29uIiwia2lkIjoiZGlkOndlYjpleGFtcGxlLmNvbTpyZWdpc3RyeSNrZXktMSJ9.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL21vbHRydXN0LmNoL2NvbnRleHRzL2FhZS92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiQWdlbnRBdXRob3JpemF0aW9uRW52ZWxvcGUiXSwiaWQiOiJ1cm46dXVpZDowMDAwMDA5NC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwYTAiLCJpc3N1ZXIiOiJkaWQ6d2ViOmV4YW1wbGUuY29tOnJlZ2lzdHJ5IiwidmFsaWRGcm9tIjoiMjAyNi0wNS0yMFQwODowMDowMFoiLCJjcmVkZW50aWFsU3ViamVjdCI6eyJpZCI6ImRpZDp3ZWI6ZXhhbXBsZS5jb206YWdlbnQtYSIsImFhZSI6eyJtYW5kYXRlIjp7ImFjdGlvbnMiOlsicmVhZCIsIndyaXRlIl0sInB1cnBvc2UiOiJBUFMgY3Jvc3MtZW5jb2Rpbmcgc2NlbmFyaW8iLCJzY29wZSI6ImFwcy1pbnRlcm9wIiwicHJpbmNpcGFsX2RpZCI6ImRpZDp3ZWI6ZXhhbXBsZS5jb206ZW50ZXJwcmlzZS1jb3JwIiwiZGVsZWdhdGlvbl9wb2xpY3kiOnsibWF4X2RlcHRoIjoyfX0sImNvbnN0cmFpbnRzIjp7fSwidmFsaWRpdHkiOnsibm90X2JlZm9yZSI6IjIwMjYtMDUtMjBUMDg6MDA6MDBaIiwibm90X2FmdGVyIjoiMjAyNi0wNS0yMFQxNjowMDowMFoiLCJzaW5nbGVfdXNlIjpmYWxzZSwicmV2b2NhdGlvbl9jaGVjayI6Imh0dHBzOi8vYXBpLmV4YW1wbGUuY29tL2FhZS9yZXZvY2F0aW9uL3tpZH0ifX19fQ.dxYAcVhBGr7qNn7DJM1xR7dCOZodlbtMOqFaH2ywuqvt8vDsS0wKptxm0Lzs_mvKtVUo2MXfKt2nYr0jNjxJBw"
+      ],
+      "revocation_responses": {
+        "urn:uuid:00000094-0000-4000-8000-0000000000a0": {
+          "revoked": true
+        }
+      }
+    }
+  },
+  "expected": {
+    "result": "REJECT",
+    "verification_step": 9,
+    "rejection_reason": "ancestor_revoked"
+  },
+  "rationale": "Mirrors APS V4 (DELEGATION_REVOKED, check-time cascade): the child credential is independently valid, but step 9 applies the revocation check to each ancestor at verification time; the parent reports revoked:true so the descendant is rejected at step 9 ancestor_revoked. APS reaches the same outcome: a revoked parent invalidates the subtree when the chain is verified."
+}

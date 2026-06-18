@@ -1,0 +1,26 @@
+{
+  "id": "aae-vector-92",
+  "name": "APS V2 cross-encoding \u2014 widened scope (child actions superset of parent)",
+  "description": "ONE-TIME APS->AAE cross-encoding of interop/aae-envelope/V2-widened-scope-reject. Delegated AAE lists [read, write, delete]; the parent grants only [read]; write/delete are not held by the delegator.",
+  "section_ref": "draft-kroehl-agentic-trust-aae-00 \u00a73 (Actions subset), \u00a75 step 9",
+  "input": {
+    "secured_aae": "eyJhbGciOiJFZERTQSIsImN0eSI6ImFhZStqc29uIiwia2lkIjoiZGlkOndlYjpleGFtcGxlLmNvbTphZ2VudC1hI2tleS0xIn0.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL21vbHRydXN0LmNoL2NvbnRleHRzL2FhZS92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiQWdlbnRBdXRob3JpemF0aW9uRW52ZWxvcGUiXSwiaWQiOiJ1cm46dXVpZDowMDAwMDA5Mi0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwYjEiLCJpc3N1ZXIiOiJkaWQ6d2ViOmV4YW1wbGUuY29tOmFnZW50LWEiLCJ2YWxpZEZyb20iOiIyMDI2LTA1LTIwVDA4OjAwOjAwWiIsImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiZGlkOndlYjpleGFtcGxlLmNvbTphZ2VudC1iIiwiYWFlIjp7Im1hbmRhdGUiOnsiYWN0aW9ucyI6WyJyZWFkIiwid3JpdGUiLCJkZWxldGUiXSwiZGVsZWdhdGlvbiI6eyJkZWxlZ2F0b3JfZGlkIjoiZGlkOndlYjpleGFtcGxlLmNvbTphZ2VudC1hIiwiZGVsZWdhdG9yX2FhZV9pZCI6InVybjp1dWlkOjAwMDAwMDkyLTAwMDAtNDAwMC04MDAwLTAwMDAwMDAwMDBhMCIsImRlbGVnYXRvcl9hYWVfdXJpIjoiaHR0cHM6Ly9hYWUuZXhhbXBsZS9wL3Vybjp1dWlkOjAwMDAwMDkyLTAwMDAtNDAwMC04MDAwLTAwMDAwMDAwMDBhMCIsImRlbGVnYXRvcl9hYWVfaGFzaCI6InNoYS0yNTY6YlF3OUNpWnpiMTZDblgwUV8ydW9JSEs5dFRrNk43eGlIV1JOLTg0YnZmdyIsImRlcHRoIjoxLCJtYXhfZGVwdGgiOjJ9fSwiY29uc3RyYWludHMiOnt9LCJ2YWxpZGl0eSI6eyJub3RfYmVmb3JlIjoiMjAyNi0wNS0yMFQwODowMDowMFoiLCJub3RfYWZ0ZXIiOiIyMDI2LTA1LTIwVDE2OjAwOjAwWiIsInNpbmdsZV91c2UiOmZhbHNlfX19fQ.SYw9hBL_Y0pfgFNTSZyKueOQIHjQe0Copss86st_H07xyf8m7kab_yXr07_RvFafxrlEtxK1ex9blDl-yH1sBQ",
+    "context": {
+      "current_time": "2026-05-20T12:00:00Z",
+      "requested_action": "read",
+      "action_context": {},
+      "subject_binding": {
+        "challenge_response_valid": true
+      },
+      "delegation_chain": [
+        "eyJhbGciOiJFZERTQSIsImN0eSI6ImFhZStqc29uIiwia2lkIjoiZGlkOndlYjpleGFtcGxlLmNvbTpyZWdpc3RyeSNrZXktMSJ9.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL21vbHRydXN0LmNoL2NvbnRleHRzL2FhZS92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiQWdlbnRBdXRob3JpemF0aW9uRW52ZWxvcGUiXSwiaWQiOiJ1cm46dXVpZDowMDAwMDA5Mi0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwYTAiLCJpc3N1ZXIiOiJkaWQ6d2ViOmV4YW1wbGUuY29tOnJlZ2lzdHJ5IiwidmFsaWRGcm9tIjoiMjAyNi0wNS0yMFQwODowMDowMFoiLCJjcmVkZW50aWFsU3ViamVjdCI6eyJpZCI6ImRpZDp3ZWI6ZXhhbXBsZS5jb206YWdlbnQtYSIsImFhZSI6eyJtYW5kYXRlIjp7ImFjdGlvbnMiOlsicmVhZCJdLCJwdXJwb3NlIjoiQVBTIGNyb3NzLWVuY29kaW5nIHNjZW5hcmlvIiwic2NvcGUiOiJhcHMtaW50ZXJvcCIsInByaW5jaXBhbF9kaWQiOiJkaWQ6d2ViOmV4YW1wbGUuY29tOmVudGVycHJpc2UtY29ycCIsImRlbGVnYXRpb25fcG9saWN5Ijp7Im1heF9kZXB0aCI6Mn19LCJjb25zdHJhaW50cyI6e30sInZhbGlkaXR5Ijp7Im5vdF9iZWZvcmUiOiIyMDI2LTA1LTIwVDA4OjAwOjAwWiIsIm5vdF9hZnRlciI6IjIwMjYtMDUtMjBUMTY6MDA6MDBaIiwic2luZ2xlX3VzZSI6ZmFsc2V9fX19.fFvgTnuHSJIIe0rexMgQdioN6w9VI8HAnvz_oFm7Ona7b4lLOLJ3M-A_GzhiL2itFHX4y05UTE4xmm45Bz1KCA"
+      ]
+    }
+  },
+  "expected": {
+    "result": "REJECT",
+    "verification_step": 9,
+    "rejection_reason": "delegated_actions_not_subset"
+  },
+  "rationale": "Mirrors APS V2 (SCOPE_WIDENING): child_scope [read, write, delete] is not a subset of parent [read]. AAE \u00a73 rejects at step 9 delegated_actions_not_subset; APS rejects via scopeCovers (child_scope not subset of parent_scope)."
+}

@@ -1,0 +1,26 @@
+{
+  "id": "aae-vector-93",
+  "name": "APS V3 cross-encoding \u2014 expired parent invalidates chain",
+  "description": "ONE-TIME APS->AAE cross-encoding of interop/aae-envelope/V3-expired-parent-reject. The child window is current but the parent's not_after is in the past; an expired ancestor invalidates the subtree.",
+  "section_ref": "draft-kroehl-agentic-trust-aae-00 \u00a72.4 (not_after), \u00a75 step 9 (ancestor temporal)",
+  "input": {
+    "secured_aae": "eyJhbGciOiJFZERTQSIsImN0eSI6ImFhZStqc29uIiwia2lkIjoiZGlkOndlYjpleGFtcGxlLmNvbTphZ2VudC1hI2tleS0xIn0.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL21vbHRydXN0LmNoL2NvbnRleHRzL2FhZS92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiQWdlbnRBdXRob3JpemF0aW9uRW52ZWxvcGUiXSwiaWQiOiJ1cm46dXVpZDowMDAwMDA5My0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwYjEiLCJpc3N1ZXIiOiJkaWQ6d2ViOmV4YW1wbGUuY29tOmFnZW50LWEiLCJ2YWxpZEZyb20iOiIyMDI2LTA1LTIwVDA4OjAwOjAwWiIsImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiZGlkOndlYjpleGFtcGxlLmNvbTphZ2VudC1iIiwiYWFlIjp7Im1hbmRhdGUiOnsiYWN0aW9ucyI6WyJyZWFkIl0sImRlbGVnYXRpb24iOnsiZGVsZWdhdG9yX2RpZCI6ImRpZDp3ZWI6ZXhhbXBsZS5jb206YWdlbnQtYSIsImRlbGVnYXRvcl9hYWVfaWQiOiJ1cm46dXVpZDowMDAwMDA5My0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwYTAiLCJkZWxlZ2F0b3JfYWFlX3VyaSI6Imh0dHBzOi8vYWFlLmV4YW1wbGUvcC91cm46dXVpZDowMDAwMDA5My0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwYTAiLCJkZWxlZ2F0b3JfYWFlX2hhc2giOiJzaGEtMjU2OkNvWi10dWhQU3lyS0ptOTZLY0h2bk9SSWlQQUpQNVBsbktuZS02REZWa28iLCJkZXB0aCI6MSwibWF4X2RlcHRoIjoyfX0sImNvbnN0cmFpbnRzIjp7fSwidmFsaWRpdHkiOnsibm90X2JlZm9yZSI6IjIwMjYtMDUtMjBUMDg6MDA6MDBaIiwibm90X2FmdGVyIjoiMjAyNi0wNS0yMFQxNjowMDowMFoiLCJzaW5nbGVfdXNlIjpmYWxzZX19fX0.lEA89oFCSVuOZVmKpBIdrGdUw55RmiHH-1dq8esAkaE_zYzwnIGu2FPdgFwsi9c6Sx1b-zW-d-REE9e1GQisDA",
+    "context": {
+      "current_time": "2026-05-20T12:00:00Z",
+      "requested_action": "read",
+      "action_context": {},
+      "subject_binding": {
+        "challenge_response_valid": true
+      },
+      "delegation_chain": [
+        "eyJhbGciOiJFZERTQSIsImN0eSI6ImFhZStqc29uIiwia2lkIjoiZGlkOndlYjpleGFtcGxlLmNvbTpyZWdpc3RyeSNrZXktMSJ9.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL21vbHRydXN0LmNoL2NvbnRleHRzL2FhZS92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiQWdlbnRBdXRob3JpemF0aW9uRW52ZWxvcGUiXSwiaWQiOiJ1cm46dXVpZDowMDAwMDA5My0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwYTAiLCJpc3N1ZXIiOiJkaWQ6d2ViOmV4YW1wbGUuY29tOnJlZ2lzdHJ5IiwidmFsaWRGcm9tIjoiMjAyNi0wNS0yMFQwODowMDowMFoiLCJjcmVkZW50aWFsU3ViamVjdCI6eyJpZCI6ImRpZDp3ZWI6ZXhhbXBsZS5jb206YWdlbnQtYSIsImFhZSI6eyJtYW5kYXRlIjp7ImFjdGlvbnMiOlsicmVhZCIsIndyaXRlIl0sInB1cnBvc2UiOiJBUFMgY3Jvc3MtZW5jb2Rpbmcgc2NlbmFyaW8iLCJzY29wZSI6ImFwcy1pbnRlcm9wIiwicHJpbmNpcGFsX2RpZCI6ImRpZDp3ZWI6ZXhhbXBsZS5jb206ZW50ZXJwcmlzZS1jb3JwIiwiZGVsZWdhdGlvbl9wb2xpY3kiOnsibWF4X2RlcHRoIjoyfX0sImNvbnN0cmFpbnRzIjp7fSwidmFsaWRpdHkiOnsibm90X2JlZm9yZSI6IjIwMjYtMDUtMjBUMDg6MDA6MDBaIiwibm90X2FmdGVyIjoiMjAyNi0wNS0yMFQxMDowMDowMFoiLCJzaW5nbGVfdXNlIjpmYWxzZX19fX0.hzXL44rLpJniIocchc0iC1WGxkAUStQi1bd7eA65ehab2vtoZWgspA6s9VcjwB5TJHZSFCSzjX-hjQgmbiGXDQ"
+      ]
+    }
+  },
+  "expected": {
+    "result": "REJECT",
+    "verification_step": 9,
+    "rejection_reason": "expired_not_after"
+  },
+  "rationale": "Mirrors APS V3 (DELEGATION_EXPIRED): the presented child is temporally valid, but step 9 re-checks each ancestor's temporal validity; the parent's not_after (10:00Z) precedes current_time (12:00Z), so the chain is rejected at step 9 expired_not_after. APS reaches the same outcome by cascading parent expiry to the subtree."
+}

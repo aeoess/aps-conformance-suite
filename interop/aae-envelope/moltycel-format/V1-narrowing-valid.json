@@ -1,0 +1,26 @@
+{
+  "id": "aae-vector-91",
+  "name": "APS V1 cross-encoding \u2014 narrowing valid (child actions subset of parent)",
+  "description": "ONE-TIME APS->AAE cross-encoding of interop/aae-envelope/V1-narrowing-valid. Depth-1 delegated AAE (agent-a->agent-b) whose actions [read] are a subset of the parent [read, write]; both windows current; no revocation.",
+  "section_ref": "draft-kroehl-agentic-trust-aae-00 \u00a73, \u00a75 step 9",
+  "input": {
+    "secured_aae": "eyJhbGciOiJFZERTQSIsImN0eSI6ImFhZStqc29uIiwia2lkIjoiZGlkOndlYjpleGFtcGxlLmNvbTphZ2VudC1hI2tleS0xIn0.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL21vbHRydXN0LmNoL2NvbnRleHRzL2FhZS92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiQWdlbnRBdXRob3JpemF0aW9uRW52ZWxvcGUiXSwiaWQiOiJ1cm46dXVpZDowMDAwMDA5MS0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwYjEiLCJpc3N1ZXIiOiJkaWQ6d2ViOmV4YW1wbGUuY29tOmFnZW50LWEiLCJ2YWxpZEZyb20iOiIyMDI2LTA1LTIwVDA4OjAwOjAwWiIsImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiZGlkOndlYjpleGFtcGxlLmNvbTphZ2VudC1iIiwiYWFlIjp7Im1hbmRhdGUiOnsiYWN0aW9ucyI6WyJyZWFkIl0sImRlbGVnYXRpb24iOnsiZGVsZWdhdG9yX2RpZCI6ImRpZDp3ZWI6ZXhhbXBsZS5jb206YWdlbnQtYSIsImRlbGVnYXRvcl9hYWVfaWQiOiJ1cm46dXVpZDowMDAwMDA5MS0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwYTAiLCJkZWxlZ2F0b3JfYWFlX3VyaSI6Imh0dHBzOi8vYWFlLmV4YW1wbGUvcC91cm46dXVpZDowMDAwMDA5MS0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwYTAiLCJkZWxlZ2F0b3JfYWFlX2hhc2giOiJzaGEtMjU2OnptTVBnZFBDM1Z2eklBdHVNWWFyUF9aNFo1bEpYcmo3bFFsMG1HVFpoWnMiLCJkZXB0aCI6MSwibWF4X2RlcHRoIjoyfX0sImNvbnN0cmFpbnRzIjp7fSwidmFsaWRpdHkiOnsibm90X2JlZm9yZSI6IjIwMjYtMDUtMjBUMDg6MDA6MDBaIiwibm90X2FmdGVyIjoiMjAyNi0wNS0yMFQxNjowMDowMFoiLCJzaW5nbGVfdXNlIjpmYWxzZX19fX0.BDYfrJqHZ05a5eWuZAlO9uHi5Bfz-2vUSrsN-8J_tt8taqHr5KrU72xEOLW3Ek8RE9ZAS1HRe8daSrGwcDbmCw",
+    "context": {
+      "current_time": "2026-05-20T12:00:00Z",
+      "requested_action": "read",
+      "action_context": {},
+      "subject_binding": {
+        "challenge_response_valid": true
+      },
+      "delegation_chain": [
+        "eyJhbGciOiJFZERTQSIsImN0eSI6ImFhZStqc29uIiwia2lkIjoiZGlkOndlYjpleGFtcGxlLmNvbTpyZWdpc3RyeSNrZXktMSJ9.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL21vbHRydXN0LmNoL2NvbnRleHRzL2FhZS92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiQWdlbnRBdXRob3JpemF0aW9uRW52ZWxvcGUiXSwiaWQiOiJ1cm46dXVpZDowMDAwMDA5MS0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwYTAiLCJpc3N1ZXIiOiJkaWQ6d2ViOmV4YW1wbGUuY29tOnJlZ2lzdHJ5IiwidmFsaWRGcm9tIjoiMjAyNi0wNS0yMFQwODowMDowMFoiLCJjcmVkZW50aWFsU3ViamVjdCI6eyJpZCI6ImRpZDp3ZWI6ZXhhbXBsZS5jb206YWdlbnQtYSIsImFhZSI6eyJtYW5kYXRlIjp7ImFjdGlvbnMiOlsicmVhZCIsIndyaXRlIl0sInB1cnBvc2UiOiJBUFMgY3Jvc3MtZW5jb2Rpbmcgc2NlbmFyaW8iLCJzY29wZSI6ImFwcy1pbnRlcm9wIiwicHJpbmNpcGFsX2RpZCI6ImRpZDp3ZWI6ZXhhbXBsZS5jb206ZW50ZXJwcmlzZS1jb3JwIiwiZGVsZWdhdGlvbl9wb2xpY3kiOnsibWF4X2RlcHRoIjoyfX0sImNvbnN0cmFpbnRzIjp7fSwidmFsaWRpdHkiOnsibm90X2JlZm9yZSI6IjIwMjYtMDUtMjBUMDg6MDA6MDBaIiwibm90X2FmdGVyIjoiMjAyNi0wNS0yMFQxNjowMDowMFoiLCJzaW5nbGVfdXNlIjpmYWxzZX19fX0.LUWNpH11sUcZ7pJDXXbmKG8FEctYhWx-l2MxdBpTaakqxJh8GdGfGxXWyz5iJrjb1MHT7Ntu2TZcHXOiDeXDDg"
+      ]
+    }
+  },
+  "expected": {
+    "result": "ACCEPT",
+    "verification_step": 9,
+    "rejection_reason": null
+  },
+  "rationale": "Mirrors APS V1: child actions [read] subset parent [read, write], parent->child link valid, both windows current, no revocation. APS verifyDelegation+scopeCovers ACCEPT; AAE \u00a75 step 9 ACCEPT."
+}
