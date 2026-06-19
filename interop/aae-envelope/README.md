@@ -64,3 +64,19 @@ non-zero if any vector's actual decision differs from its AAE-stated expectation
 > Convention note: this repo's fixtures use `tsx` runner scripts (see
 > `fixtures/composition/*/verify.ts`), not vitest, so this runner follows that pattern.
 > It is a real load-adapt-verify-assert test of the shipped APS verifier.
+
+## Constraint-monotonicity (parallel to MoltyCel 08/15)
+
+Two additional cross-encoded vectors live under
+[`moltycel-format/constraint-monotonicity/`](./moltycel-format/constraint-monotonicity/),
+closing the constraint-monotonicity gap relative to AAE:
+
+- `aae-vector-95` (cap-relaxing): child raises a numeric cap (1000 USD vs parent 500 USD).
+  REJECT @ step 9 `delegated_constraint_relaxed`. APS core `subDelegate` enforces this
+  natively (a child cap above the parent throws).
+- `aae-vector-96` (currency-change): child changes the cap currency (300 EUR vs parent
+  500 USD). REJECT @ step 9 `delegation_currency_mismatch`. APS enforces currency at the
+  v2 payment-rails layer (`preAuthorize`), not in core narrowing; see the subfolder README
+  for that documented divergence.
+
+Both are REJECTED by MoltyCel's reference verifier (`crossverify.py`: 2/2).

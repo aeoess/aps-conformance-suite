@@ -60,14 +60,32 @@ later lookup.
    ancestor is revoked or expired. It is not optional. The outcomes coincide here, but
    APS's requirement is stronger than the AAE draft's normative language.
 
-3. **Constraint-monotonicity coverage: AAE has it (08/15), our four do not.** AAE
+3. **Constraint-monotonicity coverage: AAE has it (08/15), and APS now mirrors it.** AAE
    covers delegated-constraint monotonicity with dedicated vectors:
    `08-delegation-constraint-relaxation` (a child relaxing a numeric cap) and
-   `15-currency-mismatch-delegation` (a child changing currency). APS's four canonical
-   vectors exercise only action-narrowing, expiry, and revocation; they do **not** cover
-   constraint monotonicity, so the cross-encoded files carry empty `constraints`. This is
-   a coverage gap in our four relative to AAE, not a disagreement, a candidate for a
-   future APS vector, tracked separately from this one-time artifact.
+   `15-currency-mismatch-delegation` (a child changing currency). The four canonical APS
+   vectors (V1 to V4) exercise only action-narrowing, expiry, and revocation. The gap is
+   now closed by two cross-encoded vectors under
+   [`moltycel-format/constraint-monotonicity/`](./moltycel-format/constraint-monotonicity/):
+   `aae-vector-95` (cap-relaxing) and `aae-vector-96` (currency-change), both REJECTED by
+   MoltyCel's reference verifier at step 9 (`delegated_constraint_relaxed` and
+   `delegation_currency_mismatch`). Honest caveat: APS core `subDelegate` enforces the
+   numeric cap rule natively (a child cap above the parent throws), but it does not model
+   fiat currency; APS enforces currency at the v2 payment-rails layer (`preAuthorize`), at
+   enforcement time and under reason code `spend_limit_exceeded`, not at the narrowing
+   layer with a dedicated currency code. The outcome agrees with 15; the mechanism, layer,
+   and reason code differ. Full grounding in the subfolder README.
+
+## Constraint-monotonicity vectors (added: aae-vector-95 / 96)
+
+| APS scenario | Cross-encoded (ours, JWS) | MoltyCel vector | MoltyCel verdict (their verifier) | APS grounding |
+|---|---|---|---|---|
+| cap-relaxing (child cap 1000 USD vs parent 500 USD) | `aae-vector-95` REJECT @9 `delegated_constraint_relaxed` | `08-delegation-constraint-relaxation` | REJECT @ step 9 `delegated_constraint_relaxed` | native: core `subDelegate` throws `Spend limit 1000 exceeds parent remaining 500` |
+| currency-change (child cap 300 EUR vs parent 500 USD) | `aae-vector-96` REJECT @9 `delegation_currency_mismatch` | `15-currency-mismatch-delegation` | REJECT @ step 9 `delegation_currency_mismatch` | partial: enforced by v2 payment-rails `preAuthorize` (`spend_limit_exceeded`, currency mismatch), NOT by core `subDelegate` |
+
+`crossverify.py` over the subfolder: 2/2 valid + decided as expected. `node aps_grounding.mjs`
+captures the APS-primitive behavior. The currency caveat is detailed in
+[`moltycel-format/constraint-monotonicity/README.md`](./moltycel-format/constraint-monotonicity/README.md).
 
 ## Reproduce
 
