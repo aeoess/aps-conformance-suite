@@ -71,6 +71,16 @@ scenario), and APS would also reject the equivalent spend, so the conformance ou
 holds. The mechanism divergence is the finding to carry forward (a candidate for a
 dedicated APS currency-monotonicity check at the narrowing layer).
 
+UPDATE 2026-06-19: that check shipped. Core `subDelegate` now rejects a spend-unit
+change once the parent carries a spend dimension (a spend limit or an explicit unit),
+so the "core gap" shown above is closed; see agent-passport-system commit 938bdfb. The
+grounding block above is retained as the pre-fix historical record. With the check in
+place, B core now REJECTS the unit change at the narrowing layer (throws), which tightens
+the layer alignment with MoltyCel 15 (both reject at the link check). Point 2 still holds:
+APS reports this through the spend-unit guard, not a dedicated `delegation_currency_mismatch`
+token. A unitless, unconstrained parent is unaffected; a child may still introduce a unit
+there, which is narrowing rather than conversion.
+
 ## verification_mode (issue #2)
 
 The MoltyCel clone used (`github.com/MoltyCel/aae-conformance-vectors`, HEAD c8dcce8,
