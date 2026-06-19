@@ -1,6 +1,7 @@
 {
   "vector_id": "V1-narrowing-valid",
   "aae_shape": "chain-envelope",
+  "verification_mode": "asserted",
   "description": "Child mandate.actions [read] is a strict subset of parent [read, write]. Both validity windows current, no revocation. Monotonic narrowing holds.",
   "expected_result": "ACCEPT",
   "expected_reason": null,

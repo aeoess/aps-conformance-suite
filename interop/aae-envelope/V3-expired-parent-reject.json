@@ -1,6 +1,7 @@
 {
   "vector_id": "V3-expired-parent-reject",
   "aae_shape": "chain-envelope",
+  "verification_mode": "enforced",
   "description": "Child scope [read] narrows parent [read, write] correctly and the child window is current, but the parent's validity.not_after is in the past. An expired ancestor invalidates the whole chain.",
   "expected_result": "REJECT",
   "expected_reason": "parent delegation expired (validity.not_after in the past); expiry of an ancestor invalidates the subtree",

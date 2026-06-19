@@ -1,6 +1,7 @@
 {
   "vector_id": "V2-widened-scope-reject",
   "aae_shape": "chain-envelope",
+  "verification_mode": "asserted",
   "description": "Child mandate.actions [read, write, delete] is a SUPERSET of parent [read]. The child grants more than the delegator holds. Monotonic narrowing is violated.",
   "expected_result": "REJECT",
   "expected_reason": "scope-widening: child_scope is not a subset of parent_scope (write, delete not held by delegator)",

@@ -53,6 +53,10 @@ interface AaeEnvelope {
   vector_id: string
   expected_result: 'ACCEPT' | 'REJECT'
   expected_reason_code: string | null
+  // Conformance convention (enforced vs asserted): enforced needs runtime state
+  // (clock, revocation state); asserted is structurally decidable. Optional and
+  // backward compatible: when absent, a reader treats the vector as enforced.
+  verification_mode?: 'enforced' | 'asserted'
   chain: AaeCredential[]
 }
 
@@ -196,8 +200,10 @@ for (const file of VECTORS) {
   const pass = resultOk && codeOk
   if (!pass) failures++
 
+  const mode = env.verification_mode ?? 'enforced' // default when absent (backward compatible)
   const tag = pass ? '\x1b[32m[PASS]\x1b[0m' : '\x1b[31m[FAIL]\x1b[0m'
   console.log(`${tag} ${env.vector_id}`)
+  console.log(`        mode:     ${mode}`)
   console.log(`        expected: ${env.expected_result}${env.expected_reason_code ? ` / ${env.expected_reason_code}` : ''}`)
   console.log(`        actual:   ${decision.result}${decision.reason_code ? ` / ${decision.reason_code}` : ''}`)
   if (decision.reason) console.log(`        reason:   ${decision.reason}`)
@@ -209,6 +215,7 @@ for (const file of VECTORS) {
 
   summary.push({
     vector: env.vector_id,
+    verification_mode: mode,
     expected: `${env.expected_result}${env.expected_reason_code ? '/' + env.expected_reason_code : ''}`,
     actual: `${decision.result}${decision.reason_code ? '/' + decision.reason_code : ''}`,
     pass,

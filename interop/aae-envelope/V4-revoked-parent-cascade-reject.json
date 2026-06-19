@@ -1,6 +1,7 @@
 {
   "vector_id": "V4-revoked-parent-cascade-reject",
   "aae_shape": "chain-envelope",
+  "verification_mode": "enforced",
   "description": "Child credential is fully valid on its own (narrows parent [read, write] to [read], current window, not revoked). The parent's revocation_check resolves to REVOKED at verification time. Revoking the parent invalidates the subtree. This is a CHECK-TIME cascade: the rejection happens when the chain is verified against current revocation state, not on a later lookup. Matches tests/conformance/golden-fixtures/NEG-STALE-REVOCATION.json semantics (a verifier that ignores revocation state would wrongly accept).",
   "expected_result": "REJECT",
   "expected_reason": "parent delegation revoked; revocation of an ancestor cascades to the subtree at verification time (check-time, not next-lookup)",
