@@ -42,9 +42,9 @@ directory and, for each one:
    fails.
 
 Empty directory: the runner prints `no fixtures present, nothing to verify`
-and exits 0. This keeps the scaffold valid in CI before any fixture lands.
+and exits 0, so the runner stays green in CI when no fixtures are present.
 
-## Planned cases
+## Cases
 
 | Case                  | `expected_error_code`        |
 | --------------------- | ---------------------------- |
@@ -55,16 +55,15 @@ and exits 0. This keeps the scaffold valid in CI before any fixture lands.
 
 The four codes are drawn from the CTEF v0.3.2 §A error vocabulary.
 
-## Validator wire-up status
+## Validator status
 
-`./lib.ts` ships a scaffold stub of `validateNegativePathInput()` that
-throws `SCAFFOLD_VALIDATOR_NOT_WIRED`. The production wire-up lands
-alongside the first fixture PR (or in a preceding follow-up commit) and
-ports the refusal-path logic from
-`~/agent-passport-system/src/v2/delegation-v2.ts`'s `validateV2Delegation()`
-into this directory's `lib.ts`, following the self-contained convention
-established by `fixtures/composition/envoys-rfc9421/lib.ts`. Until that
-wire-up lands, only the empty-directory case exercises the runner end-to-end.
+`./lib.ts` implements `validateNegativePathInput`, which checks delegation
+depth, validity windows, signatures, and scope expansion against the closed
+CTEF v0.3.2 §A error-code taxonomy. It is self-contained, following the
+convention established by `fixtures/composition/envoys-rfc9421/lib.ts`. All
+four fixtures pass: scope-expansion resolves to `INVALID_CLAIM_SCOPE`,
+depth-violation to `DELEGATION_DEPTH_EXCEEDED`, signature-substitution to
+`INVALID_SIGNATURE`, and validity-expired to `VALIDITY_EXPIRED`.
 
 ## Run
 
