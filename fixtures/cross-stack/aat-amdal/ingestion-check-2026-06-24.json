@@ -1,0 +1,23 @@
+{
+ "ingested_at_utc": "2026-06-24T18:00:12Z",
+ "jwks_kid": "ab0502f7",
+ "jwks_fetched_live": true,
+ "verification_path": "independent stdlib + cryptography Ed25519",
+ "verification_time": "2026-06-24T10:01:52Z",
+ "results": [
+  {
+   "vector": "aat-2026-06-24-live",
+   "jti": "aat_XKN3i1DsiDgpmBH8",
+   "signature": "valid",
+   "in_window_at_verification_time": true,
+   "window_verdict_at_verification_time": "valid"
+  },
+  {
+   "vector": "aat-2026-06-24-expired",
+   "jti": "aat_ZhlxHRSsPVLMWXCB",
+   "signature": "valid",
+   "in_window_at_verification_time": false,
+   "window_verdict_at_verification_time": "exp_reject"
+  }
+ ]
+}
