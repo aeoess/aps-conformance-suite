@@ -1,0 +1,12 @@
+{
+ "ingested_at_utc": "2026-07-01T17:21:33Z",
+ "jwks_kid": "ab0502f7",
+ "jwks_fetched_live": true,
+ "verification_path": "independent stdlib + cryptography Ed25519",
+ "verification_time": "2026-07-01T10:02:46Z",
+ "results": [
+  { "vector": "aat-2026-07-01-live", "jti": "aat_B51CddRPM2c1nCHW", "signature": "valid", "in_window_at_verification_time": true, "window_verdict_at_verification_time": "valid" },
+  { "vector": "aat-2026-07-01-expired", "jti": "aat_XKN3i1DsiDgpmBH8", "signature": "valid", "in_window_at_verification_time": false, "window_verdict_at_verification_time": "exp_reject" }
+ ],
+ "note": "This week's expired half (aat_XKN3i1DsiDgpmBH8) is byte-identical to last week's 2026-06-24 live token; rotation continuity confirmed."
+}

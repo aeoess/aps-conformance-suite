@@ -1,0 +1,26 @@
+{
+ "schema": "aat-pair-v1",
+ "issuer_jwks": { "url": "https://agentlair.dev/.well-known/jwks.json", "kid": "ab0502f7", "alg": "EdDSA" },
+ "authored_at": "2026-07-01T10:02:46Z",
+ "vectors": [
+   {
+     "id": "aat-2026-07-01-live",
+     "aat": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCIsImtpZCI6ImFiMDUwMmY3In0.eyJpc3MiOiJodHRwczovL2FnZW50bGFpci5kZXYiLCJzdWIiOiJhY2NfNnZMbGtkYVpLS3dnaEpCRCIsImF1ZCI6Imh0dHBzOi8vZ2F0ZXdheS5hZW9lc3MuY29tIiwiZXhwIjoxNzgyOTAzNzM5LCJpYXQiOjE3ODI5MDAxMzksImp0aSI6ImFhdF9CNTFDZGRSUE0yYzFuQ0hXIiwiZGlkIjoiZGlkOndlYjphZ2VudGxhaXIuZGV2OmFnZW50czphY2NfNnZMbGtkYVpLS3dnaEpCRCIsImFsX3Njb3BlcyI6WyJhcHM6dmVyaWZ5OmxpdmUiXSwiYWxfYXVkaXRfdXJsIjoiaHR0cHM6Ly9hZ2VudGxhaXIuZGV2L3YxL2F1ZGl0L2FhdF9CNTFDZGRSUE0yYzFuQ0hXIiwiYWxfbmFtZSI6InBpcGVsaW5lLXRlc3QiLCJhbF90cnVzdCI6eyJzY29yZSI6NDUsImxldmVsIjoiaW50ZXJuIiwiY29uZmlkZW5jZSI6MC45MTA1MTk5NDA2NjY0Mzg2LCJjb21wdXRlZF9hdCI6IjIwMjYtMDctMDFUMTA6MDI6MTkuNzI4WiIsInRyZW5kIjoic3RhYmxlIn0sImFsX25pZCI6ImRpZDprZXk6ejZNa2dSbVVYdEdkVGtYaEFjZnBvYWJFeXZaRWpzZHZUbkd3NmdhWDNMY1NkaGhqIn0.guwdfomtjVCFWLwYb6UQkxj7DM9pLMQ8q-iWA8ZTD_oR_vkjzIX_W2iDJWfJWut3lvpRSmp3GRJnUJons83aDA",
+     "notBefore": "2026-07-01T10:02:19Z",
+     "notAfter": "2026-07-01T11:02:19Z",
+     "verification_time": "2026-07-01T10:02:46Z",
+     "expected_result": "valid",
+     "verifier_must": "validate signature against pinned JWKS, then check window at verification_time"
+   },
+   {
+     "id": "aat-2026-07-01-expired",
+     "aat": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCIsImtpZCI6ImFiMDUwMmY3In0.eyJpc3MiOiJodHRwczovL2FnZW50bGFpci5kZXYiLCJzdWIiOiJhY2NfNnZMbGtkYVpLS3dnaEpCRCIsImF1ZCI6Imh0dHBzOi8vZ2F0ZXdheS5hZW9lc3MuY29tIiwiZXhwIjoxNzgyMjk4ODkwLCJpYXQiOjE3ODIyOTUyOTAsImp0aSI6ImFhdF9YS04zaTFEc2lEZ3BtQkg4IiwiZGlkIjoiZGlkOndlYjphZ2VudGxhaXIuZGV2OmFnZW50czphY2NfNnZMbGtkYVpLS3dnaEpCRCIsImFsX3Njb3BlcyI6WyJhcHM6dmVyaWZ5OmxpdmUiXSwiYWxfYXVkaXRfdXJsIjoiaHR0cHM6Ly9hZ2VudGxhaXIuZGV2L3YxL2F1ZGl0L2FhdF9YS04zaTFEc2lEZ3BtQkg4IiwiYWxfbmFtZSI6InBpcGVsaW5lLXRlc3QiLCJhbF90cnVzdCI6eyJzY29yZSI6NDMsImxldmVsIjoiaW50ZXJuIiwiY29uZmlkZW5jZSI6MC44ODg5NDQwMzMyODg1OTI0LCJjb21wdXRlZF9hdCI6IjIwMjYtMDYtMjRUMTA6MDE6MzAuNzExWiIsInRyZW5kIjoiZGVjbGluaW5nIn0sImFsX25pZCI6ImRpZDprZXk6ejZNa2dSbVVYdEdkVGtYaEFjZnBvYWJFeXZaRWpzZHZUbkd3NmdhWDNMY1NkaGhqIn0.6H0U4taVspDs9QRuy-7tEAsa9EGQy07zUsPZQF5_HSFTJVVS1NSvdtoFeYfzWJ6atmXOxO7_hux7UmqO2Ah6AQ",
+     "expiredAt": "2026-06-24T11:01:30Z",
+     "verification_time": "2026-07-01T10:02:46Z",
+     "expected_result": "exp_reject",
+     "expected_failure_stage": "window_check",
+     "expected_reason": "expired before verification time",
+     "verifier_must": "reject at the window check at verification_time; signature validity does not rescue an expired token"
+   }
+ ]
+}
