@@ -1,0 +1,7 @@
+{
+  "kid": "emitter-b-key-01",
+  "note": "FIXTURE-ONLY synthetic Ed25519 key, not a production emitter",
+  "alg": "ed25519",
+  "seed_hex": "b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2",
+  "public_key_hex": "55154f42065ea5a1bea05463826be2684eb92df92c100027aabaae57ca554207"
+}

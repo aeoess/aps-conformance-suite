@@ -1,0 +1,87 @@
+{
+  "receipt_id": "sha256:91e2ae85f03c7a8e7df10e8862895b99456cb13abc50b4e23ba84f1c15b3b8c9",
+  "receipt_type": "sar_402_settlement",
+  "receipt_context": "public_demo",
+  "agent_id": "agent:x402:eip155:84532:0x70e849b49d519e9ea45742e4bab257680a5223f1",
+  "activation_id": null,
+  "chain_id": null,
+  "created_at": "2026-06-23T23:48:58Z",
+  "receipt": {
+    "authority_binding": {
+      "acting_party": "resource_server",
+      "resource_server_controls_delivery": true,
+      "verifier_controls_resource_release": false,
+      "verifier_has_execution_authority": false
+    },
+    "continuity": {
+      "authority_continuity": "PASS",
+      "constraint_continuity": "PASS",
+      "executor_continuity": "PASS",
+      "object_continuity": "PASS",
+      "temporal_continuity": "PASS"
+    },
+    "delivery": {
+      "delivered_at": "2026-06-23T00:00:07Z",
+      "delivered_resource": "https://defaultverifier.com/demo/sar-402",
+      "evidence_digest": "sha256:ea24c8369b31816546e07644b3621831d2e8d780e527ccb0c9fd26471dd2a8c6",
+      "evidence_type": "http_response",
+      "status_code": 200
+    },
+    "delivery_state": "confirmed",
+    "identity": {
+      "derived_identity": {
+        "derived_agent_id": "agent:x402:eip155:84532:0x70e849b49d519e9ea45742e4bab257680a5223f1",
+        "identity_status": "derived",
+        "registration_mode": "derived_from_settlement"
+      },
+      "payer": "0x70e849b49d519e9ea45742e4bab257680a5223f1"
+    },
+    "integrity": {
+      "canonicalization": "sorted_keys_compact_v0",
+      "digest": "sha256:91e2ae85f03c7a8e7df10e8862895b99456cb13abc50b4e23ba84f1c15b3b8c9",
+      "digest_alg": "sha256"
+    },
+    "issuer": {
+      "environment": "test",
+      "verifier": "DefaultVerifier",
+      "verifier_version": "0.1.0"
+    },
+    "notes": "Canonical public SAR-402 demonstration receipt v2 (testnet/demo). Recorded evidence only; no DefaultVerifier signature; not mainnet payment; not legal payment finality.",
+    "payment": {
+      "amount_paid": {
+        "amount": "10000",
+        "asset": "USDC",
+        "decimals": 6
+      },
+      "asset": "USDC",
+      "chain": "eip155:84532",
+      "payer": "0x70e849b49d519e9ea45742e4bab257680a5223f1",
+      "payment_ref": "demo:canonical-public-demo-v2-20260623",
+      "price": {
+        "amount": "10000",
+        "asset": "USDC",
+        "decimals": 6
+      },
+      "quote_id": "q_public_demo_v2",
+      "recipient": "0x7fbf10a31e285743e049319a6940604a9b4b9309",
+      "resource": "https://defaultverifier.com/demo/sar-402"
+    },
+    "payment_state": "verified",
+    "profile": "sar-402",
+    "sar_type": "Settlement Attestation Receipt",
+    "sar_verdict": "PASS",
+    "schema_id": "sar_402_settlement_v0.1",
+    "settlement_state": "delivered",
+    "timestamps": {
+      "delivered_at": "2026-06-23T00:00:07Z",
+      "issued_at": "2026-06-23T00:00:08Z",
+      "paid_at": "2026-06-23T00:00:03Z",
+      "quote_expires_at": "2026-06-23T00:09:30Z",
+      "quoted_at": "2026-06-23T00:00:00Z",
+      "verified_at": "2026-06-23T00:00:05Z"
+    },
+    "verification_mode": "record",
+    "verification_point": "post_delivery",
+    "receipt_id": "sha256:91e2ae85f03c7a8e7df10e8862895b99456cb13abc50b4e23ba84f1c15b3b8c9"
+  }
+}
