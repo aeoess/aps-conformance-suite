@@ -88,3 +88,14 @@ digest substitution, kid mismatch, and post-signing tampering. It does NOT attes
 digest preimage (an adopted inbound content address, see the verification boundary above), the base
 receipt's settlement truth, or DefaultVerifier's own issuance signature (the demo receipt carries none:
 "Recorded evidence only; no DefaultVerifier signature").
+
+## Update: digest preimage pinned (Path A property)
+
+The emitter published the original payload and the preimage rule
+(`receipt_id = sha256(sorted_keys_compact_v0(payload minus integrity))`).
+We verified the recompute independently: the payload at
+https://github.com/nutstrut/attest-service/blob/main/reports/sar402/path-a-demo/sar402-canonical-public-demo-v2-20260623T234156Z.payload.json
+hashes to `sha256:91e2ae85f03c7a8e7df10e8862895b99456cb13abc50b4e23ba84f1c15b3b8c9`
+under that rule. The digest is therefore independently recomputable from public data,
+the full Path A property. The resolver response remains the lookup envelope; it was
+never the preimage. Wrappers unchanged.
