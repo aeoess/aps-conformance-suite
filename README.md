@@ -139,7 +139,7 @@ AIVSS scenario fixtures cite: *AIVSS Scoring System For OWASP Agentic AI Core Se
 
 - **Agent Passport System SDK** — https://github.com/aeoess/agent-passport-system
 - **Agent Governance Vocabulary** — https://github.com/aeoess/agent-governance-vocabulary
-- **AEOESS** — https://aeoess.com
+- **Agent Passport System org** — https://agent-passport.org
 - **InstructionProvenanceReceipt v0.2 spec** — `agent-passport-system/specs/INSTRUCTION-PROVENANCE-RECEIPT-DRAFT-v0.2.md`
 
 ## License
