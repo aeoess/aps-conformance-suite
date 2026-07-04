@@ -53,10 +53,17 @@
       "canonical_sha256": "134db05226a3340ebbf79a63b9e53b034abcc1776da3daca6e122363c64c3c35",
       "vector_count": 12,
       "spec_section": "Accountability record v0.1: boundary decision (allow/deny/halt) plus execution status; shape derived from decisionReceipt/execution-envelope and action_ref; detached-payload digest; Ed25519 over JCS. Includes tampered-payload and wrong-key negatives."
+    },
+    {
+      "category": "presidio-x402",
+      "path": "presidio-x402/presidio-x402-accountability-record-fixture-v1.json",
+      "canonical_sha256": "2e54fd64bf4bb407983dac88054a1e3c5d274ff0e2010bd7e862342df68ed50c",
+      "vector_count": 2,
+      "spec_section": "Accountability record v0.1 applied to x402 payment-boundary decisions (presidio-hardened-x402): PII screening + policy verdict recorded before an x402 payment is signed. One positive (PII_REDACTED/allow) and one signature negative (record signed by the actor's own wallet, not the policy recorder). The recompute-layer/ subdir is a separate integrity-vs-derivation proposal, not a registered negative fixture."
     }
   ],
   "totals": {
-    "fixtures": 6,
-    "vectors": 50
+    "fixtures": 7,
+    "vectors": 52
   }
 }
