@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aeoess.com/aps/schema/accountability-record/v0.1/accountability-record.schema.json",
+  "title": "APS Accountability Record",
+  "description": "A signed record attesting a single boundary decision (allow/deny/halt) over one agent action and whether that action executed. The shape is derived from the agent-passport-system receipt primitives, not a parallel invention: action_ref is the content-addressed request identity (computeActionRef, draft-pidlisnyi-aps-00 §4.1), action_digest is the detached-payload commitment (the digestOf pattern used by decisionReceipt), agent_did/action_ref follow the execution-envelope field convention, and sig is Ed25519 over the RFC 8785 (JCS) canonical bytes of the record with the `sig` field omitted. WHAT THIS RECORD DOES NOT PROVE: it does not attest outcome quality, correctness, success, or the real-world effect of the action; it does not prove that any settlement occurred (settlement_ref and settlement_rail are opaque, rail-neutral correlation hints, never settlement proof); and it asserts nothing beyond the recorded boundary decision and the executed flag. The record is silent on everything else, and silence here is not a denial. The `decision` here is the boundary verdict on a concrete action (allow|deny|halt), deliberately distinct from decisionReceipt's policy-evaluation vocabulary (permit|deny|narrow).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "spec_version",
+    "record_type",
+    "action_ref",
+    "action_digest",
+    "signer_did",
+    "agent_did",
+    "delegation_ref",
+    "principal_ref",
+    "decision",
+    "executed",
+    "issued_at",
+    "sig",
+    "sig_alg"
+  ],
+  "properties": {
+    "spec_version": {
+      "type": "string",
+      "description": "Version of the accountability-record schema this record conforms to, e.g. '0.1.0'."
+    },
+    "record_type": {
+      "const": "accountability_record",
+      "description": "Fixed type discriminator."
+    },
+    "action_ref": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "Content-addressed request identity: lowercase hex SHA-256 of the JCS canonicalization of the action tuple {agentId: agent_did, actionType: action.type, scopeRequired: action.scope, timestamp: normalizeTimestamp(action.timestamp)}. Recomputable from the inline `action` (when present) exactly as agent-passport-system computeActionRef does. Correlation key: because the timestamp is second-precision, distinct actions can share an action_ref; it is NOT a unique event id, and uniqueness and anti-replay are verifier-side concerns. Not a proof of what the action did."
+    },
+    "action_digest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha256"],
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "Lowercase hex SHA-256 of the JCS canonicalization of the `action` object."
+        }
+      },
+      "description": "Detached-payload commitment to the recorded action. The `action` object MAY be omitted from the record; a holder of the payload recomputes this digest over the `action` object to bind it."
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "scope", "timestamp"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Action type, e.g. 'commerce.charge'."
+        },
+        "scope": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Scopes the action required."
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the action was requested (ISO 8601). Normalized to second precision when folded into action_ref."
+        }
+      },
+      "description": "OPTIONAL inline action payload (detached-payload pattern). The field is named `action`, matching the inline `action` object on the SDK ActionReceipt/CommerceActionReceipt; this is a different, smaller shape (type/scope/timestamp) than ActionReceipt.action, and it deliberately reuses a name that also collides with the ActivityStreams `action` verb-object, which this schema does not use. When present, sha256(JCS(action)) MUST equal action_digest.sha256 and action_ref MUST be recomputable from it. When absent, action_digest and action_ref stand as commitments to a payload held out-of-band."
+    },
+    "signer_did": {
+      "type": "string",
+      "format": "uri",
+      "description": "DID URI of the RECORDER that signed this record. Distinct from agent_did."
+    },
+    "agent_did": {
+      "type": "string",
+      "format": "uri",
+      "description": "DID URI of the agent whose action is recorded. Distinct from signer_did (the recorder)."
+    },
+    "delegation_ref": {
+      "type": "string",
+      "description": "Opaque reference to the delegation, or delegation-chain root, that authorized the action. Recorder-asserted pointer; presence proves neither validity/expiry of the delegation nor principal consent/benefit."
+    },
+    "principal_ref": {
+      "type": "string",
+      "description": "Beneficiary attribution: reference (DID or opaque id) to the principal on whose behalf the action was taken and to whom accountability runs. Recorder-asserted pointer; presence proves neither validity/expiry of the delegation nor principal consent/benefit."
+    },
+    "decision": {
+      "enum": ["allow", "deny", "halt"],
+      "description": "Boundary decision recorded. 'allow' permitted the action, 'deny' refused it, 'halt' stopped it. This is the enforcement-boundary verdict, nothing more."
+    },
+    "executed": {
+      "type": "boolean",
+      "description": "Boundary-observed execution status as asserted by the recorder, not outcome truth. Recorded separately from `decision` and not derived from it; a denied or halted action is normally executed=false, but each field is asserted independently."
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the recorder issued this record (ISO 8601). Part of the signed bytes."
+    },
+    "settlement_ref": {
+      "type": "string",
+      "description": "OPTIONAL opaque settlement correlation string. Rail-neutral: an identifier only, never proof that settlement occurred."
+    },
+    "settlement_rail": {
+      "type": "string",
+      "description": "OPTIONAL free-text label naming a settlement rail. Rail-neutral by construction: an uninterpreted label with no rail-specific semantics attached by this schema."
+    },
+    "sig": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{128}$",
+      "description": "Ed25519 signature (lowercase hex, 64 bytes) over the UTF-8 bytes of the JCS canonicalization of this record with the `sig` field omitted."
+    },
+    "sig_alg": {
+      "const": "Ed25519",
+      "description": "Signature algorithm: Ed25519 over RFC 8785 (JCS) canonical bytes."
+    }
+  }
+}

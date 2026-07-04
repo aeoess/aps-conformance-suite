@@ -46,10 +46,17 @@
       "canonical_sha256": "84df9e0a634eba40f5388872bed4f028a240e0c2f2d646755ecbdfb6b8ee0e42",
       "vector_count": 1,
       "spec_section": "String-concatenation preimage failure class. Mirrored from corpollc/qntm#15. Deep verification in runners/ts/canonical-bytes-qntm-v0.3.2.test.ts."
+    },
+    {
+      "category": "accountability-record",
+      "path": "accountability-record/accountability-record-fixture-v1.json",
+      "canonical_sha256": "134db05226a3340ebbf79a63b9e53b034abcc1776da3daca6e122363c64c3c35",
+      "vector_count": 12,
+      "spec_section": "Accountability record v0.1: boundary decision (allow/deny/halt) plus execution status; shape derived from decisionReceipt/execution-envelope and action_ref; detached-payload digest; Ed25519 over JCS. Includes tampered-payload and wrong-key negatives."
     }
   ],
   "totals": {
-    "fixtures": 5,
-    "vectors": 38
+    "fixtures": 6,
+    "vectors": 50
   }
 }
