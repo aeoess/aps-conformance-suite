@@ -20,8 +20,16 @@ The check is a DISCRIMINATOR, not an always-fail:
   - the PART-1 positive record       -> recompute AGREES  (f=allow == decision=allow)
   - the recompute-layer record       -> recompute DISAGREES (f=deny != decision=allow) -> FLAGGED
 
+A flagged record is emitted under the named rejection class `recompute_mismatch`
+(proposed on x402-foundation/x402#2332; parallels APS's own lowercase `digest_mismatch`).
+It is never a substitute for a native APS verdict: APS says the receipt is intact,
+`recompute_mismatch` says the decision does not re-derive; both fire independently.
+When a record DECLARES `recompute_rejection_kind`, this check re-derives it rather than
+trusting it — the same discipline the layer applies to the decision itself.
+
 Exit nonzero ONLY on an unexpected result (a record that agrees when it should
-disagree, or vice-versa), never merely because a record is flagged.
+disagree, a flagged record whose declared kind does not re-derive, or vice-versa),
+never merely because a record is flagged.
 """
 import json
 import os
@@ -46,6 +54,11 @@ HARD_FAIL = {
 MPA_REFER = {"PENDING", "TIMEOUT"}
 
 PRECEDENCE = ["pii", "trusted_wallet", "policy", "replay", "mpa"]
+
+# Named rejection class for a record whose decision does not re-derive from its
+# controls (proposed on x402-foundation/x402#2332). Placement/adoption is aeoess's
+# call as schema owner; here it names the flag, it never overrides a native APS verdict.
+RECOMPUTE_MISMATCH = "recompute_mismatch"
 
 
 def f_controls(controls: dict) -> str:
@@ -74,20 +87,38 @@ def load(path: str) -> dict:
         return json.load(fh)
 
 
-def evaluate(name: str, record: dict, controls: dict, expected_recompute: str | None):
-    """Return (recorded_decision, recomputed_decision, agrees). Print a line."""
+def evaluate(
+    name: str,
+    record: dict,
+    controls: dict,
+    expected_recompute: str | None,
+    declared_kind: str | None = None,
+):
+    """Return (recorded, recomputed, agrees, ok). Print the evidence line.
+
+    A disagreement is emitted under RECOMPUTE_MISMATCH. When the record declares a
+    recompute_rejection_kind, re-derive it (do not trust it): a flag must carry the
+    class recompute yields, and a record that agrees must carry no class."""
     recorded = record["decision"]
     recomputed = recompute_decision(controls)
     agrees = recomputed == recorded
-    status = "AGREES" if agrees else "DISAGREES -> FLAGGED"
+    emitted_kind = None if agrees else RECOMPUTE_MISMATCH
+    status = "AGREES" if agrees else f"DISAGREES -> {emitted_kind}"
     print(f"  {name}")
     print(f"    recorded decision:   {recorded}")
     print(f"    f(controls):         {f_controls(controls)} -> {recomputed}")
     print(f"    recompute {status}")
+    ok = True
     if expected_recompute is not None and recomputed != expected_recompute:
         print(f"    [!] expected recompute={expected_recompute} but got {recomputed}")
-        return recorded, recomputed, agrees, False
-    return recorded, recomputed, agrees, True
+        ok = False
+    if declared_kind != emitted_kind:
+        print(f"    [!] declared recompute_rejection_kind={declared_kind} does not re-derive "
+              f"(recompute yields {emitted_kind})")
+        ok = False
+    elif emitted_kind is not None:
+        print(f"    declared recompute_rejection_kind={declared_kind} re-derives")
+    return recorded, recomputed, agrees, ok
 
 
 def main() -> int:
@@ -124,9 +155,10 @@ def main() -> int:
     rec_record = rec_doc["record"]
     rec_controls = rec_doc["presidio_x402_ext"]["controls"]
     expected = rec_doc.get("presidio_recompute_expected")
+    declared_kind = rec_doc.get("recompute_rejection_kind")
     _, _, agrees_rec, ok_rec = evaluate(
         "presidio-x402-verdict-not-recomputable (recompute-layer)", rec_record, rec_controls,
-        expected_recompute=expected,
+        expected_recompute=expected, declared_kind=declared_kind,
     )
     if agrees_rec:
         print("    [!] recompute-layer record should DISAGREE (be flagged) but AGREED")
@@ -137,8 +169,8 @@ def main() -> int:
 
     # Summary: the check DISCRIMINATES.
     print("Summary:")
-    print(f"  positive       -> recompute AGREES   (f=allow == decision=allow): trusted")
-    print(f"  recompute-layer-> recompute DISAGREES (f=deny  != decision=allow): FLAGGED")
+    print("  positive       -> recompute AGREES   (f=allow == decision=allow): trusted")
+    print(f"  recompute-layer-> recompute DISAGREES (f=deny  != decision=allow): {RECOMPUTE_MISMATCH}")
     print()
     if unexpected:
         print(f"{unexpected} UNEXPECTED RESULT(S) — check FAILED")

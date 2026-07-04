@@ -64,6 +64,38 @@ it does not attest that the decision was the *right* function of its inputs.
 top of an intact receipt: APS certifies the receipt, the recompute layer certifies
 the transition.
 
+## The `recompute_mismatch` rejection class (proposed)
+
+A record whose decision does not re-derive from its controls fails under a named
+class, `recompute_mismatch`, carried at the envelope level in
+`recompute_rejection_kind`. The name was proposed and agreed on x402-foundation/x402#2332
+(babyblueviper1, Tuttotorna, vstantch, 2026-07-04): it parallels APS's own lowercase
+`digest_mismatch`, and it is the honest name because nothing was tampered with — the
+decision simply does not follow from its own controls.
+
+It sits in a four-layer stack, and the boundaries are load-bearing:
+
+- **integrity** — the record was preserved (`digest_mismatch` / `schema` on failure);
+- **signature** — who signed it (`signature` on failure);
+- **recompute** — the verdict follows from the *declared* controls (`recompute_mismatch`);
+- **attestation** — the declared controls are the *real* controls (separate, not here).
+
+Two rules hold this honest. `recompute_mismatch` is **never a substitute for a native
+APS verdict**: APS says the receipt is intact, `recompute_mismatch` says the decision
+does not re-derive, and both fire independently. And the recompute layer **stops at the
+declared controls** — it cannot say the controls are truthful; a recorder who lies about
+`policy.verdict` gets a clean recompute over a false premise, which is an *attestation*
+failure, not a recompute one.
+
+`recompute_check.py` re-derives the declared `recompute_rejection_kind` rather than
+trusting it: a flagged record must carry the class recompute yields, and an agreeing
+record must carry none.
+
+**Placement and adoption are aeoess's call** as schema owner — whether this lives as an
+envelope field beside the record (as here), as its own layer, or as a native APS
+`rejection_kind`. This directory ships the working instance; the shape follows wherever
+the boundary is drawn.
+
 ## Scope — what this proves and does not prove
 
 - It **does** prove: given the recorded controls, the recorded decision does not
@@ -85,8 +117,8 @@ the transition.
 ## Files
 
 - `presidio-x402-verdict-not-recomputable.record.json` — the APS-valid record plus
-  `presidio_x402_ext.controls` and the `presidio_recompute_expected` / recorded
-  `decision` pair.
+  `presidio_x402_ext.controls`, the `presidio_recompute_expected` / recorded `decision`
+  pair, and the proposed `recompute_rejection_kind: recompute_mismatch` envelope field.
 - `recompute_check.py` — standalone (stdlib only) implementation of `f(controls)`;
   loads both this record and the PART-1 positive and shows the discriminator
   behavior.

@@ -33,6 +33,8 @@
   "expected_verification": true,
   "aps_native_status": "This record is VALID under all three native APS checks: schema-valid, signature valid over JCS(record minus sig) and signed by the key signer_did resolves to (keypair.publicKeyHex), and action_digest = sha256(JCS(action)) binds. It is deliberately NOT an APS negative.",
   "presidio_recompute_expected": "deny",
+  "recompute_rejection_kind": "recompute_mismatch",
+  "recompute_rejection_kind_status": "proposed on x402-foundation/x402#2332 (babyblueviper1 + Tuttotorna + vstantch, 2026-07-04); placement and adoption are aeoess's call as schema owner. Envelope-level only: the APS record stays schema-valid and APS-native VALID; recompute_mismatch is an additional layer, never a substitute for a native APS verdict.",
   "presidio_x402_ext": {
     "decision_ref": "0f700b3fcc4e784029eba971d7065b10b10cf4bc2c19a38d5bef9cbf57e25d94",
     "screen_verdict": "PII_REDACTED",
