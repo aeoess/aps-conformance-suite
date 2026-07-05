@@ -526,8 +526,9 @@ const fixture = {
     'prove which channel was used, and carries no normative pass threshold: the consumer ' +
     'judges k of n. Canonicalization: JCS RFC 8785. Signature: Ed25519 over the JCS of the ' +
     'record with the sig field excluded entirely. Seed derivation: sha256hex(utf8(' +
-    'content_digest + (presentation_digest or empty string when null) + nonce + version)), ' +
-    'no separators. Word handle vectors exercise the word_digest_handle codec: 11-bit words ' +
+    'canonicalizeJCS({content_digest, presentation_digest, nonce, version}))), the RFC 8785 ' +
+    'JCS preimage with presentation_digest null when absent. Word handle vectors exercise the ' +
+    'word_digest_handle codec: 11-bit words ' +
     'over the pinned lexicon with a position-dependent checksum.',
   schema: './read-fidelity-receipt.schema.json',
   lexicon_name: LEXICON_NAME,

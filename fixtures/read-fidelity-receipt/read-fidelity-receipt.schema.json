@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://aeoess.com/aps/schema/read-fidelity-receipt/v0.1/read-fidelity-receipt.schema.json",
   "title": "APS Read Fidelity Receipt",
-  "description": "A read fidelity receipt proves sampled readback fidelity at the stated n under the declared sampling assumptions. It does not prove every byte was read correctly, does not prove perception or comprehension, does not prove which channel was used, and carries no normative pass threshold: the consumer judges k of n. The record is a signed commitment to a sampled readback challenge: the verifier supplies a nonce, spans are drawn deterministically from a seed bound to that nonce and to the exact content and presentation digests, and the record carries sha256 commitments of the span texts plus the scored result (k of n). Raw span texts and responses are never in the record. Canonicalization is RFC 8785 (JCS); sig is Ed25519 over the JCS of the record with the sig field excluded entirely. challenge.seed MUST equal sha256hex(utf8(content_digest + (presentation_digest or empty string when null) + nonce + version)), concatenated with no separators; verifiers recompute the derivation and reject a mismatch even when the signature is valid.",
+  "description": "A read fidelity receipt proves sampled readback fidelity at the stated n under the declared sampling assumptions. It does not prove every byte was read correctly, does not prove perception or comprehension, does not prove which channel was used, and carries no normative pass threshold: the consumer judges k of n. The record is a signed commitment to a sampled readback challenge: the verifier supplies a nonce, spans are drawn deterministically from a seed bound to that nonce and to the exact content and presentation digests, and the record carries sha256 commitments of the span texts plus the scored result (k of n). Raw span texts and responses are never in the record. Canonicalization is RFC 8785 (JCS); sig is Ed25519 over the JCS of the record with the sig field excluded entirely. challenge.seed MUST equal sha256hex(utf8(canonicalizeJCS({content_digest, presentation_digest, nonce, version}))), the RFC 8785 JCS preimage of those four fields with presentation_digest null when absent; verifiers recompute the derivation and reject a mismatch even when the signature is valid.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -54,7 +54,7 @@
         "seed": {
           "type": "string",
           "pattern": "^[0-9a-f]{64}$",
-          "description": "MUST equal sha256hex(utf8(content_digest + (presentation_digest or empty string when null) + nonce + version)). Verifiers recompute and reject a mismatch."
+          "description": "MUST equal sha256hex(utf8(canonicalizeJCS({content_digest, presentation_digest, nonce, version}))), the RFC 8785 JCS preimage (presentation_digest null when absent). Verifiers recompute and reject a mismatch."
         },
         "algorithm": {
           "const": "span_sample_v1",

@@ -377,9 +377,10 @@ export interface SampledSpan {
 }
 
 /**
- * Derive the challenge seed. Concatenation with no separators, exactly:
- * content_digest, then presentation_digest or the empty string when null,
- * then nonce, then version.
+ * Derive the challenge seed. The preimage is the RFC 8785 JCS
+ * canonicalization of an object carrying the four bound fields, so the
+ * component boundaries are unambiguous: presentation_digest is a distinct
+ * JSON member (null when absent), never foldable into the nonce.
  */
 export function deriveSeed(
   contentDigest: string,
@@ -387,8 +388,14 @@ export function deriveSeed(
   nonce: string,
   version: string,
 ): string {
-  const presentation = presentationDigestOrNull === null ? '' : presentationDigestOrNull
-  return sha256Hex(contentDigest + presentation + nonce + version)
+  return sha256Hex(
+    canonicalizeJCS({
+      content_digest: contentDigest,
+      presentation_digest: presentationDigestOrNull,
+      nonce,
+      version,
+    }),
+  )
 }
 
 /**

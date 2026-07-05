@@ -53,10 +53,17 @@
       "canonical_sha256": "134db05226a3340ebbf79a63b9e53b034abcc1776da3daca6e122363c64c3c35",
       "vector_count": 12,
       "spec_section": "Accountability record v0.1: boundary decision (allow/deny/halt) plus execution status; shape derived from decisionReceipt/execution-envelope and action_ref; detached-payload digest; Ed25519 over JCS. Includes tampered-payload and wrong-key negatives."
+    },
+    {
+      "category": "read-fidelity-receipt",
+      "path": "read-fidelity-receipt/read-fidelity-receipt-fixture-v1.json",
+      "canonical_sha256": "bbfeae178efc947ebd7d6642048b6ba069409d5152be54a40b83e52e1c26f2e3",
+      "vector_count": 8,
+      "spec_section": "read_fidelity_receipt v0.1: sampled readback challenge over perceived content; Ed25519 over JCS; seed = sha256(JCS of content_digest, presentation_digest, nonce, version); word_digest_handle checksum. Deep verification in fixtures/read-fidelity-receipt/verify.ts and validate.py. Includes replayed-nonce, presentation-mismatch, tampered-digest, out-of-lexicon, and transposition negatives."
     }
   ],
   "totals": {
-    "fixtures": 6,
-    "vectors": 50
+    "fixtures": 7,
+    "vectors": 58
   }
 }

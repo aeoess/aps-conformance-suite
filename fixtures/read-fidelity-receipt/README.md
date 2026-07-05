@@ -28,15 +28,19 @@ field excluded entirely, and `sig` is the Ed25519 signature over those bytes.
 The seed derivation is the replay binding:
 
 ```
-seed = sha256hex( utf8( content_digest
-                        + (presentation_digest == null ? "" : presentation_digest)
-                        + nonce + version ) )
+seed = sha256hex( utf8( JCS({
+         content_digest,
+         presentation_digest,   // null when absent
+         nonce,
+         version
+       }) ) )
 ```
 
-Concatenation with no separators. Verifiers recompute the derivation and
-reject a mismatch even when the signature is valid, so replaying span
-commitments under a different nonce, content, or presentation fails even
-after a re-sign.
+RFC 8785 JCS preimage (keys sorted), so `presentation_digest` is a distinct
+member (null when absent) rather than an empty string spliced against the
+nonce. Verifiers recompute the derivation and reject a mismatch even when the
+signature is valid, so replaying span commitments under a different nonce,
+content, or presentation fails even after a re-sign.
 
 Word handle vectors exercise the word_digest_handle codec over the pinned
 lexicon `aps-handle-en-v1` (2048 words, lexicon_id

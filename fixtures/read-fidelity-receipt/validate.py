@@ -14,9 +14,11 @@ Checks, printed verbatim:
   3. Cross-language JCS byte-parity: a Python canonicalizer reproduces
      signing_input_canonical and canonical byte-for-byte (proves the TS
      generator and an independent Python impl agree on RFC 8785 bytes).
-  4. Seed derivation recompute: seed = sha256hex(utf8(content_digest +
-     (presentation_digest or empty string when null) + nonce + version)).
-     Positives MUST match; the v6/v7 seed negatives MUST mismatch.
+  4. Seed derivation recompute: seed = sha256hex(utf8(JCS({content_digest,
+     presentation_digest (null when absent), nonce, version}))). The RFC 8785
+     preimage keeps presentation_digest a distinct member so it cannot fold
+     into the nonce. Positives MUST match; the v6/v7 seed negatives MUST
+     mismatch.
   5. Word handle checksum math, recomputed in pure Python from the digest and
      the recorded word indices (11-bit words, packed prefix, sha256 over
      BE16(prefix_bits) plus the packed bits). The substitution and
@@ -59,8 +61,14 @@ def sha256_hex(s: str) -> str:
 
 
 def derive_seed(content_digest, presentation_digest, nonce, version) -> str:
-    presentation = "" if presentation_digest is None else presentation_digest
-    return sha256_hex(content_digest + presentation + nonce + version)
+    # RFC 8785 JCS preimage: presentation_digest is a distinct JSON member
+    # (null when absent), never foldable into the nonce.
+    return sha256_hex(jcs({
+        "content_digest": content_digest,
+        "presentation_digest": presentation_digest,
+        "nonce": nonce,
+        "version": version,
+    }))
 
 
 def data_indices_from_digest(digest_hex: str, data_words: int) -> list:
