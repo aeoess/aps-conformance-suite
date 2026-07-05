@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aeoess.com/aps/schema/read-fidelity-receipt/v0.1/read-fidelity-receipt.schema.json",
+  "title": "APS Read Fidelity Receipt",
+  "description": "A read fidelity receipt proves sampled readback fidelity at the stated n under the declared sampling assumptions. It does not prove every byte was read correctly, does not prove perception or comprehension, does not prove which channel was used, and carries no normative pass threshold: the consumer judges k of n. The record is a signed commitment to a sampled readback challenge: the verifier supplies a nonce, spans are drawn deterministically from a seed bound to that nonce and to the exact content and presentation digests, and the record carries sha256 commitments of the span texts plus the scored result (k of n). Raw span texts and responses are never in the record. Canonicalization is RFC 8785 (JCS); sig is Ed25519 over the JCS of the record with the sig field excluded entirely. challenge.seed MUST equal sha256hex(utf8(canonicalizeJCS({content_digest, presentation_digest, nonce, version}))), the RFC 8785 JCS preimage of those four fields with presentation_digest null when absent; verifiers recompute the derivation and reject a mismatch even when the signature is valid.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "type",
+    "content_digest",
+    "presentation_digest",
+    "challenge",
+    "response_digest",
+    "k",
+    "n",
+    "scoring_method",
+    "attester",
+    "model_claim",
+    "runtime_claim",
+    "verification_method",
+    "challenge_issued_at",
+    "response_observed_at",
+    "receipt_issued_at",
+    "sig"
+  ],
+  "dependentRequired": {
+    "lexicon_profile": ["lexicon_id"]
+  },
+  "properties": {
+    "type": {
+      "const": "read_fidelity_receipt",
+      "description": "Fixed type discriminator."
+    },
+    "content_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "Digest of the canonical content bytes."
+    },
+    "presentation_digest": {
+      "type": ["string", "null"],
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "Digest of the rendered presentation as served, or null when there is none. Part of the seed derivation either way (null contributes the empty string)."
+    },
+    "challenge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nonce", "seed", "algorithm", "version", "span_len", "span_commitments"],
+      "properties": {
+        "nonce": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Verifier-supplied challenge nonce; never derivable from the document alone; single-use per challenge."
+        },
+        "seed": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "MUST equal sha256hex(utf8(canonicalizeJCS({content_digest, presentation_digest, nonce, version}))), the RFC 8785 JCS preimage (presentation_digest null when absent). Verifiers recompute and reject a mismatch."
+        },
+        "algorithm": {
+          "const": "span_sample_v1",
+          "description": "Deterministic span sampling: position i (attempt j) is BE-uint64 of the first 8 bytes of sha256(utf8(seed + \":\" + i + \":\" + j)) mod (L - span_len + 1) over the source code points, bumping j on repeats."
+        },
+        "version": {
+          "const": "1",
+          "description": "Challenge protocol version; folded into the seed derivation."
+        },
+        "span_len": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Span length in unicode code points; required to recompute the spans."
+        },
+        "span_commitments": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "description": "sha256 of the UTF-8 bytes of each span text, in sampling order. Raw span texts are NOT in the record."
+        }
+      },
+      "description": "The sampled readback challenge this record commits to."
+    },
+    "response_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "\"sha256:\" + sha256hex(JCS(responses)) where responses is the ordered array of readback strings. Raw responses are NOT in the record."
+    },
+    "k": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of exact-match readbacks. k <= n is enforced by the verifiers, not expressible here. No normative pass threshold: the consumer judges k of n."
+    },
+    "n": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Number of sampled spans. MUST equal challenge.span_commitments.length (enforced by the verifiers)."
+    },
+    "scoring_method": {
+      "const": "exact_match_v1",
+      "description": "Exact string equality per index between span text and response."
+    },
+    "attester": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "Ed25519 public key hex of the SIGNING identity. May differ from the executing model; model_claim and runtime_claim are claims about the executor."
+    },
+    "model_claim": {
+      "type": "string",
+      "description": "Claimed executing model. A claim, not a proof; see verification_method."
+    },
+    "runtime_claim": {
+      "type": "string",
+      "description": "Claimed executing runtime. A claim, not a proof; see verification_method."
+    },
+    "verification_method": {
+      "enum": ["asserted", "provider_attestation"],
+      "description": "Whether model_claim and runtime_claim are merely asserted or backed by a provider attestation."
+    },
+    "challenge_issued_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the challenge was issued (ISO 8601, caller-provided)."
+    },
+    "response_observed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the readback responses were observed (ISO 8601, caller-provided)."
+    },
+    "receipt_issued_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the receipt was issued and signed (ISO 8601, caller-provided)."
+    },
+    "lexicon_id": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "OPTIONAL. Pinned lexicon identity (sha256 of the canonical word list text) when word_digest_handles appear in the flow."
+    },
+    "lexicon_profile": {
+      "const": "single-list-v1",
+      "description": "OPTIONAL. Lexicon layout profile identifier, alongside lexicon_id."
+    },
+    "sig": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{128}$",
+      "description": "Ed25519 signature (lowercase hex, 64 bytes) over the UTF-8 bytes of the JCS canonicalization of this record with the sig field excluded entirely."
+    }
+  }
+}
