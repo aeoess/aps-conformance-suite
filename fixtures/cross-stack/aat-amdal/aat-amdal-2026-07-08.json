@@ -1,0 +1,37 @@
+{
+ "schema": "aat-pair-v1",
+ "schema_note": "three-vector: live + pre-expired pair (window semantics) + act-binding-carrying live vector (extra claim, added 2026-07-01). The act-binding vector is an EXTRA claim, not a shape change. JWKS/window/signature checks pass unchanged.",
+ "issuer_jwks": { "url": "https://agentlair.dev/.well-known/jwks.json", "kid": "ab0502f7", "alg": "EdDSA" },
+ "authored_at": "2026-07-08T10:06:40Z",
+ "vectors": [
+   { "id": "aat-2026-07-08-live",
+     "aat": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCIsImtpZCI6ImFiMDUwMmY3In0.eyJpc3MiOiJodHRwczovL2FnZW50bGFpci5kZXYiLCJzdWIiOiJhY2NfNnZMbGtkYVpLS3dnaEpCRCIsImF1ZCI6Imh0dHBzOi8vZ2F0ZXdheS5hZW9lc3MuY29tIiwiZXhwIjoxNzgzNTA4NTEwLCJpYXQiOjE3ODM1MDQ5MTAsImp0aSI6ImFhdF9zTkRzQ3lRWlpHQUNFcTJyIiwiZGlkIjoiZGlkOndlYjphZ2VudGxhaXIuZGV2OmFnZW50czphY2NfNnZMbGtkYVpLS3dnaEpCRCIsImFsX3Njb3BlcyI6WyJhcHM6dmVyaWZ5OmxpdmUiXSwiYWxfYXVkaXRfdXJsIjoiaHR0cHM6Ly9hZ2VudGxhaXIuZGV2L3YxL2F1ZGl0L2FhdF9zTkRzQ3lRWlpHQUNFcTJyIiwiYWxfbmFtZSI6InBpcGVsaW5lLXRlc3QiLCJhbF90cnVzdCI6eyJzY29yZSI6NTQsImxldmVsIjoiaW50ZXJuIiwiY29uZmlkZW5jZSI6MC45NDI2NzU4MjQxMDExMzEzLCJjb21wdXRlZF9hdCI6IjIwMjYtMDctMDhUMTA6MDE6NTAuOTE3WiIsInRyZW5kIjoic3RhYmxlIn0sImFsX25pZCI6ImRpZDprZXk6ejZNa2dSbVVYdEdkVGtYaEFjZnBvYWJFeXZaRWpzZHZUbkd3NmdhWDNMY1NkaGhqIn0.oKq1WfmnAW-wz1lNFO2hZL6fckKv515aRerqdLjVMaxqq8rvyrA7cpn1nYI5ecHCCzQgf_f7fW-pNR-CVSR9Dw",
+     "notBefore": "2026-07-08T10:01:50Z",
+     "notAfter": "2026-07-08T11:01:50Z",
+     "verification_time": "2026-07-08T10:06:40Z",
+     "expected_result": "valid",
+     "verifier_must": "validate signature against pinned JWKS, then check window at verification_time" },
+   { "id": "aat-2026-07-08-expired",
+     "aat": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCIsImtpZCI6ImFiMDUwMmY3In0.eyJpc3MiOiJodHRwczovL2FnZW50bGFpci5kZXYiLCJzdWIiOiJhY2NfNnZMbGtkYVpLS3dnaEpCRCIsImF1ZCI6Imh0dHBzOi8vZ2F0ZXdheS5hZW9lc3MuY29tIiwiZXhwIjoxNzgyOTAzNzM5LCJpYXQiOjE3ODI5MDAxMzksImp0aSI6ImFhdF9CNTFDZGRSUE0yYzFuQ0hXIiwiZGlkIjoiZGlkOndlYjphZ2VudGxhaXIuZGV2OmFnZW50czphY2NfNnZMbGtkYVpLS3dnaEpCRCIsImFsX3Njb3BlcyI6WyJhcHM6dmVyaWZ5OmxpdmUiXSwiYWxfYXVkaXRfdXJsIjoiaHR0cHM6Ly9hZ2VudGxhaXIuZGV2L3YxL2F1ZGl0L2FhdF9CNTFDZGRSUE0yYzFuQ0hXIiwiYWxfbmFtZSI6InBpcGVsaW5lLXRlc3QiLCJhbF90cnVzdCI6eyJzY29yZSI6NDUsImxldmVsIjoiaW50ZXJuIiwiY29uZmlkZW5jZSI6MC45MTA1MTk5NDA2NjY0Mzg2LCJjb21wdXRlZF9hdCI6IjIwMjYtMDctMDFUMTA6MDI6MTkuNzI4WiIsInRyZW5kIjoic3RhYmxlIn0sImFsX25pZCI6ImRpZDprZXk6ejZNa2dSbVVYdEdkVGtYaEFjZnBvYWJFeXZaRWpzZHZUbkd3NmdhWDNMY1NkaGhqIn0.guwdfomtjVCFWLwYb6UQkxj7DM9pLMQ8q-iWA8ZTD_oR_vkjzIX_W2iDJWfJWut3lvpRSmp3GRJnUJons83aDA",
+     "expiredAt": "2026-07-01T11:02:19Z",
+     "verification_time": "2026-07-08T10:06:40Z",
+     "expected_result": "exp_reject",
+     "expected_failure_stage": "window_check",
+     "expected_reason": "expired before verification time",
+     "verifier_must": "reject at the window check at verification_time; signature validity does not rescue an expired token" },
+   { "id": "aat-2026-07-08-act-binding",
+     "aat": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCIsImtpZCI6ImFiMDUwMmY3In0.eyJpc3MiOiJodHRwczovL2FnZW50bGFpci5kZXYiLCJzdWIiOiJhY2NfNnZMbGtkYVpLS3dnaEpCRCIsImF1ZCI6Imh0dHBzOi8vZ2F0ZXdheS5hZW9lc3MuY29tIiwiZXhwIjoxNzgzNTA4NTEyLCJpYXQiOjE3ODM1MDQ5MTIsImp0aSI6ImFhdF9ZY3pMckEzYmpYZTVISUsyIiwiZGlkIjoiZGlkOndlYjphZ2VudGxhaXIuZGV2OmFnZW50czphY2NfNnZMbGtkYVpLS3dnaEpCRCIsImFsX3Njb3BlcyI6WyJhcHM6dmVyaWZ5OmxpdmUiXSwiYWxfYXVkaXRfdXJsIjoiaHR0cHM6Ly9hZ2VudGxhaXIuZGV2L3YxL2F1ZGl0L2FhdF9ZY3pMckEzYmpYZTVISUsyIiwiYWxfbmFtZSI6InBpcGVsaW5lLXRlc3QiLCJ1cm46ZGFzaGNsYXc6YWN0LWJpbmRpbmciOnsidHlwIjoiYWN0aW9uLWJpbmRpbmcvdjEiLCJoYXNoIjoic2hhMjU2OlRvX0F0Ujd2MHA4aW0zWTY5Q0NGS2FBTlcwQUdQdXNMZ1h1M1ctSjFCelUifSwiYWxfdHJ1c3QiOnsic2NvcmUiOjU1LCJsZXZlbCI6ImludGVybiIsImNvbmZpZGVuY2UiOjAuOTQ2ODQ4ODYzNjAxOTM2MiwiY29tcHV0ZWRfYXQiOiIyMDI2LTA3LTA4VDEwOjAxOjUzLjA3N1oiLCJ0cmVuZCI6InN0YWJsZSJ9LCJhbF9uaWQiOiJkaWQ6a2V5Ono2TWtnUm1VWHRHZFRrWGhBY2Zwb2FiRXl2WkVqc2R2VG5HdzZnYVgzTGNTZGhoaiJ9.QPf83aIjkFmTBajU0WbcCiX9Nitu0z5H4SNOt0CLhMasCHyCAfA09n46LgXOXL5sAd5Jh0kQXnL2v3HfOmH2Dg",
+     "notBefore": "2026-07-08T10:01:52Z",
+     "notAfter": "2026-07-08T11:01:52Z",
+     "verification_time": "2026-07-08T10:06:40Z",
+     "expected_result": "valid",
+     "act_binding": {
+       "claim": "urn:dashclaw:act-binding",
+       "typ": "action-binding/v1",
+       "preimage": { "action": "verify", "target": "https://gateway.aeoess.com", "goal": "aps:conformance:act-binding" },
+       "canonicalization": "RFC 8785 JCS profile: string-only NFC-normalized values, keys ordered action < goal < target; digest = 'sha256:' + base64url(SHA-256(utf8(JSON.stringify({action,goal,target}))))",
+       "hash": "sha256:To_AtR7v0p8im3Y69CCFKaANW0AGPusLgXu3W-J1BzU"
+     },
+     "verifier_must": "validate signature against pinned JWKS and check window at verification_time (positive vector, same as live); THEN decode the urn:dashclaw:act-binding claim, recompute the digest over the JCS canonicalization of the preimage (keys action<goal<target, NFC), and confirm it equals the claim hash byte-for-byte. The act-binding claim is an EXTRA claim: it neither rescues nor sinks window/signature validity." }
+ ]
+}

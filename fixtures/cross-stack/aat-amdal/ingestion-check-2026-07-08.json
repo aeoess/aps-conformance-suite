@@ -1,0 +1,13 @@
+{
+ "ingested_at_utc": "2026-07-08T18:00:00Z",
+ "jwks_kid": "ab0502f7",
+ "jwks_fetched_live": true,
+ "verification_path": "independent PyNaCl Ed25519 + stdlib SHA-256",
+ "verification_time": "2026-07-08T10:06:40Z",
+ "results": [
+  { "vector": "aat-2026-07-08-live", "jti": "aat_sNDsCyQZZGACEq2r", "signature": "valid", "in_window_at_verification_time": true, "window_verdict_at_verification_time": "valid" },
+  { "vector": "aat-2026-07-08-expired", "jti": "aat_B51CddRPM2c1nCHW", "signature": "valid", "in_window_at_verification_time": false, "window_verdict_at_verification_time": "exp_reject" },
+  { "vector": "aat-2026-07-08-act-binding", "jti": "aat_YczLrA3bjXe5HIK2", "signature": "valid", "in_window_at_verification_time": true, "window_verdict_at_verification_time": "valid", "act_binding_hash_recomputed": "sha256:To_AtR7v0p8im3Y69CCFKaANW0AGPusLgXu3W-J1BzU", "act_binding_hash_claimed": "sha256:To_AtR7v0p8im3Y69CCFKaANW0AGPusLgXu3W-J1BzU", "act_binding_hash_match": true }
+ ],
+ "note": "First three-vector drop under the schema bump agreed 2026-07-01. Expired half is byte-identical to the 2026-07-01 live token (rotation continuity confirmed). Act-binding digest independently recomputed from the stated JCS preimage (action<goal<target, NFC) and matches the claim hash byte-for-byte. JWKS pin (kid ab0502f7, x=KEVRJiCKuLXJ_R85_h-26tsA-Ng0DOUTqnbt1PfInmk) unchanged from prior weeks."
+}
