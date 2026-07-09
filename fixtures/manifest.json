@@ -1,7 +1,7 @@
 {
   "version": "0.1.0",
   "spec_refs": [
-    "https://aeoess.com/llms-full.txt",
+    "https://agent-passport.org/llms-full.txt",
     "https://datatracker.ietf.org/doc/draft-pidlisnyi-aps-00/",
     "https://doi.org/10.5281/zenodo.18749779",
     "https://doi.org/10.5281/zenodo.18932404",

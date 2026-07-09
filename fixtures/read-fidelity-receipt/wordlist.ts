@@ -1,4 +1,4 @@
-// Copyright 2024-2026 Tymofii Pidlisnyi. Apache-2.0 license. See LICENSE.
+// Copyright 2026 Tymofii Pidlisnyi. Apache-2.0 license. See LICENSE.
 // aps-handle-en-v1 lexicon (2048 words) for the read-fidelity-receipt fixture family.
 // GENERATED from the agent-passport-system lexicon data file
 // (src/v2/word_handles/lexicon.ts) by a one-shot extraction script.

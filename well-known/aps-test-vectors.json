@@ -2,7 +2,7 @@
   "version": "0.1.0",
   "spec": "Agent Passport System (APS) — cross-implementation test corpus",
   "spec_refs": [
-    "https://aeoess.com/llms-full.txt",
+    "https://agent-passport.org/llms-full.txt",
     "https://datatracker.ietf.org/doc/draft-pidlisnyi-aps/"
   ],
   "canonicalization": "JCS — RFC 8785",

@@ -1,4 +1,4 @@
-// Copyright 2024-2026 Tymofii Pidlisnyi. Apache-2.0 license. See LICENSE.
+// Copyright 2026 Tymofii Pidlisnyi. Apache-2.0 license. See LICENSE.
 // Shared primitives for the read-fidelity-receipt fixture family.
 //
 // Vendored from agent-passport-system so this family verifies from a cold

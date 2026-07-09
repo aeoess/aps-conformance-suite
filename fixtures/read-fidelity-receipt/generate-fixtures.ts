@@ -1,4 +1,4 @@
-// Copyright 2024-2026 Tymofii Pidlisnyi. Apache-2.0 license. See LICENSE.
+// Copyright 2026 Tymofii Pidlisnyi. Apache-2.0 license. See LICENSE.
 // Deterministic fixture-vector generator for the APS read-fidelity-receipt family.
 //
 // Run as:  npx tsx fixtures/read-fidelity-receipt/generate-fixtures.ts

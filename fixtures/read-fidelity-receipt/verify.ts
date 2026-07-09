@@ -1,4 +1,4 @@
-// Copyright 2024-2026 Tymofii Pidlisnyi. Apache-2.0 license. See LICENSE.
+// Copyright 2026 Tymofii Pidlisnyi. Apache-2.0 license. See LICENSE.
 // Cold-clone verifier for the read-fidelity-receipt fixture family.
 //
 // Run as:  npx tsx fixtures/read-fidelity-receipt/verify.ts
