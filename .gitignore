@@ -23,3 +23,6 @@ specs/ERIK-NEWTON*
 /tmp-*.md
 /scratch-*.md
 *.private.md
+
+__pycache__/
+*.pyc
