@@ -1,5 +1,7 @@
 # aps-conformance-suite
 
+[![APS conformance](https://img.shields.io/endpoint?url=https%3A%2F%2Fgateway.aeoess.com%2Fapi%2Fv1%2Fpublic%2Fconformance%2Fbadge)](https://gateway.aeoess.com/api/v1/public/conformance)
+
 Cross-implementation test corpus for the **Agent Passport System (APS)** protocol. Byte-identical JCS canonicalization fixtures, deterministic Ed25519 signatures, OWASP AIVSS §3.6 scenario fixtures, and InstructionProvenanceReceipt vectors. Apache-2.0.
 
 > **Status:** v0.1.0 (internal preview, pending external partner integration).
