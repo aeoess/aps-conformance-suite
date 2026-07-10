@@ -66,3 +66,22 @@ Most recent reciprocal verification: 2026-05-05, posted to [A2A#1786 (issuecomme
 - CTEF receipt sha256: `a14e6db4477989a1f5c0d60078b0efcc4dc9dd7e3cd1276c4480bdd95b52bcfb` (4/4 PASS)
 
 These external scripts complement the upstream Python verifier (column 1 of the cross-validation triangle) and the APS TypeScript test (column 2) by running byte-equality checks of full receipt envelopes against actual SDK output rather than testing the canonicalization function in isolation.
+
+## JCS byte-contract vectors (canonical-bytes-jcs-v1.json)
+
+Eight RFC 8785 JSON Canonicalization Scheme vectors generated from the
+agent-passport-system `canonicalizeJCS` reference (npm 3.3.1) and verified by
+this suite's vendored canonicalizer, proving byte-parity between the reference
+and the standalone runner. Each vector carries an input document, the canonical
+bytes as hex, and the SHA-256 of the canonical form.
+
+They pin the byte-exact behaviors a naive canonicalizer gets wrong:
+
+- ECMAScript `Number::toString`: `0.1` shortest round-trip, `1e21` boundary to
+  exponential (`1e+21`), negative zero to `0`, an integer above 2^53 as a plain
+  integer, and the `1e-7` exponential vs `1e-6` decimal threshold.
+- Object keys sorted by UTF-16 code unit, so an astral-plane key (U+1D306, lead
+  unit 0xD834) sorts before a BMP key U+FF61.
+- Keys are used exactly as given: JCS does NOT Unicode-normalize keys, so an NFD
+  key is preserved as NFD and is distinct from its NFC form.
+- Recursive key sorting in nested objects, with array element order preserved.

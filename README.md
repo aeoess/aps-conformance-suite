@@ -1,5 +1,7 @@
 # aps-conformance-suite
 
+[![APS conformance](https://img.shields.io/endpoint?url=https%3A%2F%2Fgateway.aeoess.com%2Fapi%2Fv1%2Fpublic%2Fconformance%2Fbadge)](https://gateway.aeoess.com/api/v1/public/conformance)
+
 Cross-implementation test corpus for the **Agent Passport System (APS)** protocol. Byte-identical JCS canonicalization fixtures, deterministic Ed25519 signatures, OWASP AIVSS §3.6 scenario fixtures, and InstructionProvenanceReceipt vectors. Apache-2.0.
 
 > **Status:** v0.1.0 (internal preview, pending external partner integration).
@@ -12,7 +14,7 @@ A packaged corpus of test vectors that any APS-compatible implementation can run
 - **inference-session** — CTEF v0.3.1 cryptographic agent identity vectors (validity windows, sequence bounds). 7 vectors, deterministic seed `ctef-synthetic-fixture-v1`.
 - **instruction-provenance** — InstructionProvenanceReceipt v0.2 envelope, path canonicalization, exhaustiveness, action-time recompute. 10 vectors (6 positive + 4 negative), deterministic seed `aps-instruction-provenance-fixture-v1`.
 - **aivss-scenarios** — AIVSS §3.6 worked scenarios (OWASP AAI001–AAI010) with CVSS+AIVSS scoring and APS-primitive mappings. 10 scenarios, structural fixtures.
-- **canonical-bytes** — string-concatenation preimage failure-class vectors (production-derived, qntm v0.3.2). 1 vector.
+- **canonical-bytes** — RFC 8785 JCS byte-contract vectors (UTF-16 key ordering, ECMAScript number serialization, NFC, string escaping), TS-reference-derived and runner-verified, plus a production-derived string-concatenation preimage failure-class fixture (qntm v0.3.2). 9 fixtures (8 JCS vectors verified, 1 production-diff).
 - **accountability-record** — signed enforcement-boundary decision records (allow/deny/halt plus execution status) with a detached-payload action digest. 12 vectors.
 - **read-fidelity-receipt** — sampled readback fidelity receipts with word-digest handles. 8 vectors.
 - **actionref-canonical** — native action_ref scopeRequired canonicalization: NFC per scope string plus Unicode code-point sort (draft-pidlisnyi-aps-03 section 4.1). 4 vectors, TS-generated and Go-verified.

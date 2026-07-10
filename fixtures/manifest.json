@@ -81,6 +81,13 @@
       "canonical_sha256": "69b0d47beb4262addd30eaf86dd434921518dc38841bd336454736c569aecc69",
       "vector_count": 2,
       "spec_section": "BilateralReceipt canonical signable bytes with aud and action_ref; independently derived and cross-verified (TypeScript reference plus from-scratch Python RFC 8785)"
+    },
+    {
+      "category": "canonical-bytes",
+      "path": "canonical-bytes/canonical-bytes-jcs-v1.json",
+      "canonical_sha256": "914803e87ce165f59958835519b30274623f2afab9a8ef5059bd2902ff0c9a8a",
+      "vector_count": 8,
+      "spec_section": "RFC 8785 JCS byte-contract vectors: ECMAScript number formatting (float, 1e21 boundary, negative zero, integer above 2^53, exponent-vs-decimal), UTF-16 key ordering, NFD keys used as given, nested objects. Verified via the runner vendored canonicalizer."
     }
   ],
   "totals": {
