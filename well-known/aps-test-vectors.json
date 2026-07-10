@@ -36,13 +36,24 @@
       "description": "AIVSS §3.6 worked scenarios — OWASP Agentic AI Core risks AAI001–AAI010, mapped to APS protocol primitives.",
       "fixture": "aivss-scenarios/manifest.json",
       "spec_source": "AIVSS Scoring System For OWASP Agentic AI Core Security Risks v0.8",
-      "scenario_count": 10
+      "scenario_count": 10,
+      "vector_count": 10
+    },
+    "canonical-bytes": {
+      "description": "String-concatenation preimage failure-class vectors (production-derived, qntm v0.3.2). Mirrored from corpollc/qntm#15; deep verification in runners/ts/canonical-bytes-qntm-v0.3.2.test.ts.",
+      "fixture": "canonical-bytes/canonical-bytes-diff-v032.json",
+      "vector_count": 1
     },
     "accountability-record": {
       "description": "Accountability records: a signed boundary decision (allow/deny/halt) plus execution status, with a detached-payload action digest. Cross-language JCS byte-parity and Ed25519 required.",
       "fixture": "accountability-record/accountability-record-fixture-v1.json",
       "deterministic_seed_input": "aps-accountability-record-fixture-v1",
       "vector_count": 12
+    },
+    "read-fidelity-receipt": {
+      "description": "Sampled readback fidelity receipts with word-digest handles: Ed25519 over the sig-excluded JCS bytes, seed derivation recompute, span commitments against the source text, and word-handle checksum decode. Cross-language byte-parity and Ed25519 required.",
+      "fixture": "read-fidelity-receipt/read-fidelity-receipt-fixture-v1.json",
+      "vector_count": 8
     },
     "actionref-canonical": {
       "description": "Native action_ref scopeRequired canonicalization: NFC per scope string, Unicode code-point sort, RFC 8785, SHA-256 (draft-pidlisnyi-aps-03 section 4.1). Cross-language byte-parity required.",

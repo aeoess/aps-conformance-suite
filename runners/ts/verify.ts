@@ -17,6 +17,12 @@ import { readFileSync, existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { canonicalizeJCS } from './canonicalize.js'
+// Real per-category verifiers (the same primitives the dedicated
+// fixtures/<cat>/verify.ts scripts use). Namespaced to avoid symbol collisions
+// (both libs export canonicalizeJCS / sha256Hex / utf8Hex / verifyUtf8).
+import * as acctLib from '../../fixtures/accountability-record/lib.js'
+import * as rfrLib from '../../fixtures/read-fidelity-receipt/lib.js'
+import * as rfrWordlist from '../../fixtures/read-fidelity-receipt/wordlist.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const REPO_ROOT = join(__dirname, '..', '..')
@@ -178,14 +184,172 @@ function checkVector(category: string, fixture: string, fixtureData: FixtureFile
     return results
   }
 
-  // Instruction-provenance negatives carry only metadata (no canonical bytes).
+  // Negative vectors (expected_verification === false) reaching this point carry
+  // only rejection metadata (e.g. instruction-provenance TIER_RESERVED / OMISSION
+  // / PATH_SMUGGLING). A negative may only PASS when the reference genuinely
+  // cannot verify it as a positive: it must declare rejection metadata AND, if it
+  // also carries positive crypto material (input + canonical bytes + signature)
+  // that verifies cleanly, the negative label is contradicted -> FAIL. The
+  // absence (or failure) of positive verification IS the rejection we assert.
   if (v.expected_verification === false) {
-    results.push({ category, fixture, name: v.name, status: 'pass', details: `negative-vector metadata (rejection_kind=${v.rejection_kind ?? 'unspecified'})` })
+    const hasRejectionMeta = v.rejection_kind !== undefined || v.expected_error_code !== undefined
+    if (!hasRejectionMeta) {
+      results.push({ category, fixture, name: v.name, status: 'fail', details: 'negative vector declares no rejection metadata (rejection_kind/expected_error_code) and carries no recomputable data; rejection cannot be confirmed' })
+      return results
+    }
+    const negSig = v.ed25519_signature_over_canonical_hex ?? v.ed25519_signature
+    if (v.input !== undefined && v.canonical_bytes_hex !== undefined && negSig && declaredPub) {
+      const canonical = canonicalizeJCS(v.input)
+      const canonicalHex = Buffer.from(canonical, 'utf8').toString('hex')
+      if (canonicalHex === v.canonical_bytes_hex && verifyEd25519(canonical, negSig, declaredPub)) {
+        results.push({ category, fixture, name: v.name, status: 'fail', details: 'declared negative but canonical bytes and Ed25519 signature verify cleanly' })
+        return results
+      }
+    }
+    results.push({ category, fixture, name: v.name, status: 'pass', details: `negative confirmed non-verifiable (rejection=${v.rejection_kind ?? v.expected_error_code})` })
     return results
   }
 
   results.push({ category, fixture, name: v.name, status: 'skip', details: 'no canonicalization data in vector' })
   return results
+}
+
+// Real verification for the accountability-record family. Mirrors
+// fixtures/accountability-record/verify.ts: byte-parity of signing input and
+// canonical bytes re-derived from the record, published-signature match, then
+// full crypto verification (Ed25519 over the signing input plus action_digest
+// binding / action_ref recompute when the payload is inline). Schema negatives
+// are rejected by validate.py, not the crypto layer, so their outcome is not
+// asserted here (their bytes are self-consistent) -- byte-parity still runs.
+function verifyAccountabilityFile(category: string, fixture: string, data: FixtureFile): VectorResult[] {
+  const out: VectorResult[] = []
+  for (const v of (data.vectors as unknown as Array<Record<string, any>>)) {
+    const problems: string[] = []
+    const si = acctLib.signingInput(v.record)
+    if (si !== v.signing_input_canonical) problems.push('signing_input_canonical mismatch')
+    if (acctLib.utf8Hex(si) !== v.signing_input_bytes_hex) problems.push('signing_input_bytes_hex mismatch')
+    const canonical = acctLib.canonicalizeJCS(v.record)
+    if (canonical !== v.canonical) problems.push('canonical mismatch')
+    if (acctLib.utf8Hex(canonical) !== v.canonical_bytes_hex) problems.push('canonical_bytes_hex mismatch')
+    if (acctLib.sha256Hex(canonical) !== v.canonical_sha256) problems.push('canonical_sha256 mismatch')
+    if (v.record.sig !== v.ed25519_signature_over_signing_input_hex) problems.push('record.sig != published signature')
+
+    const res = acctLib.verifyRecord(v.record, v.ed25519_pubkey_hex)
+    if (v.rejection_kind !== 'schema') {
+      if (res.ok !== v.expected_verification) {
+        problems.push(`verification ${res.ok} != expected ${v.expected_verification}`)
+      }
+      if (v.expected_verification === false) {
+        if (v.rejection_kind === 'digest_mismatch' && res.checks.action_digest_binds !== false) {
+          problems.push('declared digest_mismatch but action_digest bound')
+        }
+        if (v.rejection_kind === 'signature' && res.checks.signature !== false) {
+          problems.push('declared signature rejection but signature verified')
+        }
+      }
+    }
+
+    const status: VectorResult['status'] = problems.length ? 'fail' : 'pass'
+    const detail = problems.length
+      ? problems.join('; ')
+      : v.rejection_kind === 'schema'
+        ? 'byte-parity checked; schema rejection enforced by validate.py'
+        : v.rejection_kind
+          ? `negative confirmed (${v.rejection_kind})`
+          : undefined
+    out.push({ category, fixture, name: v.name, status, details: detail })
+  }
+  return out
+}
+
+// Real verification for the read-fidelity-receipt family. Mirrors
+// fixtures/read-fidelity-receipt/verify.ts: wordlist integrity, then per vector
+// either record verification (byte-parity, Ed25519 over the sig-excluded JCS
+// bytes against the embedded attester, seed derivation, span commitments and k
+// recompute for positives) or word-handle codec verification. Every negative
+// must fail for its STATED reason.
+function verifyReadFidelityFile(category: string, fixture: string, data: FixtureFile): VectorResult[] {
+  const out: VectorResult[] = []
+  const fx = data as unknown as Record<string, any>
+
+  // Wordlist integrity: the vendored wordlist must hash to the pinned lexicon id.
+  {
+    const recomputed = `sha256:${rfrLib.sha256Hex(rfrWordlist.canonicalWordlistText())}`
+    const ok = rfrWordlist.WORDS.length === 2048 && recomputed === rfrWordlist.LEXICON_ID && fx.lexicon_id === rfrWordlist.LEXICON_ID
+    out.push({ category, fixture, name: 'wordlist-integrity', status: ok ? 'pass' : 'fail', details: ok ? undefined : 'wordlist integrity failed (word count / lexicon id mismatch)' })
+  }
+
+  for (const v of (fx.vectors as Array<Record<string, any>>)) {
+    const problems: string[] = []
+
+    if (v.kind === 'record') {
+      const si = rfrLib.canonicalNoSig(v.record)
+      if (si !== v.signing_input_canonical) problems.push('signing_input_canonical mismatch')
+      if (rfrLib.utf8Hex(si) !== v.signing_input_bytes_hex) problems.push('signing_input_bytes_hex mismatch')
+      const canonical = rfrLib.canonicalizeJCS(v.record)
+      if (canonical !== v.canonical) problems.push('canonical mismatch')
+      if (rfrLib.utf8Hex(canonical) !== v.canonical_bytes_hex) problems.push('canonical_bytes_hex mismatch')
+      if (rfrLib.sha256Hex(canonical) !== v.canonical_sha256) problems.push('canonical_sha256 mismatch')
+      if (v.record.attester !== v.ed25519_pubkey_hex) problems.push('attester != published pubkey')
+
+      const res = rfrLib.verifyReadFidelityReceipt(v.record)
+      if (res.valid !== v.expected_verification) {
+        problems.push(`verification ${res.valid} != expected ${v.expected_verification}`)
+      }
+      if (v.expected_verification === false) {
+        if (res.reason !== v.expected_reason) {
+          problems.push(`failed for ${res.reason}, stated reason is ${v.expected_reason}`)
+        }
+        if (v.rejection_kind === 'seed') {
+          if (!rfrLib.verifyUtf8(rfrLib.canonicalNoSig(v.record), v.record.sig, v.record.attester)) {
+            problems.push('declared seed rejection but the re-signed signature does not verify')
+          }
+        }
+        if (v.rejection_kind === 'signature') {
+          if (rfrLib.verifyUtf8(rfrLib.canonicalNoSig(v.record), v.record.sig, v.record.attester)) {
+            problems.push('declared signature rejection but the signature verifies')
+          }
+        }
+      } else {
+        const against = rfrLib.verifyAgainstSource(v.record, v.source_text)
+        if (!against.valid) problems.push(`against-source failed: ${against.reason}`)
+        if (v.responses) {
+          const spans = rfrLib.sampleSpans(v.source_text, v.record.challenge.seed, v.record.n, v.record.challenge.span_len)
+          const { k } = rfrLib.scoreResponses(spans.map((s) => s.text), v.responses)
+          if (k !== v.record.k) problems.push(`k recompute ${k} != recorded ${v.record.k}`)
+          const rd = `sha256:${rfrLib.sha256Hex(rfrLib.canonicalizeJCS(v.responses))}`
+          if (rd !== v.record.response_digest) problems.push('response_digest recompute mismatch')
+        }
+      }
+    } else if (v.kind === 'word_handle') {
+      const reEncoded = rfrLib.encodeProfile(v.digest, v.profile)
+      if (JSON.stringify(reEncoded) !== JSON.stringify(v.original_words)) {
+        problems.push('original_words do not re-encode from digest')
+      }
+      const orig = rfrLib.decodeProfile(v.original_words, v.profile)
+      if (orig.checksumOk !== true) problems.push('unmutated base fails its own checksum')
+
+      const res = rfrLib.decodeProfile(v.words, v.profile)
+      const actualReason = res.outOfLexicon.length > 0 ? 'OUT_OF_LEXICON' : res.checksumOk ? 'NONE' : 'CHECKSUM_MISMATCH'
+      if (res.checksumOk !== v.expected.checksum_ok) {
+        problems.push(`checksum_ok ${res.checksumOk} != expected ${v.expected.checksum_ok}`)
+      }
+      if (JSON.stringify(res.outOfLexicon) !== JSON.stringify(v.expected.out_of_lexicon)) {
+        problems.push(`out_of_lexicon ${JSON.stringify(res.outOfLexicon)} != expected ${JSON.stringify(v.expected.out_of_lexicon)}`)
+      }
+      if ((res.prefixHex === null) !== v.expected.prefix_hex_null) {
+        problems.push('prefix_hex null-ness mismatch')
+      }
+      if (actualReason !== v.expected_reason) {
+        problems.push(`failed for ${actualReason}, stated reason is ${v.expected_reason}`)
+      }
+    } else {
+      problems.push(`unknown vector kind ${v.kind}`)
+    }
+
+    out.push({ category, fixture, name: v.name, status: problems.length ? 'fail' : 'pass', details: problems.length ? problems.join('; ') : undefined })
+  }
+  return out
 }
 
 function main(): number {
@@ -220,6 +384,18 @@ function main(): number {
         allResults.push({ category: entry.category, fixture: entry.path, name: '<keypair>', status: 'fail', details: `keypair derivation mismatch (declared ${data.keypair.publicKeyHex.slice(0, 16)}…, derived ${derived.publicKeyHex.slice(0, 16)}…)` })
         continue
       }
+    }
+
+    // Categories with a dedicated per-category verifier are dispatched to it so
+    // their positive vectors are actually checked and their negatives are only
+    // marked PASS when the reference genuinely rejects them (no vacuous passes).
+    if (entry.category === 'accountability-record') {
+      allResults.push(...verifyAccountabilityFile(entry.category, entry.path, data))
+      continue
+    }
+    if (entry.category === 'read-fidelity-receipt') {
+      allResults.push(...verifyReadFidelityFile(entry.category, entry.path, data))
+      continue
     }
 
     if (!Array.isArray(data.vectors)) {
