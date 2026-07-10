@@ -6,12 +6,18 @@ Cross-implementation test corpus for the **Agent Passport System (APS)** protoco
 
 ## What this suite is
 
-A packaged corpus of test vectors that any APS-compatible implementation can run to verify it agrees, byte-for-byte, with the canonical APS reference. Four fixture categories cover the major spec surfaces:
+A packaged corpus of test vectors that any APS-compatible implementation can run to verify it agrees, byte-for-byte, with the canonical APS reference. Ten fixture categories cover the major spec surfaces:
 
 - **bilateral-delegation** — JCS canonicalization (RFC 8785) vectors used in bilateral delegation receipts. 10 vectors, deterministic seed `aps-canonicalize-fixture-v1`.
 - **inference-session** — CTEF v0.3.1 cryptographic agent identity vectors (validity windows, sequence bounds). 7 vectors, deterministic seed `ctef-synthetic-fixture-v1`.
 - **instruction-provenance** — InstructionProvenanceReceipt v0.2 envelope, path canonicalization, exhaustiveness, action-time recompute. 10 vectors (6 positive + 4 negative), deterministic seed `aps-instruction-provenance-fixture-v1`.
 - **aivss-scenarios** — AIVSS §3.6 worked scenarios (OWASP AAI001–AAI010) with CVSS+AIVSS scoring and APS-primitive mappings. 10 scenarios, structural fixtures.
+- **canonical-bytes** — string-concatenation preimage failure-class vectors (production-derived, qntm v0.3.2). 1 vector.
+- **accountability-record** — signed enforcement-boundary decision records (allow/deny/halt plus execution status) with a detached-payload action digest. 12 vectors.
+- **read-fidelity-receipt** — sampled readback fidelity receipts with word-digest handles. 8 vectors.
+- **actionref-canonical** — native action_ref scopeRequired canonicalization: NFC per scope string plus Unicode code-point sort (draft-pidlisnyi-aps-03 section 4.1). 4 vectors, TS-generated and Go-verified.
+- **bilateral-pair** — bilateral pair reconciliation verdicts across the five mismatch classes. 6 vectors, co-signed.
+- **bilateral-golden** — BilateralReceipt canonical signable bytes carrying aud and action_ref; independently derived and cross-verified (TypeScript reference plus from-scratch Python RFC 8785). 2 vectors, runner-checked signatures.
 
 A `.well-known/aps-test-vectors.json` mirrors the agentgraph.co `.well-known` shape for the canonical reference subset.
 
