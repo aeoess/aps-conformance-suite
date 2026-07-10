@@ -60,6 +60,27 @@
       "canonical_sha256": "bbfeae178efc947ebd7d6642048b6ba069409d5152be54a40b83e52e1c26f2e3",
       "vector_count": 8,
       "spec_section": "read_fidelity_receipt v0.1: sampled readback challenge over perceived content; Ed25519 over JCS; seed = sha256(JCS of content_digest, presentation_digest, nonce, version); word_digest_handle checksum. Deep verification in fixtures/read-fidelity-receipt/verify.ts and validate.py. Includes replayed-nonce, presentation-mismatch, tampered-digest, out-of-lexicon, and transposition negatives."
+    },
+    {
+      "category": "actionref-canonical",
+      "path": "actionref-canonical/actionref-canonical-fixture-v1.json",
+      "canonical_sha256": "07e894afb085055e3fb779d1be9b228be80f6b60499efc7366b903ad0779f955",
+      "vector_count": 4,
+      "spec_section": "Native action_ref scopeRequired canonicalization: NFC + Unicode code-point sort (draft-pidlisnyi-aps-03 section 4.1)"
+    },
+    {
+      "category": "bilateral-pair",
+      "path": "bilateral-pair/bilateral-pair-fixture-v1.json",
+      "canonical_sha256": "512d8ca94506b5d024d03cb0dc4c655be9795dec769256c51f382c2229efece8",
+      "vector_count": 6,
+      "spec_section": "Bilateral pair reconciliation verdicts: one reconciled pair plus one vector per mismatch class"
+    },
+    {
+      "category": "bilateral-golden",
+      "path": "bilateral-golden/bilateral-golden-fixture-v1.json",
+      "canonical_sha256": "69b0d47beb4262addd30eaf86dd434921518dc38841bd336454736c569aecc69",
+      "vector_count": 2,
+      "spec_section": "BilateralReceipt canonical signable bytes with aud and action_ref; independently derived and cross-verified (TypeScript reference plus from-scratch Python RFC 8785)"
     }
   ],
   "totals": {
