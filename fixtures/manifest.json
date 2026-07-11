@@ -45,7 +45,8 @@
       "path": "canonical-bytes/canonical-bytes-diff-v032.json",
       "canonical_sha256": "84df9e0a634eba40f5388872bed4f028a240e0c2f2d646755ecbdfb6b8ee0e42",
       "vector_count": 1,
-      "spec_section": "String-concatenation preimage failure class. Mirrored from corpollc/qntm#15. Deep verification in runners/ts/canonical-bytes-qntm-v0.3.2.test.ts."
+      "spec_section": "String-concatenation preimage failure class. Mirrored from corpollc/qntm#15. Deep verification in runners/ts/canonical-bytes-qntm-v0.3.2.test.ts.",
+      "skip_in_runner": "single-object preimage-diff fixture; deep-verified in runners/ts/canonical-bytes-qntm-v0.3.2.test.ts, not assertable by the manifest runner"
     },
     {
       "category": "accountability-record",
