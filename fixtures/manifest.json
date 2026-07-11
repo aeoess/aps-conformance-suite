@@ -88,10 +88,17 @@
       "canonical_sha256": "914803e87ce165f59958835519b30274623f2afab9a8ef5059bd2902ff0c9a8a",
       "vector_count": 8,
       "spec_section": "RFC 8785 JCS byte-contract vectors: ECMAScript number formatting (float, 1e21 boundary, negative zero, integer above 2^53, exponent-vs-decimal), UTF-16 key ordering, NFD keys used as given, nested objects. Verified via the runner vendored canonicalizer."
+    },
+    {
+      "category": "merkle-root-parity",
+      "path": "merkle-root-parity/vectors.json",
+      "canonical_sha256": "3947dfb596bebb6eef2119003b1addc50c0d7a26cf44347ba005f9ad10dcb5cd",
+      "vector_count": 6,
+      "spec_section": "Attribution Merkle root, domain-separated construction (receipt format v1.2, Day-145 audit): cross-language root byte-parity for TS, Go, Python"
     }
   ],
   "totals": {
-    "fixtures": 10,
-    "vectors": 70
+    "fixtures": 12,
+    "vectors": 84
   }
 }
