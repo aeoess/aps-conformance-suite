@@ -26,3 +26,5 @@ specs/ERIK-NEWTON*
 
 __pycache__/
 *.pyc
+/runners/go/go
+/runners/go/_runner

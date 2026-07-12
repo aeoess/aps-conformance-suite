@@ -9,7 +9,8 @@
 // same signatures as the TypeScript reference, on the identical vector set.
 //
 // Run:
-//   cd runners/go && go run .
+//
+//	cd runners/go && go run .
 //
 // Exit code 0 on full pass, 1 on any failure.
 package main
@@ -26,16 +27,17 @@ import (
 	"runtime"
 	"sort"
 
+	"github.com/aeoess/agent-passport-go/actionref"
 	"github.com/aeoess/agent-passport-go/jcs"
 	apsverify "github.com/aeoess/agent-passport-go/verify"
 )
 
 type manifestEntry struct {
-	Category       string `json:"category"`
-	Path           string `json:"path"`
-	CanonicalSHA   string `json:"canonical_sha256"`
-	VectorCount    int    `json:"vector_count"`
-	SpecSection    string `json:"spec_section"`
+	Category     string `json:"category"`
+	Path         string `json:"path"`
+	CanonicalSHA string `json:"canonical_sha256"`
+	VectorCount  int    `json:"vector_count"`
+	SpecSection  string `json:"spec_section"`
 }
 
 type manifest struct {
@@ -74,21 +76,23 @@ func canonicalizeGeneric(raw json.RawMessage) (string, error) {
 }
 
 type vector struct {
-	Name                  string          `json:"name"`
-	ExpectedVerification  *bool           `json:"expected_verification"`
-	Input                 json.RawMessage `json:"input"`
-	Envelope              json.RawMessage `json:"envelope"`
-	CanonicalBytesHex     string          `json:"canonical_bytes_hex"`
-	CanonicalSHA256       string          `json:"canonical_sha256"`
-	Ed25519Sig            string          `json:"ed25519_signature"`
-	Ed25519PubHex         string          `json:"ed25519_pubkey_hex"`
-	Ed25519SigOverCanon   string          `json:"ed25519_signature_over_canonical_hex"`
-	ScenarioID            interface{}     `json:"scenario_id"`
+	Name                 string          `json:"name"`
+	ExpectedVerification *bool           `json:"expected_verification"`
+	Input                json.RawMessage `json:"input"`
+	Envelope             json.RawMessage `json:"envelope"`
+	CanonicalBytesHex    string          `json:"canonical_bytes_hex"`
+	CanonicalSHA256      string          `json:"canonical_sha256"`
+	Ed25519Sig           string          `json:"ed25519_signature"`
+	Ed25519PubHex        string          `json:"ed25519_pubkey_hex"`
+	Ed25519SigOverCanon  string          `json:"ed25519_signature_over_canonical_hex"`
+	ScenarioID           interface{}     `json:"scenario_id"`
 }
 
 type fixtureFile struct {
-	SeedInput string          `json:"seed_input"`
-	Keypair   *struct{ PublicKeyHex string `json:"publicKeyHex"` } `json:"keypair"`
+	SeedInput string `json:"seed_input"`
+	Keypair   *struct {
+		PublicKeyHex string `json:"publicKeyHex"`
+	} `json:"keypair"`
 	Vectors   []json.RawMessage `json:"vectors"`
 	Scenarios []string          `json:"scenarios"`
 }
@@ -273,6 +277,62 @@ func checkMerkleParityVectors(category, fixture string, raws []json.RawMessage) 
 	return out
 }
 
+// actionRefVector is the shape of an actionref-canonical fixture vector. These
+// carry an input tuple plus the expected canonical scope order and action_ref
+// hex, but NOT the generic canonical_bytes_hex/canonical_sha256 fields, so
+// checkVector would silently skip them. checkActionRefVectors instead recomputes
+// action_ref via the SDK actionref package (NFC per scope + Unicode code-point
+// sort of scopeRequired, JCS, SHA-256; draft-pidlisnyi-aps-03 §4.1) and asserts
+// byte-identical hex and canonical scope order.
+type actionRefVector struct {
+	Name  string `json:"name"`
+	Input struct {
+		AgentID       string   `json:"agentId"`
+		ActionType    string   `json:"actionType"`
+		ScopeRequired []string `json:"scopeRequired"`
+		Timestamp     string   `json:"timestamp"`
+	} `json:"input"`
+	CanonicalScopeOrder []string `json:"canonical_scope_order"`
+	ActionRef           string   `json:"action_ref"`
+}
+
+func checkActionRefVectors(category, fixture string, raws []json.RawMessage) []result {
+	var out []result
+	for _, raw := range raws {
+		var v actionRefVector
+		if err := json.Unmarshal(raw, &v); err != nil {
+			out = append(out, result{category, fixture, "<vector>", "fail", "vector parse error: " + err.Error()})
+			continue
+		}
+		var problems []string
+		canon := actionref.CanonicalizeScopes(v.Input.ScopeRequired)
+		if len(v.CanonicalScopeOrder) > 0 {
+			if len(canon) != len(v.CanonicalScopeOrder) {
+				problems = append(problems, fmt.Sprintf("canonical_scope_order length %d != recorded %d", len(canon), len(v.CanonicalScopeOrder)))
+			} else {
+				for i := range canon {
+					if canon[i] != v.CanonicalScopeOrder[i] {
+						problems = append(problems, fmt.Sprintf("canonical_scope_order[%d] = %q != recorded %q", i, canon[i], v.CanonicalScopeOrder[i]))
+					}
+				}
+			}
+		}
+		got, err := actionref.ComputeActionRefScopes(v.Input.AgentID, v.Input.ActionType, v.Input.ScopeRequired, v.Input.Timestamp)
+		if err != nil {
+			problems = append(problems, "compute action_ref: "+err.Error())
+		} else if got != v.ActionRef {
+			problems = append(problems, "action_ref mismatch (recomputed "+got[:16]+"…, recorded "+v.ActionRef[:16]+"…)")
+		}
+		status, details := "pass", ""
+		if len(problems) > 0 {
+			status = "fail"
+			details = problems[0]
+		}
+		out = append(out, result{category, fixture, v.Name, status, details})
+	}
+	return out
+}
+
 func main() {
 	os.Exit(run())
 }
@@ -354,6 +414,11 @@ func run() int {
 			// record one skip for the fixture (e.g. the canonical-bytes diff,
 			// whose deep check lives in a dedicated TS test, not the main run).
 			all = append(all, result{entry.Category, entry.Path, "<vectors>", "skip", "no vectors array and no scenarios list"})
+			continue
+		}
+
+		if entry.Category == "actionref-canonical" {
+			all = append(all, checkActionRefVectors(entry.Category, entry.Path, data.Vectors)...)
 			continue
 		}
 
