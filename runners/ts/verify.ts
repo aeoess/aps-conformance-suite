@@ -14,7 +14,7 @@
 
 import crypto from 'node:crypto'
 import { readFileSync, existsSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { canonicalizeJCS } from './canonicalize.js'
 // Real per-category verifiers (the same primitives the dedicated
@@ -26,7 +26,13 @@ import * as rfrWordlist from '../../fixtures/read-fidelity-receipt/wordlist.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const REPO_ROOT = join(__dirname, '..', '..')
-const FIXTURES_DIR = join(REPO_ROOT, 'fixtures')
+// The fixtures directory defaults to the in-repo fixtures. APS_FIXTURES_DIR
+// overrides it so a test harness can point the runner at a copied-and-mutated
+// fixture tree (used to prove the fail-loud behaviour without touching any
+// published fixture file). Not used in normal operation.
+const FIXTURES_DIR = process.env.APS_FIXTURES_DIR
+  ? resolve(process.env.APS_FIXTURES_DIR)
+  : join(REPO_ROOT, 'fixtures')
 const MANIFEST_PATH = join(FIXTURES_DIR, 'manifest.json')
 
 const PKCS8_ED25519_PREFIX = Buffer.from('302e020100300506032b657004220420', 'hex')
@@ -38,6 +44,11 @@ interface ManifestEntry {
   canonical_sha256: string
   vector_count: number
   spec_section: string
+  // When set, the file carries no `vectors`/`scenarios` this runner can assert
+  // over because it is deep-verified by a dedicated test. The runner records an
+  // explicit skip with this reason instead of failing loud. Anything else with
+  // no assertable shape is a FAILURE, not a silent skip.
+  skip_in_runner?: string
 }
 
 interface Manifest {
@@ -69,6 +80,10 @@ interface Vector {
   ed25519_signature_over_canonical_hex?: string
   expected_error_code?: string
   rejection_kind?: string
+  // An explicit, runner-recognized skip marker for a vector that is genuinely
+  // not applicable to this runner. Its presence (with a reason) is the ONLY way
+  // a vector may skip; an unrecognized/unhandled shape is a failure.
+  skip_reason?: string
 }
 
 function sha256Hex(input: string): string {
@@ -210,7 +225,16 @@ function checkVector(category: string, fixture: string, fixtureData: FixtureFile
     return results
   }
 
-  results.push({ category, fixture, name: v.name, status: 'skip', details: 'no canonicalization data in vector' })
+  // A vector that reaches this point matched no known shape. Only an explicit,
+  // runner-recognized skip marker may downgrade it to skip; otherwise it is a
+  // FAILURE. Silently skipping an unrecognized shape is exactly the defect this
+  // runner used to have -- it let vectors assert nothing while the suite stayed
+  // green.
+  if (typeof v.skip_reason === 'string' && v.skip_reason.length > 0) {
+    results.push({ category, fixture, name: v.name, status: 'skip', details: `explicit skip: ${v.skip_reason}` })
+    return results
+  }
+  results.push({ category, fixture, name: v.name, status: 'fail', details: 'unrecognized vector shape: no verifiable data and no explicit skip_reason (fail-loud; a not-applicable vector must declare skip_reason)' })
   return results
 }
 
@@ -352,6 +376,199 @@ function verifyReadFidelityFile(category: string, fixture: string, data: Fixture
   return out
 }
 
+// Compare two strings by Unicode code point. JavaScript's default string
+// comparison and Array#sort order by UTF-16 code unit, which differs from code
+// point order for astral-plane characters (a high BMP scope must sort before an
+// astral scope). Array.from iterates by code point, so surrogate pairs collapse
+// to a single element before comparison.
+function compareCodePoints(a: string, b: string): number {
+  const aa = Array.from(a)
+  const bb = Array.from(b)
+  const n = Math.min(aa.length, bb.length)
+  for (let i = 0; i < n; i++) {
+    const ca = aa[i].codePointAt(0) as number
+    const cb = bb[i].codePointAt(0) as number
+    if (ca !== cb) return ca - cb
+  }
+  return aa.length - bb.length
+}
+
+// Native APS action_ref (draft-pidlisnyi-aps-03 section 4.1): NFC-normalize each
+// scope string, sort scopeRequired by Unicode code point, then SHA-256 over the
+// RFC 8785 (JCS) canonicalization of {agentId, actionType, scopeRequired,
+// timestamp}. Reuses the vendored JCS canonicalizer and the accountability lib's
+// SHA-256 helper; no crypto is reimplemented here.
+function computeNativeActionRef(input: {
+  agentId: string
+  actionType: string
+  scopeRequired: string[]
+  timestamp: string
+}): { actionRef: string; scopeOrder: string[] } {
+  const scopeOrder = input.scopeRequired.map((s) => s.normalize('NFC')).sort(compareCodePoints)
+  const tuple = {
+    agentId: input.agentId,
+    actionType: input.actionType,
+    scopeRequired: scopeOrder,
+    timestamp: input.timestamp,
+  }
+  return { actionRef: acctLib.sha256Hex(canonicalizeJCS(tuple)), scopeOrder }
+}
+
+// actionref-canonical family: recompute action_ref for each input and assert it
+// equals the vector's recorded action_ref (and, when present, the canonical
+// scope order). These vectors carry expected action_ref values, so this is a
+// real assertion, not a byte-parity echo.
+function verifyActionRefFile(category: string, fixture: string, data: FixtureFile): VectorResult[] {
+  const out: VectorResult[] = []
+  for (const v of (data.vectors as unknown as Array<Record<string, any>>)) {
+    const problems: string[] = []
+    if (!v.input || !Array.isArray(v.input.scopeRequired)) {
+      problems.push('missing input.scopeRequired')
+    } else {
+      const { actionRef, scopeOrder } = computeNativeActionRef(v.input)
+      if (typeof v.action_ref !== 'string') {
+        problems.push('vector declares no expected action_ref')
+      } else if (actionRef !== v.action_ref) {
+        problems.push(`action_ref mismatch (recomputed ${actionRef.slice(0, 16)}…, expected ${v.action_ref.slice(0, 16)}…)`)
+      }
+      if (Array.isArray(v.canonical_scope_order) && JSON.stringify(scopeOrder) !== JSON.stringify(v.canonical_scope_order)) {
+        problems.push(`canonical scope order mismatch (recomputed ${JSON.stringify(scopeOrder)}, expected ${JSON.stringify(v.canonical_scope_order)})`)
+      }
+    }
+    out.push({ category, fixture, name: v.name, status: problems.length ? 'fail' : 'pass', details: problems.length ? problems.join('; ') : undefined })
+  }
+  return out
+}
+
+// Structural reconciliation of a bilateral receipt pair. Per the fixture README
+// the per-copy Ed25519 signatures are presumed already verified; reconciliation
+// compares the relying party's copy against the counterparty copy (or its
+// absence) and emits reason-coded mismatch classes. Field identity that differs
+// per copy by construction (receiptId, agreedAt, signatures) is not compared;
+// only the semantic binding fields are.
+function reconcileBilateralPair(
+  local: Record<string, any>,
+  counterparty: Record<string, any> | null | undefined,
+  policy: Record<string, any>,
+): { status: string; mismatches: string[] } {
+  const mismatches: string[] = []
+  if (counterparty === null || counterparty === undefined) {
+    if (local.outcome?.status === 'success') mismatches.push('unilateral_success')
+    return { status: 'unilateral', mismatches }
+  }
+  if (policy?.requireAudience) {
+    const recipients: string[] = counterparty.aud?.recipients ?? []
+    if (!recipients.includes(policy.selfRecipientId)) mismatches.push('wrong_audience')
+  }
+  if (local.requestingAgentId !== counterparty.requestingAgentId || local.servingAgentId !== counterparty.servingAgentId) {
+    mismatches.push('recipient_changed')
+  }
+  if (canonicalizeJCS(local.outcome) !== canonicalizeJCS(counterparty.outcome)) {
+    mismatches.push('payload_changed')
+  }
+  if (local.action_ref !== counterparty.action_ref) {
+    mismatches.push('action_ref_mismatch')
+  }
+  return { status: mismatches.length ? 'mismatch' : 'reconciled', mismatches }
+}
+
+// bilateral-pair family: run reconciliation over each pair and assert the
+// resulting status plus mismatch set match the vector's expected verdict. The
+// mismatch lists are compared order-independently.
+function verifyBilateralPairFile(category: string, fixture: string, data: FixtureFile): VectorResult[] {
+  const out: VectorResult[] = []
+  const sorted = (a: string[]): string => JSON.stringify([...a].sort())
+  for (const v of (data.vectors as unknown as Array<Record<string, any>>)) {
+    const problems: string[] = []
+    if (!v.local || !v.expected) {
+      problems.push('missing local receipt or expected verdict')
+    } else {
+      const r = reconcileBilateralPair(v.local, v.counterparty, v.policy ?? {})
+      if (r.status !== v.expected.status) {
+        problems.push(`status ${r.status} != expected ${v.expected.status}`)
+      }
+      const expectedMismatches: string[] = Array.isArray(v.expected.mismatches) ? v.expected.mismatches : []
+      if (sorted(r.mismatches) !== sorted(expectedMismatches)) {
+        problems.push(`mismatches ${JSON.stringify(r.mismatches)} != expected ${JSON.stringify(expectedMismatches)}`)
+      }
+    }
+    out.push({ category, fixture, name: v.name, status: problems.length ? 'fail' : 'pass', details: problems.length ? problems.join('; ') : undefined })
+  }
+  return out
+}
+
+// Real verification for the merkle-root-parity family. Each vector carries
+// leaf_inputs (UTF-8 strings), the derived leaf hex values, and the expected
+// attribution Merkle root under the domain-separated construction (receipt
+// format v1.2, Day-145 audit): leaves sorted ascending, leaf =
+// sha256(0x00 || leaf_hex), internal = sha256(0x01 || left_hex || right_hex),
+// odd trailing node promoted unchanged. The runner recomputes every leaf and
+// every root with the small executable oracle below (no SDK import), so this
+// category can never pass vacuously; vectors here are never skipped.
+interface MerkleParityVector {
+  name: string
+  leaf_count: number
+  leaf_inputs: string[]
+  leaves: string[]
+  expected_root: string
+  duplicate_last_leaf_root?: string
+}
+
+function merkleParityLeafHash(leaf: string): string {
+  return sha256Hex('\x00' + leaf)
+}
+
+function merkleParityNodeHash(left: string, right: string): string {
+  return sha256Hex('\x01' + left + right)
+}
+
+function merkleParityRoot(leaves: string[]): string {
+  if (leaves.length === 0) return sha256Hex('empty')
+  let level = [...leaves].sort().map(merkleParityLeafHash)
+  while (level.length > 1) {
+    const next: string[] = []
+    for (let i = 0; i < level.length; i += 2) {
+      next.push(
+        i + 1 < level.length
+          ? merkleParityNodeHash(level[i], level[i + 1])
+          : level[i], // odd node promoted unchanged, never duplicated
+      )
+    }
+    level = next
+  }
+  return level[0]
+}
+
+function verifyMerkleParityFile(category: string, fixture: string, data: FixtureFile): VectorResult[] {
+  const out: VectorResult[] = []
+  for (const v of (data.vectors as unknown as MerkleParityVector[])) {
+    const problems: string[] = []
+    if (!Array.isArray(v.leaf_inputs) || !Array.isArray(v.leaves) || v.leaf_inputs.length !== v.leaves.length || v.leaves.length !== v.leaf_count) {
+      out.push({ category, fixture, name: v.name, status: 'fail', details: 'malformed vector: leaf_inputs/leaves/leaf_count inconsistent' })
+      continue
+    }
+    v.leaf_inputs.forEach((input, i) => {
+      const derived = sha256Hex(input)
+      if (derived !== v.leaves[i]) problems.push(`leaf[${i}] derivation mismatch (recomputed ${derived.slice(0, 16)}…, recorded ${v.leaves[i].slice(0, 16)}…)`)
+    })
+    const root = merkleParityRoot(v.leaves)
+    if (root !== v.expected_root) {
+      problems.push(`expected_root mismatch (recomputed ${root.slice(0, 16)}…, recorded ${v.expected_root.slice(0, 16)}…)`)
+    }
+    if (v.duplicate_last_leaf_root !== undefined) {
+      const dupRoot = merkleParityRoot([...v.leaves, v.leaves[v.leaves.length - 1]])
+      if (dupRoot !== v.duplicate_last_leaf_root) {
+        problems.push(`duplicate_last_leaf_root mismatch (recomputed ${dupRoot.slice(0, 16)}…)`)
+      }
+      if (dupRoot === root) {
+        problems.push('CVE-2012-2459 regression: duplicate-leaf multiset folded to the honest root')
+      }
+    }
+    out.push({ category, fixture, name: v.name, status: problems.length ? 'fail' : 'pass', details: problems.length ? problems.join('; ') : undefined })
+  }
+  return out
+}
+
 function main(): number {
   if (!existsSync(MANIFEST_PATH)) {
     console.error(`manifest not found at ${MANIFEST_PATH}`)
@@ -397,6 +614,18 @@ function main(): number {
       allResults.push(...verifyReadFidelityFile(entry.category, entry.path, data))
       continue
     }
+    if (entry.category === 'actionref-canonical') {
+      allResults.push(...verifyActionRefFile(entry.category, entry.path, data))
+      continue
+    }
+    if (entry.category === 'bilateral-pair') {
+      allResults.push(...verifyBilateralPairFile(entry.category, entry.path, data))
+      continue
+    }
+    if (entry.category === 'merkle-root-parity') {
+      allResults.push(...verifyMerkleParityFile(entry.category, entry.path, data))
+      continue
+    }
 
     if (!Array.isArray(data.vectors)) {
       // AIVSS-style: manifest references scenario files. Load each and run
@@ -421,7 +650,14 @@ function main(): number {
         }
         continue
       }
-      allResults.push({ category: entry.category, fixture: entry.path, name: '<vectors>', status: 'skip', details: 'no `vectors` array and no `scenarios` list' })
+      // No `vectors` and no `scenarios` this runner can assert over. Only an
+      // explicit, manifest-declared skip (deep-verified elsewhere) may downgrade
+      // to skip; otherwise this is a FAILURE, not a silent skip.
+      if (typeof entry.skip_in_runner === 'string' && entry.skip_in_runner.length > 0) {
+        allResults.push({ category: entry.category, fixture: entry.path, name: '<file>', status: 'skip', details: `explicit skip: ${entry.skip_in_runner}` })
+      } else {
+        allResults.push({ category: entry.category, fixture: entry.path, name: '<vectors>', status: 'fail', details: 'no `vectors` array and no `scenarios` list, and manifest declares no skip_in_runner (fail-loud)' })
+      }
       continue
     }
 

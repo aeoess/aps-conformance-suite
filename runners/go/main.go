@@ -180,6 +180,99 @@ func checkVector(category, fixture string, declaredPub string, raw json.RawMessa
 	return []result{{category, fixture, v.Name, "skip", "no canonicalization data in vector"}}
 }
 
+// merkleParityVector is the shape of a merkle-root-parity fixture vector.
+// These carry leaf_inputs (UTF-8 strings), the derived leaf hex values, and
+// the expected attribution Merkle root under the domain-separated
+// construction (receipt format v1.2, Day-145 audit): leaves sorted
+// ascending, leaf = sha256(0x00 || leaf_hex), internal =
+// sha256(0x01 || left_hex || right_hex), odd trailing node promoted
+// unchanged. The runner recomputes every leaf and every root with the small
+// executable oracle below (no SDK import), so this category can never pass
+// vacuously; vectors here are never skipped.
+type merkleParityVector struct {
+	Name                  string   `json:"name"`
+	LeafCount             int      `json:"leaf_count"`
+	LeafInputs            []string `json:"leaf_inputs"`
+	Leaves                []string `json:"leaves"`
+	ExpectedRoot          string   `json:"expected_root"`
+	DuplicateLastLeafRoot string   `json:"duplicate_last_leaf_root"`
+}
+
+func merkleParityLeafHash(leaf string) string {
+	return sha256Hex([]byte("\x00" + leaf))
+}
+
+func merkleParityNodeHash(left, right string) string {
+	return sha256Hex([]byte("\x01" + left + right))
+}
+
+func merkleParityRoot(leaves []string) string {
+	if len(leaves) == 0 {
+		return sha256Hex([]byte("empty"))
+	}
+	level := make([]string, len(leaves))
+	copy(level, leaves)
+	sort.Strings(level)
+	for i := range level {
+		level[i] = merkleParityLeafHash(level[i])
+	}
+	for len(level) > 1 {
+		next := make([]string, 0, (len(level)+1)/2)
+		for i := 0; i < len(level); i += 2 {
+			if i+1 < len(level) {
+				next = append(next, merkleParityNodeHash(level[i], level[i+1]))
+			} else {
+				// Odd node promoted unchanged, never duplicated.
+				next = append(next, level[i])
+			}
+		}
+		level = next
+	}
+	return level[0]
+}
+
+func checkMerkleParityVectors(category, fixture string, raws []json.RawMessage) []result {
+	var out []result
+	for _, raw := range raws {
+		var v merkleParityVector
+		if err := json.Unmarshal(raw, &v); err != nil {
+			out = append(out, result{category, fixture, "<vector>", "fail", "vector parse error: " + err.Error()})
+			continue
+		}
+		var problems []string
+		if len(v.LeafInputs) != len(v.Leaves) || len(v.Leaves) != v.LeafCount {
+			out = append(out, result{category, fixture, v.Name, "fail", "malformed vector: leaf_inputs/leaves/leaf_count inconsistent"})
+			continue
+		}
+		for i, input := range v.LeafInputs {
+			if derived := sha256Hex([]byte(input)); derived != v.Leaves[i] {
+				problems = append(problems, fmt.Sprintf("leaf[%d] derivation mismatch (recomputed %s, recorded %s)", i, derived[:16], v.Leaves[i][:16]))
+			}
+		}
+		root := merkleParityRoot(v.Leaves)
+		if root != v.ExpectedRoot {
+			problems = append(problems, "expected_root mismatch (recomputed "+root[:16]+", recorded "+v.ExpectedRoot[:16]+")")
+		}
+		if v.DuplicateLastLeafRoot != "" {
+			dupLeaves := append(append([]string{}, v.Leaves...), v.Leaves[len(v.Leaves)-1])
+			dupRoot := merkleParityRoot(dupLeaves)
+			if dupRoot != v.DuplicateLastLeafRoot {
+				problems = append(problems, "duplicate_last_leaf_root mismatch (recomputed "+dupRoot[:16]+")")
+			}
+			if dupRoot == root {
+				problems = append(problems, "CVE-2012-2459 regression: duplicate-leaf multiset folded to the honest root")
+			}
+		}
+		status, details := "pass", ""
+		if len(problems) > 0 {
+			status = "fail"
+			details = problems[0]
+		}
+		out = append(out, result{category, fixture, v.Name, status, details})
+	}
+	return out
+}
+
 func main() {
 	os.Exit(run())
 }
@@ -261,6 +354,11 @@ func run() int {
 			// record one skip for the fixture (e.g. the canonical-bytes diff,
 			// whose deep check lives in a dedicated TS test, not the main run).
 			all = append(all, result{entry.Category, entry.Path, "<vectors>", "skip", "no vectors array and no scenarios list"})
+			continue
+		}
+
+		if entry.Category == "merkle-root-parity" {
+			all = append(all, checkMerkleParityVectors(entry.Category, entry.Path, data.Vectors)...)
 			continue
 		}
 
