@@ -1,0 +1,114 @@
+{
+  "version": "1.0",
+  "primitive": "attribution-merkle-root",
+  "receipt_format": "v1.2",
+  "spec_section": "Attribution Merkle tree, domain-separated construction (Day-145 audit): leaf = sha256(0x00 || leaf_hex_utf8), internal = sha256(0x01 || left_hex_utf8 || right_hex_utf8), leaves sorted ascending by code point before hashing, odd trailing node promoted unchanged, empty set = sha256(\"empty\")",
+  "leaf_derivation": "leaf[i] = lowercase_hex(sha256(utf8(\"aps-merkle-parity-\" + i))), i ascending from 0",
+  "vectors": [
+    {
+      "name": "parity-1-leaves",
+      "description": "1-leaf multiset; leaves are sha256 of the listed leaf_inputs; expected_root is the domain-separated attribution Merkle root shared by the TypeScript, Go, and Python SDKs",
+      "leaf_count": 1,
+      "leaf_inputs": [
+        "aps-merkle-parity-0"
+      ],
+      "leaves": [
+        "ed6e418d162b4b00105ff232a39c57185586a1cc83b49027cb9599958bcdcae0"
+      ],
+      "expected_root": "44e90912f4e083b9d12a68a327611fae945976dd062a696dbd1b4c159b2e206d"
+    },
+    {
+      "name": "parity-2-leaves",
+      "description": "2-leaf multiset; leaves are sha256 of the listed leaf_inputs; expected_root is the domain-separated attribution Merkle root shared by the TypeScript, Go, and Python SDKs",
+      "leaf_count": 2,
+      "leaf_inputs": [
+        "aps-merkle-parity-0",
+        "aps-merkle-parity-1"
+      ],
+      "leaves": [
+        "ed6e418d162b4b00105ff232a39c57185586a1cc83b49027cb9599958bcdcae0",
+        "114b0df5d57fe402001d31d6ca1934d9f688fd915ab79d7605792de9014d10eb"
+      ],
+      "expected_root": "bb4dae845225140a964afd1ea33eac2f49db0845d829a1deed974c6576210a9c"
+    },
+    {
+      "name": "parity-3-leaves",
+      "description": "3-leaf multiset; leaves are sha256 of the listed leaf_inputs; expected_root is the domain-separated attribution Merkle root shared by the TypeScript, Go, and Python SDKs",
+      "leaf_count": 3,
+      "leaf_inputs": [
+        "aps-merkle-parity-0",
+        "aps-merkle-parity-1",
+        "aps-merkle-parity-2"
+      ],
+      "leaves": [
+        "ed6e418d162b4b00105ff232a39c57185586a1cc83b49027cb9599958bcdcae0",
+        "114b0df5d57fe402001d31d6ca1934d9f688fd915ab79d7605792de9014d10eb",
+        "db3b0d77c6ffa57c5bc5d4e5adf67d7cf695603f481c6a1e4808baaa680f8a28"
+      ],
+      "expected_root": "53fc826f785d4c225cde4fcec9e44d3523f9989be4d112b7be065378f54ae436"
+    },
+    {
+      "name": "parity-5-leaves",
+      "description": "5-leaf multiset; leaves are sha256 of the listed leaf_inputs; expected_root is the domain-separated attribution Merkle root shared by the TypeScript, Go, and Python SDKs",
+      "leaf_count": 5,
+      "leaf_inputs": [
+        "aps-merkle-parity-0",
+        "aps-merkle-parity-1",
+        "aps-merkle-parity-2",
+        "aps-merkle-parity-3",
+        "aps-merkle-parity-4"
+      ],
+      "leaves": [
+        "ed6e418d162b4b00105ff232a39c57185586a1cc83b49027cb9599958bcdcae0",
+        "114b0df5d57fe402001d31d6ca1934d9f688fd915ab79d7605792de9014d10eb",
+        "db3b0d77c6ffa57c5bc5d4e5adf67d7cf695603f481c6a1e4808baaa680f8a28",
+        "d7ec06185e65e63695d4c8c1b65a515f565151ffcb826c49ca07cdbe2aa4fa7a",
+        "531fd2a6367a6b5c367d4579293bbecd69de62e52117b045ca259aa99585b337"
+      ],
+      "expected_root": "1837e308723f0acf6a8e9605a721def4dc95a60a4e57cd6a07c4af80df1c80a7"
+    },
+    {
+      "name": "parity-8-leaves",
+      "description": "8-leaf multiset; leaves are sha256 of the listed leaf_inputs; expected_root is the domain-separated attribution Merkle root shared by the TypeScript, Go, and Python SDKs",
+      "leaf_count": 8,
+      "leaf_inputs": [
+        "aps-merkle-parity-0",
+        "aps-merkle-parity-1",
+        "aps-merkle-parity-2",
+        "aps-merkle-parity-3",
+        "aps-merkle-parity-4",
+        "aps-merkle-parity-5",
+        "aps-merkle-parity-6",
+        "aps-merkle-parity-7"
+      ],
+      "leaves": [
+        "ed6e418d162b4b00105ff232a39c57185586a1cc83b49027cb9599958bcdcae0",
+        "114b0df5d57fe402001d31d6ca1934d9f688fd915ab79d7605792de9014d10eb",
+        "db3b0d77c6ffa57c5bc5d4e5adf67d7cf695603f481c6a1e4808baaa680f8a28",
+        "d7ec06185e65e63695d4c8c1b65a515f565151ffcb826c49ca07cdbe2aa4fa7a",
+        "531fd2a6367a6b5c367d4579293bbecd69de62e52117b045ca259aa99585b337",
+        "77354a4f66801b8453146a35c1c5799bc9047a61e53572b349ab7866a54ad541",
+        "b479078ee89747b8ad52afa973d1dd84f575d4370c1213e4397e3aaa4cfd4a0f",
+        "30c2352ee2e739d7c71bd732cb326d2e1c3a2f740672746fbe4d5fdcca626838"
+      ],
+      "expected_root": "fb88356945f6f9b347aec2a7a4d14f788dbba44472fd911e201f6399cb843096"
+    },
+    {
+      "name": "collision-negative-3-vs-4-duplicate",
+      "description": "Odd-node duplication regression (CVE-2012-2459 class): the 4-leaf multiset that duplicates the last leaf of the 3-leaf set must fold to a DIFFERENT root; both roots are pinned and the runner recomputes and compares them",
+      "leaf_count": 3,
+      "leaf_inputs": [
+        "aps-merkle-parity-0",
+        "aps-merkle-parity-1",
+        "aps-merkle-parity-2"
+      ],
+      "leaves": [
+        "ed6e418d162b4b00105ff232a39c57185586a1cc83b49027cb9599958bcdcae0",
+        "114b0df5d57fe402001d31d6ca1934d9f688fd915ab79d7605792de9014d10eb",
+        "db3b0d77c6ffa57c5bc5d4e5adf67d7cf695603f481c6a1e4808baaa680f8a28"
+      ],
+      "expected_root": "53fc826f785d4c225cde4fcec9e44d3523f9989be4d112b7be065378f54ae436",
+      "duplicate_last_leaf_root": "9310166db01443aa4ff7aef94d45ea01091180b77d7e9c3a1f73e268d0359df6"
+    }
+  ]
+}

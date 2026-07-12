@@ -497,6 +497,78 @@ function verifyBilateralPairFile(category: string, fixture: string, data: Fixtur
   return out
 }
 
+// Real verification for the merkle-root-parity family. Each vector carries
+// leaf_inputs (UTF-8 strings), the derived leaf hex values, and the expected
+// attribution Merkle root under the domain-separated construction (receipt
+// format v1.2, Day-145 audit): leaves sorted ascending, leaf =
+// sha256(0x00 || leaf_hex), internal = sha256(0x01 || left_hex || right_hex),
+// odd trailing node promoted unchanged. The runner recomputes every leaf and
+// every root with the small executable oracle below (no SDK import), so this
+// category can never pass vacuously; vectors here are never skipped.
+interface MerkleParityVector {
+  name: string
+  leaf_count: number
+  leaf_inputs: string[]
+  leaves: string[]
+  expected_root: string
+  duplicate_last_leaf_root?: string
+}
+
+function merkleParityLeafHash(leaf: string): string {
+  return sha256Hex('\x00' + leaf)
+}
+
+function merkleParityNodeHash(left: string, right: string): string {
+  return sha256Hex('\x01' + left + right)
+}
+
+function merkleParityRoot(leaves: string[]): string {
+  if (leaves.length === 0) return sha256Hex('empty')
+  let level = [...leaves].sort().map(merkleParityLeafHash)
+  while (level.length > 1) {
+    const next: string[] = []
+    for (let i = 0; i < level.length; i += 2) {
+      next.push(
+        i + 1 < level.length
+          ? merkleParityNodeHash(level[i], level[i + 1])
+          : level[i], // odd node promoted unchanged, never duplicated
+      )
+    }
+    level = next
+  }
+  return level[0]
+}
+
+function verifyMerkleParityFile(category: string, fixture: string, data: FixtureFile): VectorResult[] {
+  const out: VectorResult[] = []
+  for (const v of (data.vectors as unknown as MerkleParityVector[])) {
+    const problems: string[] = []
+    if (!Array.isArray(v.leaf_inputs) || !Array.isArray(v.leaves) || v.leaf_inputs.length !== v.leaves.length || v.leaves.length !== v.leaf_count) {
+      out.push({ category, fixture, name: v.name, status: 'fail', details: 'malformed vector: leaf_inputs/leaves/leaf_count inconsistent' })
+      continue
+    }
+    v.leaf_inputs.forEach((input, i) => {
+      const derived = sha256Hex(input)
+      if (derived !== v.leaves[i]) problems.push(`leaf[${i}] derivation mismatch (recomputed ${derived.slice(0, 16)}…, recorded ${v.leaves[i].slice(0, 16)}…)`)
+    })
+    const root = merkleParityRoot(v.leaves)
+    if (root !== v.expected_root) {
+      problems.push(`expected_root mismatch (recomputed ${root.slice(0, 16)}…, recorded ${v.expected_root.slice(0, 16)}…)`)
+    }
+    if (v.duplicate_last_leaf_root !== undefined) {
+      const dupRoot = merkleParityRoot([...v.leaves, v.leaves[v.leaves.length - 1]])
+      if (dupRoot !== v.duplicate_last_leaf_root) {
+        problems.push(`duplicate_last_leaf_root mismatch (recomputed ${dupRoot.slice(0, 16)}…)`)
+      }
+      if (dupRoot === root) {
+        problems.push('CVE-2012-2459 regression: duplicate-leaf multiset folded to the honest root')
+      }
+    }
+    out.push({ category, fixture, name: v.name, status: problems.length ? 'fail' : 'pass', details: problems.length ? problems.join('; ') : undefined })
+  }
+  return out
+}
+
 function main(): number {
   if (!existsSync(MANIFEST_PATH)) {
     console.error(`manifest not found at ${MANIFEST_PATH}`)
@@ -548,6 +620,10 @@ function main(): number {
     }
     if (entry.category === 'bilateral-pair') {
       allResults.push(...verifyBilateralPairFile(entry.category, entry.path, data))
+      continue
+    }
+    if (entry.category === 'merkle-root-parity') {
+      allResults.push(...verifyMerkleParityFile(entry.category, entry.path, data))
       continue
     }
 
