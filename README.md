@@ -6,7 +6,7 @@ Verify bundles in the browser at https://agent-passport.org/verify.html; live to
 
 Cross-implementation test corpus for the **Agent Passport System (APS)** protocol. Byte-identical JCS canonicalization fixtures, deterministic Ed25519 signatures, OWASP AIVSS §3.6 scenario fixtures, and InstructionProvenanceReceipt vectors. Apache-2.0.
 
-> **Status:** v0.1.0 (internal preview, pending external partner integration).
+> **Status:** v0.1.0. The corpus carries cross-stack fixtures from two outside parties, and a weekly signed-token exchange with one of them (AgentLair) has run since 2026-06-17. That is a seed. It is not independent conformance yet.
 
 ## What this suite is
 
