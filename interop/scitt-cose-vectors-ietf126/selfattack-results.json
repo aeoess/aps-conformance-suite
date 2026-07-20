@@ -1,0 +1,32 @@
+[
+ {
+  "name": "payload byte flip",
+  "vector": "valid-eddsa",
+  "target": "payload.bin[0]",
+  "byteOffset": 0,
+  "expectedStage": "payload-digest",
+  "observedStage": "payload-digest",
+  "observedResult": "INVALID",
+  "passed": true
+ },
+ {
+  "name": "statement signature byte flip",
+  "vector": "valid-es256",
+  "target": "statement.cose[249] (signature)",
+  "byteOffset": 249,
+  "expectedStage": "statement-sig",
+  "observedStage": "statement-sig",
+  "observedResult": "INVALID",
+  "passed": true
+ },
+ {
+  "name": "receipt digest byte flip",
+  "vector": "valid-eddsa",
+  "target": "receipt.cose[28] (audit-path node 0)",
+  "byteOffset": 28,
+  "expectedStage": "inclusion-proof",
+  "observedStage": "inclusion-proof",
+  "observedResult": "INVALID",
+  "passed": true
+ }
+]

@@ -1,0 +1,286 @@
+{
+ "manifest_version": "v1",
+ "rows": [
+  {
+   "id": "valid-eddsa",
+   "polarity": "positive",
+   "expected": "VALID",
+   "observed": "VALID",
+   "stage": null,
+   "expected_failure_code": null,
+   "mapped_failure_code": null,
+   "verdict": "match",
+   "unsupported": [],
+   "stages": [
+    {
+     "stage": "structure",
+     "ok": true,
+     "detail": "alg EdDSA/EdDSA, headers match expected"
+    },
+    {
+     "stage": "payload-digest",
+     "ok": true,
+     "detail": "sha256 08b6e9ec3bd002da... matches, payload attached and equal"
+    },
+    {
+     "stage": "leaf-entry",
+     "ok": true,
+     "detail": "leaf entry recomputed: a6dd4523ffdda175..."
+    },
+    {
+     "stage": "statement-sig",
+     "ok": true,
+     "detail": "Signature1 verifies under issuer-key.pub"
+    },
+    {
+     "stage": "vds-gate",
+     "ok": true,
+     "detail": "vds=1 RFC9162_SHA256, supported"
+    },
+    {
+     "stage": "inclusion-proof",
+     "ok": true,
+     "detail": "root 5c834b80c0b40ca9... (independent full-tree rebuild agrees)"
+    },
+    {
+     "stage": "receipt-sig",
+     "ok": true,
+     "detail": "receipt Signature1 verifies over reconstructed root"
+    }
+   ]
+  },
+  {
+   "id": "valid-es256",
+   "polarity": "positive",
+   "expected": "VALID",
+   "observed": "VALID",
+   "stage": null,
+   "expected_failure_code": null,
+   "mapped_failure_code": null,
+   "verdict": "match",
+   "unsupported": [],
+   "stages": [
+    {
+     "stage": "structure",
+     "ok": true,
+     "detail": "alg ES256/ES256, headers match expected"
+    },
+    {
+     "stage": "payload-digest",
+     "ok": true,
+     "detail": "sha256 a55649d4e0674a1f... matches, payload attached and equal"
+    },
+    {
+     "stage": "leaf-entry",
+     "ok": true,
+     "detail": "leaf entry recomputed: 3ffa392b06d19b15..."
+    },
+    {
+     "stage": "statement-sig",
+     "ok": true,
+     "detail": "Signature1 verifies under issuer-key.pub"
+    },
+    {
+     "stage": "vds-gate",
+     "ok": true,
+     "detail": "vds=1 RFC9162_SHA256, supported"
+    },
+    {
+     "stage": "inclusion-proof",
+     "ok": true,
+     "detail": "root e1dba63622c67f39... (independent full-tree rebuild agrees)"
+    },
+    {
+     "stage": "receipt-sig",
+     "ok": true,
+     "detail": "receipt Signature1 verifies over reconstructed root"
+    }
+   ]
+  },
+  {
+   "id": "fail-tampered-path",
+   "polarity": "negative",
+   "expected": "INVALID/TAMPERED_INCLUSION_PATH",
+   "observed": "INVALID/TAMPERED_INCLUSION_PATH",
+   "stage": "receipt-sig",
+   "expected_failure_code": "TAMPERED_INCLUSION_PATH",
+   "mapped_failure_code": "TAMPERED_INCLUSION_PATH",
+   "verdict": "match",
+   "unsupported": [],
+   "stages": [
+    {
+     "stage": "structure",
+     "ok": true,
+     "detail": "alg EdDSA/EdDSA, headers match expected"
+    },
+    {
+     "stage": "payload-digest",
+     "ok": true,
+     "detail": "sha256 374497661bfe6024... matches, payload attached and equal"
+    },
+    {
+     "stage": "leaf-entry",
+     "ok": true,
+     "detail": "leaf entry recomputed: 341df0ce74c5d59c..."
+    },
+    {
+     "stage": "statement-sig",
+     "ok": true,
+     "detail": "Signature1 verifies under issuer-key.pub"
+    },
+    {
+     "stage": "vds-gate",
+     "ok": true,
+     "detail": "vds=1 RFC9162_SHA256, supported"
+    },
+    {
+     "stage": "inclusion-proof",
+     "ok": true,
+     "detail": "root b539ba94681f4c24... (independent full-tree rebuild DISAGREES: b594e8f6ed6b5fc0)"
+    },
+    {
+     "stage": "receipt-sig",
+     "ok": false,
+     "detail": "receipt signature does NOT verify over reconstructed root b539ba94681f4c24..."
+    }
+   ]
+  },
+  {
+   "id": "fail-unsupported-vds",
+   "polarity": "negative",
+   "expected": "INVALID/UNSUPPORTED_VDS",
+   "observed": "INVALID/UNSUPPORTED_VDS",
+   "stage": "vds-gate",
+   "expected_failure_code": "UNSUPPORTED_VDS",
+   "mapped_failure_code": "UNSUPPORTED_VDS",
+   "verdict": "match",
+   "unsupported": [],
+   "stages": [
+    {
+     "stage": "structure",
+     "ok": true,
+     "detail": "alg EdDSA/EdDSA, headers match expected"
+    },
+    {
+     "stage": "payload-digest",
+     "ok": true,
+     "detail": "sha256 b5b997112c8aff9e... matches, payload attached and equal"
+    },
+    {
+     "stage": "leaf-entry",
+     "ok": true,
+     "detail": "leaf entry recomputed: ee728ba89fc45b23..."
+    },
+    {
+     "stage": "statement-sig",
+     "ok": true,
+     "detail": "Signature1 verifies under issuer-key.pub"
+    },
+    {
+     "stage": "vds-gate",
+     "ok": false,
+     "detail": "vds=2 is not a supported verifiable data structure (supported: 1 RFC9162_SHA256)"
+    }
+   ]
+  },
+  {
+   "id": "fail-bad-statement-sig",
+   "polarity": "negative",
+   "expected": "INVALID/BAD_STATEMENT_SIGNATURE",
+   "observed": "INVALID/BAD_STATEMENT_SIGNATURE",
+   "stage": "statement-sig",
+   "expected_failure_code": "BAD_STATEMENT_SIGNATURE",
+   "mapped_failure_code": "BAD_STATEMENT_SIGNATURE",
+   "verdict": "match",
+   "unsupported": [],
+   "stages": [
+    {
+     "stage": "structure",
+     "ok": true,
+     "detail": "alg EdDSA/EdDSA, headers match expected"
+    },
+    {
+     "stage": "payload-digest",
+     "ok": true,
+     "detail": "sha256 17591d8abea5cad1... matches, payload attached and equal"
+    },
+    {
+     "stage": "leaf-entry",
+     "ok": true,
+     "detail": "leaf entry recomputed: 0dea38958b8f83f3..."
+    },
+    {
+     "stage": "statement-sig",
+     "ok": false,
+     "detail": "Signature1 does NOT verify under issuer-key.pub"
+    },
+    {
+     "stage": "vds-gate",
+     "ok": true,
+     "detail": "vds=1 RFC9162_SHA256, supported"
+    },
+    {
+     "stage": "inclusion-proof",
+     "ok": true,
+     "detail": "root e5b5647171f5b9b3... (independent full-tree rebuild agrees)"
+    },
+    {
+     "stage": "receipt-sig",
+     "ok": true,
+     "detail": "receipt Signature1 verifies over reconstructed root"
+    }
+   ]
+  },
+  {
+   "id": "valid-ccf-vds2",
+   "polarity": "positive",
+   "expected": "VALID",
+   "observed": "VALID",
+   "stage": null,
+   "expected_failure_code": null,
+   "mapped_failure_code": null,
+   "verdict": "match",
+   "unsupported": [
+    "ccf.v1 (vds=2) inclusion-proof root reconstruction: profile algorithm out of committed scope; receipt signature checked over the recorded root instead"
+   ],
+   "stages": [
+    {
+     "stage": "structure",
+     "ok": true,
+     "detail": "alg ES256/ES384, headers match expected"
+    },
+    {
+     "stage": "payload-digest",
+     "ok": true,
+     "detail": "sha256 04935e9a37f6d7c6... matches, payload attached and equal"
+    },
+    {
+     "stage": "leaf-entry",
+     "ok": true,
+     "detail": "leaf entry recomputed: cdd87929ead61eca..."
+    },
+    {
+     "stage": "statement-sig",
+     "ok": true,
+     "detail": "Signature1 verifies under issuer-key.pub"
+    },
+    {
+     "stage": "vds-gate",
+     "ok": true,
+     "detail": "vds=2 CCF ledger: recognized, proof profile out of scope (recorded, not faked)"
+    },
+    {
+     "stage": "receipt-sig",
+     "ok": true,
+     "detail": "receipt Signature1 verifies over the RECORDED root (reconstruction unsupported)"
+    }
+   ]
+  }
+ ],
+ "totals": {
+  "vectors": 6,
+  "match": 6,
+  "divergence": 0,
+  "with_unsupported_subchecks": 1
+ }
+}
