@@ -141,7 +141,7 @@ This suite is the conformance reference for the protocol described in:
 - *Governance in the Medium* — https://doi.org/10.5281/zenodo.19582550
 - *Cognitive Attestation* — https://doi.org/10.5281/zenodo.19646276
 - *The Evidence-Safety Gap* — https://doi.org/10.5281/zenodo.19914628
-- IETF Internet-Draft: `draft-pidlisnyi-aps-01`
+- IETF Internet-Draft: `draft-pidlisnyi-aps-03`
 
 AIVSS scenario fixtures cite: *AIVSS Scoring System For OWASP Agentic AI Core Security Risks v0.8* (OWASP, accessed 2026-04-26).
 
